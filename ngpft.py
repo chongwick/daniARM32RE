@@ -15,12 +15,9 @@ import binascii
 
 FILE_NAME = ''
 IMAGEBASE = '0x80000'
-IS_THUMB_MODE = 1
-MD = Cs(CS_ARCH_ARM, CS_MODE_THUMB)
 
 class DisassemblerCore(object):
-    def __init__(self, filename):
-        self.filename = filename
+    def __init__(self):
         self.file_data = b''
         self.hex_data = ''
         self.starting_address = ''
@@ -39,53 +36,19 @@ class DisassemblerCore(object):
                 'blxgt', 'blxvc', 'blxcc', 'blxhs', 'blxmi', 'blxne', 'blxal', 'blxle', 'blxge',
                 'blxvs', 'blxls', 'blxlt', 'blxlo', 'blxcs', 'blxhi', 'blxeq', 'blxpl',
                 'cbz', 'cbnz'}
-        self.curr_mnemonic = ''
-        self.curr_op_str = ''
 
     def run(self):
-        self.load_file()
-        self.parse_isr()
-        for i in range(len(self.file_data)):
-            self.mem_instr.append(0)
-        self.disassemble()
-        for i in range(len(self.mem_instr)):
-            if self.mem_instr[i] != 0:
-                print('%s\t%s'%(hex(i+int(IMAGEBASE,16)), self.mem_instr[i]))
-        return True
+        self.load_input_file()
+        self.init_emul()
 
-    # Takes a hex representation and returns an int
     def endian_switch(self, val):
         tmp = "0x" + val[6] + val[7] + val[4] + val[5] + val[2] + val[3] + val[0] + val[1]
         return(int(tmp,16))
 
-    def toggle_thumb(self):
-        if IS_THUMB_MODE == 1:
-            IS_THUMB_MODE = 0
-            MD = Cs(CS_ARCH_ARM, CS_MODE_ARM)
-        elif IS_THUMB_MODE == 0:
-            IS_THUMB_MODE = 1
-            MD = Cs(CS_ARCH_ARM, CS_MODE_THUMB)
-
-    def dasm_single(self, md, code, addr):
-        for(address, size, mnemonic, op_str) in md.disasm_lite(code,
-                addr):
-            self.curr_mnemonic = str(mnemonic)
-            self.curr_op_str = str(op_str)
-            instr = self.curr_mnemonic + '\t' + self.curr_op_str
-            if self.mem_instr[address-int(IMAGEBASE,16)] == 0:
-                self.mem_instr[address-int(IMAGEBASE,16)] = instr
-                #debugging
-                print('%s\t%s'%(hex(address), instr))
-                return True
-            else:
-                return False
-
-    def load_file(self):
-        with open(self.filename, 'rb') as f:
+    def load_input_file(self):
+        with open(FILE_NAME, 'rb') as f:
             self.file_data = f.read()
         f.close()
-
-    def parse_isr(self):
         self.hex_data = binascii.hexlify(self.file_data)
         # Stack top stored in first word, starting address in second
         self.stack_top = self.endian_switch(self.hex_data[0:8])
@@ -123,39 +86,41 @@ class DisassemblerCore(object):
                    self.isr_pointers.append(address)
            self.isr_table_length += 1
 
-    # https://www.capstone-engine.org/lang_python.html
-    def disassemble(self):
-        # Record conditional branch destinations
-        con_br_dst = []
-        start = (self.starting_address - int(IMAGEBASE, 16) - 1) * 2
-        curr_instr = start
-        curr_addr = self.starting_address - IS_THUMB_MODE
-        code = self.hex_data[curr_instr:curr_instr+4].decode('hex')
-        i = 1
-        while(i < 40):
-            i += 1
-            if self.dasm_single(MD, code, curr_addr):
-                if IS_THUMB_MODE:
-                    curr_instr += 4
-                    curr_addr += 2
-                else:
-                    curr_instr += 8
-                    curr_addr += 4
-                code = self.hex_data[curr_instr:curr_instr+4].decode('hex')
-                if self.curr_mnemonic in self.branch_instructions:
-                    if 'x' in self.curr_mnemonic:
-                        self.toggle_thumb()
-                    curr_instr = (int(self.curr_op_str[1:], 16) - int(IMAGEBASE, 16)) * 2
-                    curr_addr = int(self.curr_op_str[1:], 16)
-                    code = self.hex_data[curr_instr:curr_instr+4].decode('hex')
-                if self.curr_mnemonic in self.conditional_branches:
-                    if self.curr_op_str[1:] not in con_br_dst:
-                        con_br_dst.append(self.curr_op_str[1:])
-            else:
-                curr_instr = (int(con_br_dst[0], 16) - int(IMAGEBASE, 16)) * 2
-                curr_addr = int(con_br_dst[0], 16)
-                code = self.hex_data[curr_instr:curr_instr+4].decode('hex')
-        #        del(con_br_dst[0])
+    def all_instr_hook_code(self, uc, ip_address, size, user_data):
+        print(">>> Tracing basic block at 0x%x, block size = 0x%x" %(ip_address, size))
+    def hook_mem_access(self, uc, access, ip_address, size, value, user_data):
+        print(">>> Tracing basic block at 0x%x, block size = 0x%x" %(ip_address, size))
+    def hook_mem_invalid(self, uc, access, ip_address, size, value, user_data):
+        print(">>> Tracing basic block at 0x%x, block size = 0x%x" %(ip_address, size))
+
+
+    def init_emul(self):
+        try:
+            self.uc = Uc(IN_UC_ARCH, IN_UC_ARCH_MODE)
+            tmp = len(self.file_data) // (1024 * 1024)
+            self.mem_size = (1024 * 1024) + (tmp * (1024 * 1024)) 
+            self.uc.mem_map(IMAGEBASE, self.mem_map)
+            self.uc.mem_write(IMAGEBASE, self.file_data) 
+            self.uc.reg_write(UC_ARM_REG_R0, 0)
+            self.uc.reg_write(UC_ARM_REG_R1, 0)
+            self.uc.reg_write(UC_ARM_REG_R2, 0)
+            self.uc.reg_write(UC_ARM_REG_R3, 0)
+            self.uc.reg_write(UC_ARM_REG_R4, 0)
+            self.uc.reg_write(UC_ARM_REG_R5, 0)
+            self.uc.reg_write(UC_ARM_REG_R6, 0)
+            self.uc.reg_write(UC_ARM_REG_R7, 0)
+            self.uc.reg_write(UC_ARM_REG_R8, 0)
+            self.uc.reg_write(UC_ARM_REG_R9, 0)
+            self.uc.reg_write(UC_ARM_REG_R10, 0)
+            self.uc.reg_write(UC_ARM_REG_R11, 0)
+            self.uc.reg_write(UC_ARM_REG_R12, 0)
+            self.uc.reg_write(UC_ARM_REG_SP, self.stack_top)
+            self.uc.hook_add(UC_HOOK_CODE, self.all_instr_hook_code)
+            self.uc.hook_add(UC_HOOK_MEM_READ | UC_HOOK_MEM_WRITE, self.hook_mem_access)
+            self.uc.hook_add(UC_HOOK_MEM_INVALID, self.hook_mem_invalid)
+            self.uc.emu_start(self.starting_address, IMAGEBASE + self.mem_size-1)
+        except Error as e:
+            print('ERROR: %s'%e)
 
 # Main
 def main():
@@ -173,7 +138,7 @@ def main():
         if len(FILE_NAME) == 0:
             print('No file found')
             return True
-    dc = DisassemblerCore(FILE_NAME)
+    dc = DisassemblerCore()
     dc.run()
 
 if __name__ == '__main__':
