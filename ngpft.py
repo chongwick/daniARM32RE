@@ -14,7 +14,7 @@ from collections import OrderedDict
 import binascii
 
 FILE_NAME = ''
-IMAGEBASE = '0x80000'
+IMAGEBASE = 0x80000
 
 class DisassemblerCore(object):
     def __init__(self):
@@ -46,6 +46,7 @@ class DisassemblerCore(object):
         return(int(tmp,16))
 
     def load_input_file(self):
+        global FILE_NAME
         with open(FILE_NAME, 'rb') as f:
             self.file_data = f.read()
         f.close()
@@ -87,19 +88,24 @@ class DisassemblerCore(object):
            self.isr_table_length += 1
 
     def all_instr_hook_code(self, uc, ip_address, size, user_data):
+        print("all_hook")
+        print(self.uc.query(UC_QUERY_MODE))
         print(">>> Tracing basic block at 0x%x, block size = 0x%x" %(ip_address, size))
     def hook_mem_access(self, uc, access, ip_address, size, value, user_data):
+        print("mem_acc")
         print(">>> Tracing basic block at 0x%x, block size = 0x%x" %(ip_address, size))
     def hook_mem_invalid(self, uc, access, ip_address, size, value, user_data):
+        print("mem_invalid")
         print(">>> Tracing basic block at 0x%x, block size = 0x%x" %(ip_address, size))
 
 
     def init_emul(self):
         try:
-            self.uc = Uc(IN_UC_ARCH, IN_UC_ARCH_MODE)
+            self.uc = Uc(UC_ARCH_ARM, UC_MODE_ARM)
+            self.mem_size = 0
             tmp = len(self.file_data) // (1024 * 1024)
             self.mem_size = (1024 * 1024) + (tmp * (1024 * 1024)) 
-            self.uc.mem_map(IMAGEBASE, self.mem_map)
+            self.uc.mem_map(IMAGEBASE, self.mem_size)
             self.uc.mem_write(IMAGEBASE, self.file_data) 
             self.uc.reg_write(UC_ARM_REG_R0, 0)
             self.uc.reg_write(UC_ARM_REG_R1, 0)
@@ -119,11 +125,12 @@ class DisassemblerCore(object):
             self.uc.hook_add(UC_HOOK_MEM_READ | UC_HOOK_MEM_WRITE, self.hook_mem_access)
             self.uc.hook_add(UC_HOOK_MEM_INVALID, self.hook_mem_invalid)
             self.uc.emu_start(self.starting_address, IMAGEBASE + self.mem_size-1)
-        except Error as e:
+        except Exception as e:
             print('ERROR: %s'%e)
 
 # Main
 def main():
+    global FILE_NAME
     if len(sys.argv) > 1:
         FILE_NAME = str(sys.argv[1])
         #IMAGEBASE = str(sys.argv[2])
