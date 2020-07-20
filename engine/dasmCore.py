@@ -36,6 +36,9 @@ class DisassemblerCore(object):
         self.curr_instr = ''
         self.curr_op_str = ''
         self.cond_br_dst = []
+        self.non_br_dst = []
+        self.breaks = 0
+        self.end = False
 
     def run(self):
         global IMAGEBASE
@@ -48,7 +51,13 @@ class DisassemblerCore(object):
             if self.mem_instr[i] != 0:
                 g += 1
                 print('%s\t%s'%(hex(i+IMAGEBASE), self.mem_instr[i]))
+        print('unique')
         print(g)
+        print('not taken')
+        print(len(self.cond_br_dst))
+        print('breaks')
+        print(self.breaks)
+
     def endian_switch(self, val):
         tmp = "0x" + val[6] + val[7] + val[4] + val[5] + val[2] + val[3] + val[0] + val[1]
         return(int(tmp,16))
@@ -119,18 +128,24 @@ class DisassemblerCore(object):
             self.curr_op_str = str(op_str)
             instr = self.curr_instr + '\t' + self.curr_op_str
             print('dasmrout %s\t%s'%(hex(addr), instr))
-            if self.mem_instr[addr-IMAGEBASE] == 0:
-                self.mem_instr[addr-IMAGEBASE] = instr
-                if self.curr_instr in self.conditional_branches:
-                    if self.uc.query(UC_QUERY_MODE) == UC_MODE_THUMB: 
-                        self.cond_br_dst.append(int(self.curr_op_str[1:],16)+1)
-                        #self.uc.reg_write(UC_ARM_REG_R15, int(self.curr_op_str[1:], 16)+1)
-                    else:
-                        self.cond_br_dst.append(int(self.curr_op_str[1:],16))
-                        #self.uc.reg_write(UC_ARM_REG_R15, int(self.curr_op_str[1:], 16))
-                return True
-            else:
-                return False
+            try:
+                if self.mem_instr[addr-IMAGEBASE] == 0:
+                    self.mem_instr[addr-IMAGEBASE] = instr
+                    if self.curr_instr in self.conditional_branches:
+                        if self.uc.query(UC_QUERY_MODE) == UC_MODE_THUMB: 
+                            self.cond_br_dst.append(int(self.curr_op_str[1:],16)+1)
+                            self.cond_br_dst.append(addr+size+1)
+                        else:
+                            self.cond_br_dst.append(int(self.curr_op_str[1:],16))
+                            self.cond_br_dst.append(addr+size)
+                    return True
+                else:
+                    return False
+            except Exception as e:
+                self.uc.emu_stop()
+                print 'PENIS NICKLES'
+                print(hex(addr))
+                print(addr-IMAGEBASE)
 
     def disassemble(self, addr, size):
         #start = (self.starting_address-IMAGEBASE-1)*2
@@ -139,6 +154,10 @@ class DisassemblerCore(object):
         #code = '43f8042b'
         #code = code.decode('hex')
         #print(binascii.hexlify(code))
+        if addr in self.cond_br_dst:
+            self.cond_br_dst.remove(addr)
+        elif addr+1 in self.cond_br_dst:
+            self.cond_br_dst.remove(addr+1)
         code = self.uc.mem_read(addr, size)
         if not (self.dasm_single(code, addr)):
             try:
@@ -152,6 +171,10 @@ class DisassemblerCore(object):
                     nxt_instr = addr+size+1
                     self.uc.reg_write(UC_ARM_REG_R15, nxt_instr)
         if self.curr_instr == 'b' and int(self.curr_op_str[1:],16) == addr:
+            self.uc.reg_write(UC_ARM_REG_R15, self.cond_br_dst[-1])
+            del(self.cond_br_dst[-1])
+            self.end = True
+        if self.end and len(self.cond_br_dst) == 0:
             self.uc.emu_stop()
 
     #
