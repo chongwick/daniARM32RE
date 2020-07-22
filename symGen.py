@@ -12,11 +12,15 @@ import struct
 from capstone import *
 from collections import OrderedDict
 import binascii
+import math
 
 FILE_NAME = ''
 IMAGEBASE = '0x80000'
 IS_THUMB_MODE = 1
+MAX_INSTR_SIZE = 8
 MD = Cs(CS_ARCH_ARM, CS_MODE_THUMB)
+REGISTER_NAMES = ['r0', 'r1', 'r2', 'r3', 'r4', 'r5', 'r6', 'r7', 'r8', 'r9'
+        , 'r10', 'sl', 'r11', 'r12', 'r13', 'r14', 'r15', 'psr', 'lr', 'pc', 'sp']
 
 class DisassemblerCore(object):
     def __init__(self, filename):
@@ -41,10 +45,12 @@ class DisassemblerCore(object):
                 'cbz', 'cbnz'}
         self.curr_mnemonic = ''
         self.curr_op_str = ''
+        self.done = False
+        self.size = 0
+        self.subroutine_returns = []
 
     def run(self):
         self.load_file()
-        self.parse_isr()
         for i in range(len(self.file_data)):
             self.mem_instr.append(0)
         self.disassemble()
@@ -66,30 +72,18 @@ class DisassemblerCore(object):
             IS_THUMB_MODE = 1
             MD = Cs(CS_ARCH_ARM, CS_MODE_THUMB)
 
-    def dasm_single(self, md, code, addr):
-        for(address, size, mnemonic, op_str) in md.disasm_lite(code,
-                addr):
-            self.curr_mnemonic = str(mnemonic)
-            self.curr_op_str = str(op_str)
-            instr = self.curr_mnemonic + '\t' + self.curr_op_str
-            if self.mem_instr[address-int(IMAGEBASE,16)] == 0:
-                self.mem_instr[address-int(IMAGEBASE,16)] = instr
-                #debugging
-                print('%s\t%s'%(hex(address), instr))
-                return True
-            else:
-                return False
-
     def load_file(self):
         with open(self.filename, 'rb') as f:
             self.file_data = f.read()
         f.close()
-
-    def parse_isr(self):
         self.hex_data = binascii.hexlify(self.file_data)
         # Stack top stored in first word, starting address in second
         self.stack_top = self.endian_switch(self.hex_data[0:8])
         self.starting_address = self.endian_switch(self.hex_data[8:16])
+        if self.starting_address % 2 != 0:
+            IS_THUMB_MODE = 1
+        else:
+            IS_THUMB_MODE = 0
         # Detect endianness. (See daniEmu source code documentation if it's open source by now)
         index = 16
         while (True):
@@ -123,6 +117,22 @@ class DisassemblerCore(object):
                    self.isr_pointers.append(address)
            self.isr_table_length += 1
 
+    def dasm_single(self, md, code, addr):
+        self.size = 0
+        for(address, size, mnemonic, op_str) in md.disasm_lite(code,
+                addr):
+            self.size+=2
+            self.curr_mnemonic = str(mnemonic)
+            self.curr_op_str = str(op_str)
+            instr = self.curr_mnemonic + '\t' + self.curr_op_str
+            if self.mem_instr[address-int(IMAGEBASE,16)] == 0:
+                self.mem_instr[address-int(IMAGEBASE,16)] = instr
+                #debugging
+                print('%s\t%s'%(hex(address), instr))
+                return True
+            else:
+                return False
+
     # https://www.capstone-engine.org/lang_python.html
     def disassemble(self):
         # Record conditional branch destinations
@@ -131,31 +141,45 @@ class DisassemblerCore(object):
         curr_instr = start
         curr_addr = self.starting_address - IS_THUMB_MODE
         code = self.hex_data[curr_instr:curr_instr+4].decode('hex')
-        i = 1
-        while(i < 40):
-            i += 1
+        prev_addr = 0
+        reg_br_addr = 0
+        while(True):
             if self.dasm_single(MD, code, curr_addr):
-                if IS_THUMB_MODE:
-                    curr_instr += 4
-                    curr_addr += 2
-                else:
-                    curr_instr += 8
-                    curr_addr += 4
-                code = self.hex_data[curr_instr:curr_instr+4].decode('hex')
+                prev_addr = curr_addr
+                curr_instr += self.size*2
+                curr_addr += self.size 
+                code = self.hex_data[curr_instr:curr_instr+MAX_INSTR_SIZE].decode('hex')
+                if self.curr_mnemonic == 'ldr' and 'pc' in self.curr_op_str:
+                    arg = self.curr_op_str.split('#')[1]
+                    arg = int(arg[:-1],16)
+                    loc = int(math.floor((prev_addr + arg)/4)*4)
+                    # 8 for doubleword offset
+                    loc = int(loc - int(IMAGEBASE, 16)) * 2 + 8
+                    data = self.hex_data[loc:loc+8]
+                    reg_br_addr = self.endian_switch(data)-1
                 if self.curr_mnemonic in self.branch_instructions:
-                    if 'x' in self.curr_mnemonic:
-                        self.toggle_thumb()
-                    curr_instr = (int(self.curr_op_str[1:], 16) - int(IMAGEBASE, 16)) * 2
-                    curr_addr = int(self.curr_op_str[1:], 16)
-                    code = self.hex_data[curr_instr:curr_instr+4].decode('hex')
-                if self.curr_mnemonic in self.conditional_branches:
-                    if self.curr_op_str[1:] not in con_br_dst:
+                    if self.curr_op_str in REGISTER_NAMES:
+                        curr_instr = (reg_br_addr - int(IMAGEBASE, 16)) * 2
+                        curr_addr = reg_br_addr
+                        code = self.hex_data[curr_instr:curr_instr+4].decode('hex')
+                    else:
+                        curr_instr = (int(self.curr_op_str[1:], 16) - int(IMAGEBASE, 16)) * 2
+                        curr_addr = int(self.curr_op_str[1:], 16)
+                        code = self.hex_data[curr_instr:curr_instr+4].decode('hex')
+                elif self.curr_mnemonic in self.conditional_branches:
+                    if self.curr_op_str in REGISTER_NAMES:
+                        con_br_dst.append(hex(reg_br_addr))
+                    elif self.curr_op_str[1:] not in con_br_dst:
                         con_br_dst.append(self.curr_op_str[1:])
             else:
-                curr_instr = (int(con_br_dst[0], 16) - int(IMAGEBASE, 16)) * 2
-                curr_addr = int(con_br_dst[0], 16)
-                code = self.hex_data[curr_instr:curr_instr+4].decode('hex')
-        #        del(con_br_dst[0])
+                if len(con_br_dst) == 0:
+                    break
+                    self.done = True
+                if not self.done:
+                    curr_instr = (int(con_br_dst[-1], 16) - int(IMAGEBASE, 16)) * 2
+                    curr_addr = int(con_br_dst[-1], 16)
+                    code = self.hex_data[curr_instr:curr_instr+4].decode('hex')
+                    del(con_br_dst[-1])
 
 # Main
 def main():
