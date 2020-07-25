@@ -7,6 +7,7 @@ Using Capstone disassembly and Unicorn emulation framework
 from unicorn import *
 from unicorn.arm_const import *
 from unicorn.unicorn_const import *
+from z3 import *
 import sys
 import struct
 from capstone import *
@@ -47,13 +48,14 @@ class DisassemblerCore(object):
         self.curr_op_str = ''
         self.done = False
         self.size = 0
-        self.subroutine_returns = []
+        self.subroutine_branch = []
 
     def run(self):
         self.load_file()
         for i in range(len(self.file_data)):
             self.mem_instr.append(0)
         self.disassemble()
+        print('\n\n\nDisassembly\n\n\n')
         for i in range(len(self.mem_instr)):
             if self.mem_instr[i] != 0:
                 print('%s\t%s'%(hex(i+int(IMAGEBASE,16)), self.mem_instr[i]))
@@ -133,6 +135,22 @@ class DisassemblerCore(object):
             else:
                 return False
 
+    def subroutine_branch_handler(self, curr_addr):
+        if 'l' in self.curr_mnemonic:
+            self.subroutine_branch.append(curr_addr+self.size)
+            for i in self.subroutine_branch:
+                print(hex(i))
+            return False
+        elif 'lr' in self.curr_op_str:
+            curr_instr = (int(self.subroutine_branch[-1], 16) - int(IMAGEBASE, 16))*2
+            curr_addr = int(self.subroutine_branch[-1],16)
+            return True
+            print(curr_instr)
+        else:
+            return False
+        if 'pop' in self.curr_mnemonic:
+            return True
+
     # https://www.capstone-engine.org/lang_python.html
     def disassemble(self):
         # Record conditional branch destinations
@@ -158,6 +176,8 @@ class DisassemblerCore(object):
                     data = self.hex_data[loc:loc+8]
                     reg_br_addr = self.endian_switch(data)-1
                 if self.curr_mnemonic in self.branch_instructions:
+                    if self.subroutine_branch_handler(curr_addr):
+                        break
                     if self.curr_op_str in REGISTER_NAMES:
                         curr_instr = (reg_br_addr - int(IMAGEBASE, 16)) * 2
                         curr_addr = reg_br_addr
@@ -167,7 +187,9 @@ class DisassemblerCore(object):
                         curr_addr = int(self.curr_op_str[1:], 16)
                         code = self.hex_data[curr_instr:curr_instr+4].decode('hex')
                 elif self.curr_mnemonic in self.conditional_branches:
-                    if self.curr_op_str in REGISTER_NAMES:
+                    if self.curr_mnemonic == 'cbz' or self.curr_mnemonic == 'cbnz':
+                        con_br_dst.append(self.curr_op_str.split('#')[1])
+                    elif self.curr_op_str in REGISTER_NAMES:
                         con_br_dst.append(hex(reg_br_addr))
                     elif self.curr_op_str[1:] not in con_br_dst:
                         con_br_dst.append(self.curr_op_str[1:])
@@ -176,6 +198,7 @@ class DisassemblerCore(object):
                     break
                     self.done = True
                 if not self.done:
+                    print(con_br_dst)
                     curr_instr = (int(con_br_dst[-1], 16) - int(IMAGEBASE, 16)) * 2
                     curr_addr = int(con_br_dst[-1], 16)
                     code = self.hex_data[curr_instr:curr_instr+4].decode('hex')
