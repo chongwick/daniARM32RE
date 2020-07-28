@@ -135,38 +135,39 @@ class DisassemblerCore(object):
             else:
                 return False
 
-    def subroutine_branch_handler(self, curr_addr):
-        if 'l' in self.curr_mnemonic:
-            self.subroutine_branch.append(curr_addr+self.size)
-            for i in self.subroutine_branch:
-                print(hex(i))
+    def subroutine_branch_handler(self):
+        if 'push' in self.curr_mnemonic and 'lr' in self.curr_op_str:
+            print('banannananananan')
+            return False
+        elif 'pop' in self.curr_mnemonic and 'pc' in self.curr_op_str:
+            print('kiwiwiwiwiwiwi')
+            return False
+        elif 'l' in self.curr_mnemonic:
+            self.subroutine_branch.append(self.curr_addr+self.size)
             return False
         elif 'lr' in self.curr_op_str:
-            curr_instr = (int(self.subroutine_branch[-1], 16) - int(IMAGEBASE, 16))*2
-            curr_addr = int(self.subroutine_branch[-1],16)
-            return True
-            print(curr_instr)
-        else:
+            self.curr_instr = (self.subroutine_branch[-1] - int(IMAGEBASE, 16))*2
+            self.curr_addr = self.subroutine_branch[-1]
+            del(self.subroutine_branch[-1])
             return False
-        if 'pop' in self.curr_mnemonic:
-            return True
+
 
     # https://www.capstone-engine.org/lang_python.html
     def disassemble(self):
         # Record conditional branch destinations
         con_br_dst = []
         start = (self.starting_address - int(IMAGEBASE, 16) - 1) * 2
-        curr_instr = start
-        curr_addr = self.starting_address - IS_THUMB_MODE
-        code = self.hex_data[curr_instr:curr_instr+4].decode('hex')
+        self.curr_instr = start
+        self.curr_addr = self.starting_address - IS_THUMB_MODE
+        code = self.hex_data[self.curr_instr:self.curr_instr+4].decode('hex')
         prev_addr = 0
         reg_br_addr = 0
         while(True):
-            if self.dasm_single(MD, code, curr_addr):
-                prev_addr = curr_addr
-                curr_instr += self.size*2
-                curr_addr += self.size 
-                code = self.hex_data[curr_instr:curr_instr+MAX_INSTR_SIZE].decode('hex')
+            if self.dasm_single(MD, code, self.curr_addr):
+                prev_addr = self.curr_addr
+                self.curr_instr += self.size*2
+                self.curr_addr += self.size 
+                code = self.hex_data[self.curr_instr:self.curr_instr+MAX_INSTR_SIZE].decode('hex')
                 if self.curr_mnemonic == 'ldr' and 'pc' in self.curr_op_str:
                     arg = self.curr_op_str.split('#')[1]
                     arg = int(arg[:-1],16)
@@ -176,16 +177,16 @@ class DisassemblerCore(object):
                     data = self.hex_data[loc:loc+8]
                     reg_br_addr = self.endian_switch(data)-1
                 if self.curr_mnemonic in self.branch_instructions:
-                    if self.subroutine_branch_handler(curr_addr):
+                    if self.subroutine_branch_handler():
                         break
                     if self.curr_op_str in REGISTER_NAMES:
-                        curr_instr = (reg_br_addr - int(IMAGEBASE, 16)) * 2
-                        curr_addr = reg_br_addr
-                        code = self.hex_data[curr_instr:curr_instr+4].decode('hex')
+                        self.curr_instr = (reg_br_addr - int(IMAGEBASE, 16)) * 2
+                        self.curr_addr = reg_br_addr
+                        code = self.hex_data[self.curr_instr:self.curr_instr+4].decode('hex')
                     else:
-                        curr_instr = (int(self.curr_op_str[1:], 16) - int(IMAGEBASE, 16)) * 2
-                        curr_addr = int(self.curr_op_str[1:], 16)
-                        code = self.hex_data[curr_instr:curr_instr+4].decode('hex')
+                        self.curr_instr = (int(self.curr_op_str[1:], 16) - int(IMAGEBASE, 16)) * 2
+                        self.curr_addr = int(self.curr_op_str[1:], 16)
+                        code = self.hex_data[self.curr_instr:self.curr_instr+4].decode('hex')
                 elif self.curr_mnemonic in self.conditional_branches:
                     if self.curr_mnemonic == 'cbz' or self.curr_mnemonic == 'cbnz':
                         con_br_dst.append(self.curr_op_str.split('#')[1])
@@ -195,13 +196,16 @@ class DisassemblerCore(object):
                         con_br_dst.append(self.curr_op_str[1:])
             else:
                 if len(con_br_dst) == 0:
-                    break
-                    self.done = True
-                if not self.done:
+                    if len(self.conditional_branches) != 0:
+                        self.curr_instr = (self.subroutine_branch[-1] - int(IMAGEBASE, 16))*2
+                        self.curr_addr = self.subroutine_branch[-1]
+                        del(self.subroutine_branch[-1])
+                        break;
+                else:
                     print(con_br_dst)
-                    curr_instr = (int(con_br_dst[-1], 16) - int(IMAGEBASE, 16)) * 2
-                    curr_addr = int(con_br_dst[-1], 16)
-                    code = self.hex_data[curr_instr:curr_instr+4].decode('hex')
+                    self.curr_instr = (int(con_br_dst[-1], 16) - int(IMAGEBASE, 16)) * 2
+                    self.curr_addr = int(con_br_dst[-1], 16)
+                    code = self.hex_data[self.curr_instr:self.curr_instr+4].decode('hex')
                     del(con_br_dst[-1])
 
 # Main
