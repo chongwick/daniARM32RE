@@ -114,6 +114,7 @@ class DisassemblerCore(object):
             self.curr_mnemonic = str(mnemonic)
             self.curr_op_str = str(op_str)
             instr = self.curr_mnemonic + '\t' + self.curr_op_str
+            #!!!Error!!! returning before getting the correct instruction size
             if self.mem_instr[address-int(IMAGEBASE,16)] == 0:
                 self.mem_instr[address-int(IMAGEBASE,16)] = instr
                 #debugging
@@ -122,117 +123,24 @@ class DisassemblerCore(object):
             else:
                 return False
 
-    def subroutine_branch_handler(self):
-        if 'push' in self.curr_mnemonic and 'lr' in self.curr_op_str:
-            print('banannananananan')
-            return False
-        elif 'pop' in self.curr_mnemonic and 'pc' in self.curr_op_str:
-            print('kiwiwiwiwiwiwi')
-            return False
-        elif (self.curr_mnemonic in self.branch_instructions or
-                self.curr_mnemonic in self.conditional_branches) and ('l' in self.curr_mnemonic):
-            self.subroutine_branch.append(self.curr_addr+self.size)
-            return False
-        elif 'lr' in self.curr_op_str:
-            self.curr_instr = (self.subroutine_branch[-1] - int(IMAGEBASE, 16))*2
-            self.curr_addr = self.subroutine_branch[-1]
-            del(self.subroutine_branch[-1])
-            return False
-
-
     # https://www.capstone-engine.org/lang_python.html
     def disassemble(self):
-        # Record conditional branch destinations
-        con_br_dst = []
         start = (self.starting_address - int(IMAGEBASE, 16) - 1) * 2
         self.curr_instr = start
         self.curr_addr = self.starting_address - IS_THUMB_MODE  #offset for thumb
         # Section of code to be disassembled
         code = self.hex_data[self.curr_instr:self.curr_instr+4].decode('hex')
         prev_addr = 0
-        # Hold value of register when used as argument for branch
-        reg_br_addr = 0
-        register_branches = {}
-        register_branches['r0'] = []
-        register_branches['r1'] = []
-        register_branches['r2'] = []
-        register_branches['r3'] = []
-        register_branches['r4'] = []
-        register_branches['r5'] = []
-        register_branches['r6'] = []
-        register_branches['r7'] = []
-        register_branches['r8'] = []
-        register_branches['r9'] = []
-        register_branches['r10'] = []
-        register_branches['r11'] = []
-        register_branches['r12'] = []
-        register_branches['r13'] = []
-        register_branches['r14'] = []
-        register_branches['r15'] = []
         g = 0
-        while(g < 500):
+        while(g < 800):
+            if self.size == 4:
+                print("$$$")
+            g += 1
+            print(g)
             if self.dasm_single(MD, code, self.curr_addr):
                 self.curr_instr += self.size*2
                 self.curr_addr += self.size
                 code = self.hex_data[self.curr_instr:self.curr_instr+MAX_INSTR_SIZE].decode('hex')
-
-        #while(True):
-        #    if self.dasm_single(MD, code, self.curr_addr):
-        #        prev_addr = self.curr_addr
-        #        self.curr_instr += self.size*2
-        #        self.curr_addr += self.size
-        #        code = self.hex_data[self.curr_instr:self.curr_instr+MAX_INSTR_SIZE].decode('hex')
-
-        #        # Calculate the branch address when the branch argument is a register
-        #        if self.curr_mnemonic == 'ldr' and 'pc' in self.curr_op_str:
-        #            reg = self.curr_op_str.split(',')[0]
-        #            arg = self.curr_op_str.split('#')[1]
-        #            arg = int(arg[:-1],16)
-        #            loc = int(math.floor((prev_addr + arg)/4)*4)
-        #            # 8 for doubleword offset
-        #            loc = int(loc - int(IMAGEBASE, 16)) * 2 + 8
-        #            data = self.hex_data[loc:loc+8]
-        #            reg_br_addr = self.endian_switch(data)-1
-        #            register_branches[reg].append(reg_br_addr)
-
-        #        if self.subroutine_branch_handler():
-        #            break
-
-        #        if self.curr_mnemonic in self.branch_instructions:
-        #            # Branch with register argument (non-subroutine return)
-        #            if self.curr_op_str in REGISTER_NAMES and self.curr_op_str != 'lr':
-        #                tmp = register_branches[self.curr_op_str].pop()
-        #                self.curr_instr = (tmp - int(IMAGEBASE, 16)) * 2
-        #                self.curr_addr = tmp
-        #                code = self.hex_data[self.curr_instr:self.curr_instr+4].decode('hex')
-        #            # Branch with explicit argument
-        #            elif self.curr_op_str == 'lr':
-        #                print('\n\nlink')
-        #            else:
-        #                self.curr_instr = (int(self.curr_op_str[1:], 16) - int(IMAGEBASE, 16)) * 2
-        #                self.curr_addr = int(self.curr_op_str[1:], 16)
-        #                code = self.hex_data[self.curr_instr:self.curr_instr+4].decode('hex')
-        #        elif self.curr_mnemonic in self.conditional_branches:
-        #            if self.curr_mnemonic == 'cbz' or self.curr_mnemonic == 'cbnz':
-        #                con_br_dst.append(self.curr_op_str.split('#')[1])
-        #            #elif self.curr_op_str in REGISTER_NAMES:
-        #            #    con_br_dst.append(hex(reg_br_addr))
-        #            elif self.curr_op_str[1:] not in con_br_dst:
-        #                con_br_dst.append(self.curr_op_str[1:])
-        #    else:
-        #        '''issue code'''
-        #        if len(con_br_dst) == 0:
-        #            if len(self.conditional_branches) != 0:
-        #                self.curr_instr = (self.subroutine_branch[-1] - int(IMAGEBASE, 16))*2
-        #                self.curr_addr = self.subroutine_branch[-1]
-        #                del(self.subroutine_branch[-1])
-        #                break;
-        #        else:
-        #            print(con_br_dst)
-        #            self.curr_instr = (int(con_br_dst[-1], 16) - int(IMAGEBASE, 16)) * 2
-        #            self.curr_addr = int(con_br_dst[-1], 16)
-        #            code = self.hex_data[self.curr_instr:self.curr_instr+4].decode('hex')
-        #            del(con_br_dst[-1])
 
         # Takes a hex representation and returns an int
     def endian_switch(self, val):

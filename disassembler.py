@@ -114,6 +114,7 @@ class DisassemblerCore(object):
             self.curr_mnemonic = str(mnemonic)
             self.curr_op_str = str(op_str)
             instr = self.curr_mnemonic + '\t' + self.curr_op_str
+            '''ERROR: Returning before getting correct instruction size'''
             if self.mem_instr[address-int(IMAGEBASE,16)] == 0:
                 self.mem_instr[address-int(IMAGEBASE,16)] = instr
                 #debugging
