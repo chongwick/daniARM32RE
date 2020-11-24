@@ -56,7 +56,7 @@ class DisassemblerCore(object):
         for i in range(len(self.mem_instr)):
             if self.mem_instr[i] != 0:
                 disassembled_instrs += 1
-                print('%s\t%s'%(hex(i+int(IMAGEBASE,16)), self.mem_instr[i]))
+                #print('%s\t%s'%(hex(i+int(IMAGEBASE,16)), self.mem_instr[i]))
         print('NUMBER OF DISASSEMBLED INSTRUCTIONS:')
         print(disassembled_instrs)
         return True
@@ -106,22 +106,25 @@ class DisassemblerCore(object):
                    self.isr_pointers.append(address)
            self.isr_table_length += 1
 
+    #Disassemble ONE instruction
     def dasm_single(self, md, code, addr):
-        self.size = 0
+        #Keep track of the number of instructions disassembled
+        count = 0
         for(address, size, mnemonic, op_str) in md.disasm_lite(code,
                 addr):
-            self.size+=2
+            count += 1
             self.curr_mnemonic = str(mnemonic)
             self.curr_op_str = str(op_str)
             instr = self.curr_mnemonic + '\t' + self.curr_op_str
-            #!!!Error!!! returning before getting the correct instruction size
-            if self.mem_instr[address-int(IMAGEBASE,16)] == 0:
-                self.mem_instr[address-int(IMAGEBASE,16)] = instr
-                #debugging
-                print('%s\t%s'%(hex(address), instr))
-                return True
-            else:
-                return False
+            self.mem_instr[address-int(IMAGEBASE,16)] = instr
+            #debugging
+            print('%s\t%s\t%s\t\t%s'%(hex(address), instr, size, binascii.hexlify(code)))
+        '''dasm_single is given 4 bytes. If Capstone is only able to disassemble 1 2-byte instruction,
+           the second 2 bytes of the 4 belong to the next instruction.'''
+        if count == 1 and size == 2:
+            return False
+        else:
+            return True
 
     # https://www.capstone-engine.org/lang_python.html
     def disassemble(self):
@@ -129,18 +132,19 @@ class DisassemblerCore(object):
         self.curr_instr = start
         self.curr_addr = self.starting_address - IS_THUMB_MODE  #offset for thumb
         # Section of code to be disassembled
-        code = self.hex_data[self.curr_instr:self.curr_instr+4].decode('hex')
+        code = self.hex_data[self.curr_instr:self.curr_instr+MAX_INSTR_SIZE].decode('hex')
         prev_addr = 0
         g = 0
-        while(g < 800):
-            if self.size == 4:
-                print("$$$")
+        #while(self.curr_instr+MAX_INSTR_SIZE < len(self.hex_data)):
+        while(g < 21):
             g += 1
-            print(g)
             if self.dasm_single(MD, code, self.curr_addr):
-                self.curr_instr += self.size*2
-                self.curr_addr += self.size
-                code = self.hex_data[self.curr_instr:self.curr_instr+MAX_INSTR_SIZE].decode('hex')
+                self.curr_instr += MAX_INSTR_SIZE
+                self.curr_addr += 4
+            else:
+                self.curr_instr += MAX_INSTR_SIZE/2
+                self.curr_addr += 2
+            code = self.hex_data[self.curr_instr:self.curr_instr+MAX_INSTR_SIZE].decode('hex')
 
         # Takes a hex representation and returns an int
     def endian_switch(self, val):
