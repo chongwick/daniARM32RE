@@ -2,7 +2,10 @@
 ARM 32-bit full binary disassembler using Capstone disassembly framework.
 - Daniel Chong
 '''
-
+'''
+NOTE: CORTEX M processors use THUMB instructions exclusively https://stackoverflow.com/questions/28669905/what-is-the-difference-between-the-arm-thumb-and-thumb-2-instruction-encodings
+https://www.keil.com/support/man/docs/armasm/armasm_dom1361289866466.htm
+'''
 import sys
 import struct
 from capstone import *
@@ -18,17 +21,23 @@ MD = Cs(CS_ARCH_ARM, CS_MODE_THUMB)
 REGISTER_NAMES = ['r0', 'r1', 'r2', 'r3', 'r4', 'r5', 'r6', 'r7', 'r8', 'r9'
         , 'r10', 'sl', 'r11', 'r12', 'r13', 'r14', 'r15', 'psr', 'lr', 'pc', 'sp']
 
+#Record the location of branch instructions in the binary
+BRANCHES = {}
+MEM_INSTR = []
+
 class DisassemblerCore(object):
     def __init__(self, filename):
+        global MEM_INSTR
+        global BRANCHES
         self.filename = filename
         self.file_data = b''
         self.hex_data = ''
         self.starting_address = ''
+        self.beginning_code = ''
         self.stack_top = ''
         self.isr_num = 0
         self.isr_table_length = 0
         self.isr_pointers = []
-        self.mem_instr = []
         self.branch_instructions = {'b', 'bl', 'blx', 'bx'}
         self.conditional_branches = {'blgt', 'blvc', 'blcc', 'blhs', 'blmi', 'blne', 'blal',
                 'blle', 'blge', 'blvs',
@@ -49,14 +58,18 @@ class DisassemblerCore(object):
     def run(self):
         self.load_file()
         for i in range(len(self.file_data)):
-            self.mem_instr.append(0)
+            MEM_INSTR.append(0)
         self.disassemble()
         print('\n\n\nDisassembly\n\n\n')
         disassembled_instrs = 0
-        for i in range(len(self.mem_instr)):
-            if self.mem_instr[i] != 0:
-                disassembled_instrs += 1
-                #print('%s\t%s'%(hex(i+int(IMAGEBASE,16)), self.mem_instr[i]))
+        #for i in range(len(MEM_INSTR)):
+        #    if MEM_INSTR[i] != 0:
+        #        disassembled_instrs += 1
+        #        print('%s\t%s'%(hex(i+int(IMAGEBASE,16)), MEM_INSTR[i]))
+                #if 'b\t#' + hex(i+int(IMAGEBASE,16)) == MEM_INSTR[i]:
+                #    print'banana'
+                #    break;
+        print BRANCHES
         print('NUMBER OF DISASSEMBLED INSTRUCTIONS:')
         print(disassembled_instrs)
         return True
@@ -82,6 +95,9 @@ class DisassemblerCore(object):
                 if ((address % 2 == 0) or
                         (address > self.starting_address + len(self.file_data)) or
                         (address < self.starting_address - len(self.file_data))):
+                    #Weird offset because of "index+=8" and self.beginning_code-thumb_mode
+                    self.beginning_code = int(IMAGEBASE,16) + (index-8)/2 + 1
+                    print(hex(self.beginning_code))
                     break;
             if(address != 0):
                 self.isr_num += 1
@@ -101,6 +117,7 @@ class DisassemblerCore(object):
                    if ((address % 2 == 0) or
                            (address > self.starting_address + len(self.file_data)) or
                            (address < self.starting_address - len(self.file_data))):
+                       self.beginning_code = address
                        break;
                if (address != 0) and (address not in self.isr_pointers):
                    self.isr_pointers.append(address)
@@ -116,9 +133,11 @@ class DisassemblerCore(object):
             self.curr_mnemonic = str(mnemonic)
             self.curr_op_str = str(op_str)
             instr = self.curr_mnemonic + '\t' + self.curr_op_str
-            self.mem_instr[address-int(IMAGEBASE,16)] = instr
+            MEM_INSTR[address-int(IMAGEBASE,16)] = instr
+            if self.curr_mnemonic in self.branch_instructions or self.curr_mnemonic in self.conditional_branches:
+               BRANCHES[address-int(IMAGEBASE,16)] = instr
             #debugging
-            print('%s\t%s\t%s\t\t%s'%(hex(address), instr, size, binascii.hexlify(code)))
+#            print('%s\t%s\t%s\t\t%s'%(hex(address), instr, size, binascii.hexlify(code)))
         '''dasm_single is given 4 bytes. If Capstone is only able to disassemble 1 2-byte instruction,
            the second 2 bytes of the 4 belong to the next instruction.'''
         if count == 1 and size == 2:
@@ -128,16 +147,18 @@ class DisassemblerCore(object):
 
     # https://www.capstone-engine.org/lang_python.html
     def disassemble(self):
+        #start = (self.beginning_code - int(IMAGEBASE, 16) - 1) * 2
         start = (self.starting_address - int(IMAGEBASE, 16) - 1) * 2
         self.curr_instr = start
-        self.curr_addr = self.starting_address - IS_THUMB_MODE  #offset for thumb
+        #self.curr_addr = self.beginning_code - IS_THUMB_MODE  #offset for thumb
+        self.curr_addr = self.starting_address - IS_THUMB_MODE
         # Section of code to be disassembled
         code = self.hex_data[self.curr_instr:self.curr_instr+MAX_INSTR_SIZE].decode('hex')
         prev_addr = 0
         g = 0
-        #while(self.curr_instr+MAX_INSTR_SIZE < len(self.hex_data)):
-        while(g < 21):
+        while(g < 50):
             g += 1
+        #while(self.curr_instr+MAX_INSTR_SIZE < len(self.hex_data)):
             if self.dasm_single(MD, code, self.curr_addr):
                 self.curr_instr += MAX_INSTR_SIZE
                 self.curr_addr += 4
@@ -161,6 +182,7 @@ class DisassemblerCore(object):
 
 # Main
 def main():
+    tmp = False
     if len(sys.argv) > 1:
         FILE_NAME = str(sys.argv[1])
         #IMAGEBASE = str(sys.argv[2])
