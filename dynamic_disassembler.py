@@ -188,6 +188,8 @@ class DisassemblerCore(object):
                     data = self.hex_data[loc:loc+8]
                     reg_br_addr = self.endian_switch(data)-1
                     register_branches[reg].append(reg_br_addr)
+                    print hex(reg_br_addr)
+                    break;
 
                 if self.subroutine_branch_handler():
                     break
