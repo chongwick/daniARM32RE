@@ -246,17 +246,20 @@ class GeneratorCore(object):
 
                 if instr in BRANCH_INSTRUCTIONS:
                     if op in REGISTER_NAMES:
+                        self.paths[i+int(IMAGEBASE,16)] = path_data(0, register_branches[op].pop())
                         break;
-                    self.paths[i+int(IMAGEBASE,16)] = path_data(0, int(op.split('#')[1],16))
+                    else:
+                        self.paths[i+int(IMAGEBASE,16)] = path_data(0, int(op.split('#')[1],16))
 
                 elif instr in CONDITIONAL_BRANCHES:
-                    if op in REGISTER_NAMES:
-                        break;
                     index = i + 1
                     while(MEM_INSTR[index] == 0):
                         index += 1
                     index += int(IMAGEBASE,16)
-                    self.paths[i+int(IMAGEBASE,16)] = path_data(index, int(op.split('#')[1],16))
+                    if op in REGISTER_NAMES:
+                        self.paths[i+int(IMAGEBASE,16)] = path_data(index, register_branches[op].pop())
+                    else:
+                        self.paths[i+int(IMAGEBASE,16)] = path_data(index, int(op.split('#')[1],16))
 
                 else:
                     index = i + 1
