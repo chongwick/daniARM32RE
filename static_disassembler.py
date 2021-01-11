@@ -200,6 +200,8 @@ class GeneratorCore(object):
 
     def run(self):
         self.generate_paths()
+        for i in self.paths:
+            print("Address: %s  First Path: %s   Branch Path: %s"%(hex(i), hex(self.paths[i].path), hex(self.paths[i].branch_path)))
         
     def generate_paths(self):
         '''mem_instr and branches have the imagebase subtracted from them!!'''
@@ -242,7 +244,7 @@ class GeneratorCore(object):
                     reg_br_addr = endian_switch(data)-1
                     register_branches[reg].append(reg_br_addr)
 
-                elif instr in BRANCH_INSTRUCTIONS:
+                if instr in BRANCH_INSTRUCTIONS:
                     if op in REGISTER_NAMES:
                         break;
                     self.paths[i+int(IMAGEBASE,16)] = path_data(0, int(op.split('#')[1],16))
@@ -251,14 +253,14 @@ class GeneratorCore(object):
                     if op in REGISTER_NAMES:
                         break;
                     index = i + 1
-                    while(MEM_INSTR[index] != 0):
+                    while(MEM_INSTR[index] == 0):
                         index += 1
                     index += int(IMAGEBASE,16)
                     self.paths[i+int(IMAGEBASE,16)] = path_data(index, int(op.split('#')[1],16))
 
                 else:
                     index = i + 1
-                    while(MEM_INSTR[index] != 0):
+                    while(MEM_INSTR[index] == 0):
                         index += 1
                     index += int(IMAGEBASE,16)
                     self.paths[i+int(IMAGEBASE,16)] = path_data(index, 0)
