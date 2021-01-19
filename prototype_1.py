@@ -86,7 +86,7 @@ class DisassemblerCore(object):
         return True
 
     def load_file(self):
-        global HEX_DATA
+        global HEX_DATA, STARTING_ADDRESS
         with open(self.filename, 'rb') as f:
             self.file_data = f.read()
         f.close()
@@ -161,11 +161,11 @@ class DisassemblerCore(object):
 
     # https://www.capstone-engine.org/lang_python.html
     def disassemble(self):
-        #start = (self.beginning_code - int(IMAGEBASE, 16) - 1) * 2
-        start = (self.starting_address - int(IMAGEBASE, 16) - 1) * 2
+        start = (self.beginning_code - int(IMAGEBASE, 16) - 1) * 2
+        #start = (self.starting_address - int(IMAGEBASE, 16) - 1) * 2
         self.curr_instr = start
-        #self.curr_addr = self.beginning_code - IS_THUMB_MODE  #offset for thumb
-        self.curr_addr = self.starting_address - IS_THUMB_MODE
+        self.curr_addr = self.beginning_code - IS_THUMB_MODE  #offset for thumb
+        #self.curr_addr = self.starting_address - IS_THUMB_MODE
         # Section of code to be disassembled
         code = HEX_DATA[self.curr_instr:self.curr_instr+MAX_INSTR_SIZE].decode('hex')
         prev_addr = 0
@@ -204,8 +204,13 @@ class GeneratorCore(object):
     def run(self):
         self.generate_paths()
         for i in self.paths:
-            print("Address: %s  First Path: %s   Branch Path: %s   Instruction: %s"%(hex(i), hex(self.paths[i].path), hex(self.paths[i].branch_path), self.paths[i].arg))
+            if len(self.paths[i].sources) == 0:
+                self.paths[i] = 'Invalid'
+            else:
+                print("Address: %s  First Path: %s   Branch Path: %s   Instruction: %s"%(hex(i), hex(self.paths[i].path), hex(self.paths[i].branch_path), self.paths[i].arg))
         
+           #     print("Address: %s  First Path: %s   Branch Path: %s   Instruction: %s"%(hex(i), hex(self.paths[i].path), hex(self.paths[i].branch_path)))
+            
     def generate_paths(self):
         '''mem_instr and branches have the imagebase subtracted from them!!'''
         global STARTING_ADDRESS, MEM_INSTR, BRANCHES, BRANCH_INSTRUCTIONS, CONDITIONAL_BRANCHES, HEX_DATA
@@ -228,8 +233,10 @@ class GeneratorCore(object):
         register_branches['r14'] = []
         register_branches['r15'] = []
         register_branches['lr'] = []
+        
+        i = STARTING_ADDRESS-int(IMAGEBASE,16)-IS_THUMB_MODE
 
-        for i in range(len(MEM_INSTR)):
+        while i < range(len(MEM_INSTR)):
             if MEM_INSTR[i] != 0:
 
                 instr = MEM_INSTR[i].instr
@@ -286,6 +293,9 @@ class GeneratorCore(object):
                     index += int(IMAGEBASE,16)
                     self.paths[i+int(IMAGEBASE,16)] = path_data(index, 0)
                     self.paths[i+int(IMAGEBASE,16)].arg = instr + ' ' + op
+            i += 1
+        if len(self.paths[STARTING_ADDRESS-int(IMAGEBASE,16)-IS_THUMB_MODE].sources) == 0:
+            self.paths[STARTING_ADDRESS-int(IMAGEBASE,16)-IS_THUMB_MODE].sources.append(0)
         return 0
 
 # Main
