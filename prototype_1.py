@@ -200,102 +200,137 @@ class GeneratorCore(object):
         self.mem_instr = disassembly
         self.branches = branches
         self.paths = {}
+        self.register_branches = {}
+        self.register_branches['r0'] = []
+        self.register_branches['r1'] = []
+        self.register_branches['r2'] = []
+        self.register_branches['r3'] = []
+        self.register_branches['r4'] = []
+        self.register_branches['r5'] = []
+        self.register_branches['r6'] = []
+        self.register_branches['r7'] = []
+        self.register_branches['r8'] = []
+        self.register_branches['r9'] = []
+        self.register_branches['r10'] = []
+        self.register_branches['r11'] = []
+        self.register_branches['r12'] = []
+        self.register_branches['r13'] = []
+        self.register_branches['r14'] = []
+        self.register_branches['r15'] = []
+        self.register_branches['lr'] = []
+        self.subroutine_stack = []
+        self.link_reg_branch_dest = 0
 
     def run(self):
         self.generate_paths()
-        for i in self.paths:
-            if len(self.paths[i].sources) == 0:
-                self.paths[i] = 'Invalid'
-            else:
-                print("Address: %s  First Path: %s   Branch Path: %s   Instruction: %s"%(hex(i), hex(self.paths[i].path), hex(self.paths[i].branch_path), self.paths[i].arg))
+        #for i in self.paths:
+        #    if len(self.paths[i].sources) == 0:
+        #        self.paths[i] = 'Invalid'
+        #    else:
+        #        print("Address: %s  First Path: %s   Branch Path: %s   Instruction: %s"%(hex(i), hex(self.paths[i].path), hex(self.paths[i].branch_path), self.paths[i].arg))
         
            #     print("Address: %s  First Path: %s   Branch Path: %s   Instruction: %s"%(hex(i), hex(self.paths[i].path), hex(self.paths[i].branch_path)))
             
+    # Calculate the location of a branch with a register as the argument
+    def register_branch_calc(self, instr, op, curr_addr):
+        #Calculate branch destinations when argument is a register
+        if instr == 'ldr' and 'pc' in op:
+            addr = curr_addr + int(IMAGEBASE, 16)
+            reg = op.split(',')[0]
+            arg = op.split('#')[1]
+            arg = int(arg[:-1],16)
+            loc = int(math.floor((addr + arg)/4)*4)
+            # 8 for doubleword offset
+            loc = int(loc - int(IMAGEBASE, 16)) * 2 + 8
+            data = HEX_DATA[loc:loc+8]
+            reg_br_addr = endian_switch(data)-1
+            self.register_branches[reg].append(reg_br_addr)
+
+    # Link subroutine paths during first pass through binary
+    def subroutine_linking(self, instr, op):
+        global BRANCH_INSTRUCTIONS, REGISTER_NAMES, CONDITIONAL_BRANCHES, MEM_INSTR
+        if instr in BRANCH_INSTRUCTIONS:
+            if 'bl' in instr:
+                if op in REGISTER_NAMES:
+                    print 'bl'
+                    dest = self.register_branches[op].pop()
+                    self.subroutine_stack.append(dest-int(IMAGEBASE,16))
+                    self.link_reg_branch_dest = dest-int(IMAGEBASE,16)
+                return 1
+            if op == 'lr':
+                if instr == 'pop' or instr in BRANCH_INSTRUCTIONS or instr in CONDITIONAL_BRANCHES:
+                    print 'poop'
+                return 1
+        return 0
+
     def generate_paths(self):
         '''mem_instr and branches have the imagebase subtracted from them!!'''
         global STARTING_ADDRESS, MEM_INSTR, BRANCHES, BRANCH_INSTRUCTIONS, CONDITIONAL_BRANCHES, HEX_DATA
 
-        register_branches = {}
-        register_branches['r0'] = []
-        register_branches['r1'] = []
-        register_branches['r2'] = []
-        register_branches['r3'] = []
-        register_branches['r4'] = []
-        register_branches['r5'] = []
-        register_branches['r6'] = []
-        register_branches['r7'] = []
-        register_branches['r8'] = []
-        register_branches['r9'] = []
-        register_branches['r10'] = []
-        register_branches['r11'] = []
-        register_branches['r12'] = []
-        register_branches['r13'] = []
-        register_branches['r14'] = []
-        register_branches['r15'] = []
-        register_branches['lr'] = []
-        
         i = STARTING_ADDRESS-int(IMAGEBASE,16)-IS_THUMB_MODE
 
         while i < range(len(MEM_INSTR)):
             if MEM_INSTR[i] != 0:
-
                 instr = MEM_INSTR[i].instr
                 op = MEM_INSTR[i].op
+                self.register_branch_calc(instr, op, i)
+                self.subroutine_linking(instr, op)
+            if self.link_reg_branch_dest:
+                i = self.link_reg_branch_dest
+                print MEM_INSTR[i].instr + MEM_INSTR[i].op
+                self.link_reg_branch_dest = 0
+                break
+            else:
+                i += 1
+        
+        #while i < range(len(MEM_INSTR)):
+        #    if MEM_INSTR[i] != 0:
 
-                #Calculate branch destinations when argument is a register
-                if instr == 'ldr' and 'pc' in op:
-                    addr = i + int(IMAGEBASE, 16)
-                    reg = op.split(',')[0]
-                    arg = op.split('#')[1]
-                    arg = int(arg[:-1],16)
-                    loc = int(math.floor((addr + arg)/4)*4)
-                    # 8 for doubleword offset
-                    loc = int(loc - int(IMAGEBASE, 16)) * 2 + 8
-                    data = HEX_DATA[loc:loc+8]
-                    reg_br_addr = endian_switch(data)-1
-                    register_branches[reg].append(reg_br_addr)
+        #        instr = MEM_INSTR[i].instr
+        #        op = MEM_INSTR[i].op
+        #        self.register_branch_calc(instr, op, i)
 
-                if instr in BRANCH_INSTRUCTIONS:
-                    if 'bl' in instr:
-                        register_branches['lr'].append(i+int(IMAGEBASE,16)+2)
+        #        if instr in BRANCH_INSTRUCTIONS:
+        #            if 'bl' in instr:
+        #                self.register_branches['lr'].append(i+int(IMAGEBASE,16)+2)
 
-                    if op in REGISTER_NAMES:
-                        self.paths[i+int(IMAGEBASE,16)] = path_data(0, register_branches[op].pop())
-                        self.paths[i+int(IMAGEBASE,16)].arg = instr + ' ' + op
-                        if op == 'lr':
-                            print instr + op
-                            break;
-                    else:
-                        self.paths[i+int(IMAGEBASE,16)] = path_data(0, int(op.split('#')[1],16))
-                        self.paths[i+int(IMAGEBASE,16)].arg = instr + ' ' + op
+        #            if op in REGISTER_NAMES:
+        #                self.paths[i+int(IMAGEBASE,16)] = path_data(0, self.register_branches[op].pop())
+        #                self.paths[i+int(IMAGEBASE,16)].arg = instr + ' ' + op
+        #                if op == 'lr':
+        #                    print instr + op
+        #                    break;
+        #            else:
+        #                self.paths[i+int(IMAGEBASE,16)] = path_data(0, int(op.split('#')[1],16))
+        #                self.paths[i+int(IMAGEBASE,16)].arg = instr + ' ' + op
 
-                elif instr in CONDITIONAL_BRANCHES:
-                    if 'bl' in instr:
-                        register_branches['lr'].append(i+int(IMAGEBASE,16)+2)
-                    index = i + 1
-                    while(MEM_INSTR[index] == 0):
-                        index += 1
-                    index += int(IMAGEBASE,16)
-                    if op in REGISTER_NAMES:
-                        self.paths[i+int(IMAGEBASE,16)] = path_data(index, register_branches[op].pop())
-                        self.paths[i+int(IMAGEBASE,16)].arg = instr + ' ' + op
-                        if op == 'lr':
-                            print instr + op
-                            break;
-                    else:
-                        self.paths[i+int(IMAGEBASE,16)] = path_data(index, int(op.split('#')[1],16))
-                        self.paths[i+int(IMAGEBASE,16)].arg = instr + ' ' + op
+        #        elif instr in CONDITIONAL_BRANCHES:
+        #            if 'bl' in instr:
+        #                self.register_branches['lr'].append(i+int(IMAGEBASE,16)+2)
+        #            index = i + 1
+        #            while(MEM_INSTR[index] == 0):
+        #                index += 1
+        #            index += int(IMAGEBASE,16)
+        #            if op in REGISTER_NAMES:
+        #                self.paths[i+int(IMAGEBASE,16)] = path_data(index, self.register_branches[op].pop())
+        #                self.paths[i+int(IMAGEBASE,16)].arg = instr + ' ' + op
+        #                if op == 'lr':
+        #                    print instr + op
+        #                    break;
+        #            else:
+        #                self.paths[i+int(IMAGEBASE,16)] = path_data(index, int(op.split('#')[1],16))
+        #                self.paths[i+int(IMAGEBASE,16)].arg = instr + ' ' + op
 
-                else:
-                    index = i + 1
-                    while(MEM_INSTR[index] == 0):
-                        index += 1
-                    index += int(IMAGEBASE,16)
-                    self.paths[i+int(IMAGEBASE,16)] = path_data(index, 0)
-                    self.paths[i+int(IMAGEBASE,16)].arg = instr + ' ' + op
-            i += 1
-        if len(self.paths[STARTING_ADDRESS-int(IMAGEBASE,16)-IS_THUMB_MODE].sources) == 0:
-            self.paths[STARTING_ADDRESS-int(IMAGEBASE,16)-IS_THUMB_MODE].sources.append(0)
+        #        else:
+        #            index = i + 1
+        #            while(MEM_INSTR[index] == 0):
+        #                index += 1
+        #            index += int(IMAGEBASE,16)
+        #            self.paths[i+int(IMAGEBASE,16)] = path_data(index, 0)
+        #            self.paths[i+int(IMAGEBASE,16)].arg = instr + ' ' + op
+        #    i += 1
+        #if len(self.paths[STARTING_ADDRESS-int(IMAGEBASE,16)-IS_THUMB_MODE].sources) == 0:
+        #    self.paths[STARTING_ADDRESS-int(IMAGEBASE,16)-IS_THUMB_MODE].sources.append(0)
         return 0
 
 # Main
