@@ -369,14 +369,16 @@ class GeneratorCore(object):
             instr = MEM_INSTR[addr].instr
             op = MEM_INSTR[addr].op
             #return to return address
-            if 'pop' in instr or ('ldr' in instr and 'pc' in op and 'sp' in op):
+            if ('pop' in instr and 'pc' in op) or ('ldr' in instr and 'pc' in op and 'sp' in op):
                 ret_addr = self.return_address_stack.pop()
                 self.paths[addr+int(IMAGEBASE,16)] = path_data(0, ret_addr)
+                self.paths[addr+int(IMAGEBASE,16)].arg = instr + ' ' + op
                 print(hex(addr+int(IMAGEBASE,16)), 'poppity', hex(ret_addr))
                 return
             elif (instr in BRANCH_INSTRUCTIONS or instr in CONDITIONAL_BRANCHES) and 'lr' in op:
                 ret_addr = self.return_address_stack.pop()
                 self.paths[addr+int(IMAGEBASE,16)] = path_data(0, ret_addr)
+                self.paths[addr+int(IMAGEBASE,16)].arg = instr + ' ' + op
                 print(hex(addr+int(IMAGEBASE,16)), 'ldrin', hex(ret_addr))
                 return
             else:
@@ -443,7 +445,7 @@ class GeneratorCore(object):
                     i += 1
                 elif instr in CONDITIONAL_BRANCHES and op == 'lr':
                     i += 1
-                elif instr == 'pop':
+                elif 'pop' in instr:
                     i += 1
                 
                 else:
