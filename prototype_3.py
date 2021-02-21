@@ -43,6 +43,7 @@ BRANCHES = {}
 MEM_INSTR = []
 STARTING_ADDRESS = ''
 HEX_DATA = ''
+ISR_POINTERS = []
 
 # Takes a hex representation and returns an int
 def endian_switch(val):
@@ -65,7 +66,7 @@ class DisassemblerCore(object):
         self.stack_top = ''
         self.isr_num = 0
         self.isr_table_length = 0
-        self.isr_pointers = []
+        ISR_POINTERS = []
         self.curr_mnemonic = ''
         self.curr_op_str = ''
         self.done = False
@@ -117,17 +118,17 @@ class DisassemblerCore(object):
                         (address < self.starting_address - len(self.file_data))):
                     #Weird offset because of "index+=8" and self.beginning_code-thumb_mode
                     self.beginning_code = int(IMAGEBASE,16) + (index-8)/2 + 1
-                    print(hex(self.beginning_code))
+                    #print(hex(self.beginning_code))
                     break;
             if(address != 0):
                 self.isr_num += 1
-            if (address != 0) and (address not in self.isr_pointers):
-                self.isr_pointers.append(address)
+            if (address != 0) and (address not in ISR_POINTERS):
+                ISR_POINTERS.append(address)
             self.isr_table_length += 1
         if self.isr_num < 8 or self.starting_address > int("0x40000000", 16):
            print(">>>>BIG ENDIAN DETECTED<<<<")
            index = 16
-           del(self.isr_pointers[:])
+           del(ISR_POINTERS[:])
            self.starting_address = int(HEX_DATA[8:16], 16)
            self.stack_top = int(HEX_DATA[0:8], 16)
            while (True):
@@ -139,8 +140,8 @@ class DisassemblerCore(object):
                            (address < self.starting_address - len(self.file_data))):
                        self.beginning_code = address
                        break;
-               if (address != 0) and (address not in self.isr_pointers):
-                   self.isr_pointers.append(address)
+               if (address != 0) and (address not in ISR_POINTERS):
+                   ISR_POINTERS.append(address)
            self.isr_table_length += 1
 
     #Disassemble ONE instruction
@@ -234,9 +235,12 @@ class GeneratorCore(object):
         self.linked_instrs = {}
         # Conditional branch paths that were unexplored
         self.branches = []
+        #Keep track of the last instruction to add to sources
+        self.last_instr = 0
 
     def run(self):
         self.generate_paths()
+        print len(self.paths)
         #for i in self.paths:
         #    print("Address: %s  First Path: %s   Branch Path: %s   Instruction: %s"%(hex(i), hex(self.paths[i].path), hex(self.paths[i].branch_path), self.paths[i].arg))
 
@@ -264,58 +268,6 @@ class GeneratorCore(object):
 
 
 
-    # Find all branch with link instructions
-    def link_detection(self, mem_instr, starting_address):
-        global BRANCH_INSTRUCTIONS, CONDITIONAL_BRANCHES, IS_THUMB_MODE
-        i = starting_address-int(IMAGEBASE,16)-IS_THUMB_MODE
-        while i < len(mem_instr)-1:
-            if mem_instr[i] != 0:
-                instr = mem_instr[i].instr
-                if instr in BRANCH_INSTRUCTIONS or instr in CONDITIONAL_BRANCHES:
-                    if 'bl' in instr:
-                        self.link_branch_instructions[i] = True
-            i += 1
-
-
-    def branch_with_link_handler(self, addr):
-        global MEM_INSTR
-        try:
-            while(MEM_INSTR[addr] == 0):
-                addr += 1
-            instr = MEM_INSTR[addr].instr
-            op = MEM_INSTR[addr].op
-            #return to return address
-            if ('pop' in instr and 'pc' in op) or ('ldr' in instr and 'pc' in op and 'sp' in op):
-                ret_addr = self.return_address_stack.pop()
-                self.paths[addr+int(IMAGEBASE,16)] = path_data(0, ret_addr)
-                self.paths[addr+int(IMAGEBASE,16)].arg = instr + ' ' + op
-                return
-            elif (instr in BRANCH_INSTRUCTIONS or instr in CONDITIONAL_BRANCHES) and 'lr' in op:
-                ret_addr = self.return_address_stack.pop()
-                self.paths[addr+int(IMAGEBASE,16)] = path_data(0, ret_addr)
-                self.paths[addr+int(IMAGEBASE,16)].arg = instr + ' ' + op
-                return
-            else:
-                if 'bl' in instr:
-                    self.register_branch_calc(instr, op, addr)
-                    b_result = self.branch_destination_handler(instr, op, addr)
-                    if b_result[0] == True:
-                        self.linked_instrs[addr] = True
-                        self.paths[addr+int(IMAGEBASE,16)] = path_data(b_result[1], b_result[2])
-                        self.paths[addr+int(IMAGEBASE,16)].arg = instr + ' ' + op
-                        index = addr + 1
-                        while(MEM_INSTR[index] == 0):
-                            index += 1
-                        index += int(IMAGEBASE,16)
-                        self.return_address_stack.append(index)
-                        self.branch_with_link_handler(b_result[2]-int(IMAGEBASE,16))
-                else:
-                    self.register_branch_calc(instr, op, addr)
-                    self.branch_with_link_handler(addr+1)
-        except:
-            print 'CANNOT CONTINUE'
-            return
-
     #Return format: branch instruction?, first branch path, second path, next instruction to handle
     def branch_destination_handler(self, instr, op, addr):
         global MEM_INSTR
@@ -342,7 +294,8 @@ class GeneratorCore(object):
 
     # Link all other instructions
     def instruction_linking(self, i):
-        global BRANCH_INSTRUCTIONS, REGISTER_NAMES, CONDITIONAL_BRANCHES, MEM_INSTR
+        global BRANCH_INSTRUCTIONS, REGISTER_NAMES, CONDITIONAL_BRANCHES, MEM_INSTR, ISR_POINTERS
+        isr_num = 0
         while True:
             while(MEM_INSTR[i] == 0):
                 i += 1
@@ -351,32 +304,40 @@ class GeneratorCore(object):
                 if len(self.branches) != 0:
                     i = self.branches.pop()
                 else:
-                    return 
+                    if isr_num != len(ISR_POINTERS):
+                        i = ISR_POINTERS[isr_num] - int(IMAGEBASE,16)
+                        isr_num += 1
+                    else:
+                        return 
             else:
                 instr = MEM_INSTR[i].instr
                 op = MEM_INSTR[i].op
 
                 if instr == 'b' and op not in REGISTER_NAMES:
                     if int(op.split('#')[1],16)-int(IMAGEBASE,16) == i:
-                        print op, instr
-                        print i
-                        print int(op.split('#')[1],16)
-                        print 'hi'
-                        return
+                        if isr_num != len(ISR_POINTERS):
+                            i = ISR_POINTERS[isr_num] - int(IMAGEBASE,16)
+                            isr_num += 1
+                        else:
+                            print 'CFG complete'
+                            return
 
                 print(hex(i+int(IMAGEBASE,16)), instr, op)
                 
                 self.register_branch_calc(instr, op, i)
 
                 if ('pop' in instr and 'pc' in op) or ('ldr' in instr and 'pc' in op and 'sp' in op):
+                    self.last_instr = i
                     i = self.return_address_stack.pop()-int(IMAGEBASE,16)
                 elif (instr in BRANCH_INSTRUCTIONS or instr in CONDITIONAL_BRANCHES) and 'lr' in op:
+                    self.last_instr = i
                     i = self.return_address_stack.pop()-int(IMAGEBASE,16)
                 else:
                     b_result = self.branch_destination_handler(instr, op, i)
                     if b_result[0] == True:
                         self.paths[i+int(IMAGEBASE,16)] = path_data(b_result[1], b_result[2])
                         self.paths[i+int(IMAGEBASE,16)].arg = instr + ' ' + op
+                        self.paths[i+int(IMAGEBASE,16)].sources.append(self.last_instr)
                         if 'bl' in instr:
                             index = i + 1
                             while(MEM_INSTR[index] == 0):
@@ -385,8 +346,10 @@ class GeneratorCore(object):
                             self.return_address_stack.append(index)
                         if b_result[3] != 0:
                             self.branches.append(b_result[3])
+                            self.last_instr = i
                             i = b_result[2]-int(IMAGEBASE,16)
                         else:
+                            self.last_instr = i
                             i = b_result[2]-int(IMAGEBASE,16)
                     else:
                         index = i + 1
@@ -395,6 +358,8 @@ class GeneratorCore(object):
                         index += int(IMAGEBASE,16)
                         self.paths[i+int(IMAGEBASE,16)] = path_data(index, 0)
                         self.paths[i+int(IMAGEBASE,16)].arg = instr + ' ' + op
+                        self.paths[i+int(IMAGEBASE,16)].sources.append(self.last_instr)
+                        self.last_instr = i
                         i = i + 1
 
     def generate_paths(self):
@@ -403,7 +368,6 @@ class GeneratorCore(object):
 
         i = STARTING_ADDRESS-int(IMAGEBASE,16)-IS_THUMB_MODE
 
-        self.link_detection(MEM_INSTR, STARTING_ADDRESS)
         self.instruction_linking(i)
         return 0
 
