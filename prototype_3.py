@@ -315,7 +315,10 @@ class GeneratorCore(object):
 
                 if instr == 'b' and op not in REGISTER_NAMES:
                     if int(op.split('#')[1],16)-int(IMAGEBASE,16) == i:
-                        if isr_num != len(ISR_POINTERS):
+                        print(hex(i+int(IMAGEBASE,16)), instr, op)
+                        if len(self.branches) != 0:
+                            i = self.branches.pop()
+                        elif isr_num != len(ISR_POINTERS):
                             i = ISR_POINTERS[isr_num] - int(IMAGEBASE,16)
                             isr_num += 1
                         else:
