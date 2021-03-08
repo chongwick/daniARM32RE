@@ -207,7 +207,6 @@ class path_data:
 class GeneratorCore(object):
     def __init__(self, disassembly, branches):
         self.mem_instr = disassembly
-        self.branches = branches
         self.paths = {}
         self.register_branches = {}
         self.register_branches['r0'] = []
@@ -233,17 +232,20 @@ class GeneratorCore(object):
         # The beginning of invalid instructions
         self.end = 0
         self.linked_instrs = {}
-        # Conditional branch paths that were unexplored
+        # Conditional branch p                                                aths that were unexplored
         self.branches = []
+        self.cond_branches = []
         #Keep track of the last instruction to add to sources
         self.last_instr = 0
 
     def run(self):
         self.generate_paths()
-        print len(self.paths)
-        #for i in self.paths:
-        #    print("Address: %s  First Path: %s   Branch Path: %s   Instruction: %s"%(hex(i), hex(self.paths[i].path), hex(self.paths[i].branch_path), self.paths[i].arg))
+        addresses = list(self.paths.keys())
+        addresses.sort()
+        for i in addresses:
+            print("Address: %s  First Path: %s   Branch Path: %s   Instruction: %s"%(hex(i), hex(self.paths[i].path), hex(self.paths[i].branch_path), self.paths[i].arg))
 
+        print len(self.paths)
            #     print("Address: %s  First Path: %s   Branch Path: %s   Instruction: %s"%(hex(i), hex(self.paths[i].path), hex(self.paths[i].branch_path)))
 
     # Calculate the location of a branch with a register as the argument
@@ -297,8 +299,12 @@ class GeneratorCore(object):
         global BRANCH_INSTRUCTIONS, REGISTER_NAMES, CONDITIONAL_BRANCHES, MEM_INSTR, ISR_POINTERS
         isr_num = 0
         while True:
-            while(MEM_INSTR[i] == 0):
-                i += 1
+            try:
+                while(MEM_INSTR[i] == 0):
+                    i += 1
+            except:
+                print i
+                return
 
             if i+int(IMAGEBASE,16) in self.paths:
                 if len(self.branches) != 0:
@@ -313,57 +319,63 @@ class GeneratorCore(object):
                 instr = MEM_INSTR[i].instr
                 op = MEM_INSTR[i].op
 
-                if instr == 'b' and op not in REGISTER_NAMES:
-                    if int(op.split('#')[1],16)-int(IMAGEBASE,16) == i:
-                        print(hex(i+int(IMAGEBASE,16)), instr, op)
-                        if len(self.branches) != 0:
-                            i = self.branches.pop()
-                        elif isr_num != len(ISR_POINTERS):
-                            i = ISR_POINTERS[isr_num] - int(IMAGEBASE,16)
-                            isr_num += 1
-                        else:
-                            print 'CFG complete'
-                            return
-
-                print(hex(i+int(IMAGEBASE,16)), instr, op)
-                
-                self.register_branch_calc(instr, op, i)
-
-                if ('pop' in instr and 'pc' in op) or ('ldr' in instr and 'pc' in op and 'sp' in op):
-                    self.last_instr = i
-                    i = self.return_address_stack.pop()-int(IMAGEBASE,16)
-                elif (instr in BRANCH_INSTRUCTIONS or instr in CONDITIONAL_BRANCHES) and 'lr' in op:
-                    self.last_instr = i
-                    i = self.return_address_stack.pop()-int(IMAGEBASE,16)
+                if (instr == 'b' and op not in REGISTER_NAMES) and (int(op.split('#')[1],16)-int(IMAGEBASE,16) == i):
+                    self.paths[i+int(IMAGEBASE,16)] = path_data(0, int(op.split('#')[1],16))
+                    self.paths[i+int(IMAGEBASE,16)].arg = instr + ' ' + op
+                    self.paths[i+int(IMAGEBASE,16)].sources.append(self.last_instr)
+                    print(hex(i+int(IMAGEBASE,16)), instr, op)
+                    if len(self.branches) != 0:
+                        i = self.branches.pop()
+                        self.last_instr = self.cond_branches.pop()
+                    elif isr_num != len(ISR_POINTERS):
+                        i = ISR_POINTERS[isr_num] - int(IMAGEBASE,16)
+                        isr_num += 1
+                        self.last_instr = 0
+                    else:
+                        print 'CFG complete'
+                        return
                 else:
-                    b_result = self.branch_destination_handler(instr, op, i)
-                    if b_result[0] == True:
-                        self.paths[i+int(IMAGEBASE,16)] = path_data(b_result[1], b_result[2])
-                        self.paths[i+int(IMAGEBASE,16)].arg = instr + ' ' + op
-                        self.paths[i+int(IMAGEBASE,16)].sources.append(self.last_instr)
-                        if 'bl' in instr:
+
+                    print(hex(i+int(IMAGEBASE,16)), instr, op)
+                    
+                    self.register_branch_calc(instr, op, i)
+
+                    if ('pop' in instr and 'pc' in op) or ('ldr' in instr and 'pc' in op and 'sp' in op):
+                        self.last_instr = i
+                        i = self.return_address_stack.pop()-int(IMAGEBASE,16)
+                    elif (instr in BRANCH_INSTRUCTIONS or instr in CONDITIONAL_BRANCHES) and 'lr' in op:
+                        self.last_instr = i
+                        i = self.return_address_stack.pop()-int(IMAGEBASE,16)
+                    else:
+                        b_result = self.branch_destination_handler(instr, op, i)
+                        if b_result[0] == True:
+                            self.paths[i+int(IMAGEBASE,16)] = path_data(b_result[1], b_result[2])
+                            self.paths[i+int(IMAGEBASE,16)].arg = instr + ' ' + op
+                            self.paths[i+int(IMAGEBASE,16)].sources.append(self.last_instr)
+                            if 'bl' in instr:
+                                index = i + 1
+                                while(MEM_INSTR[index] == 0):
+                                    index += 1
+                                index += int(IMAGEBASE,16)
+                                self.return_address_stack.append(index)
+                            if b_result[3] != 0:
+                                self.branches.append(b_result[3])
+                                self.cond_branches.append(i)
+                                self.last_instr = i
+                                i = b_result[2]-int(IMAGEBASE,16)
+                            else:
+                                self.last_instr = i
+                                i = b_result[2]-int(IMAGEBASE,16)
+                        else:
                             index = i + 1
                             while(MEM_INSTR[index] == 0):
                                 index += 1
                             index += int(IMAGEBASE,16)
-                            self.return_address_stack.append(index)
-                        if b_result[3] != 0:
-                            self.branches.append(b_result[3])
+                            self.paths[i+int(IMAGEBASE,16)] = path_data(index, 0)
+                            self.paths[i+int(IMAGEBASE,16)].arg = instr + ' ' + op
+                            self.paths[i+int(IMAGEBASE,16)].sources.append(self.last_instr)
                             self.last_instr = i
-                            i = b_result[2]-int(IMAGEBASE,16)
-                        else:
-                            self.last_instr = i
-                            i = b_result[2]-int(IMAGEBASE,16)
-                    else:
-                        index = i + 1
-                        while(MEM_INSTR[index] == 0):
-                            index += 1
-                        index += int(IMAGEBASE,16)
-                        self.paths[i+int(IMAGEBASE,16)] = path_data(index, 0)
-                        self.paths[i+int(IMAGEBASE,16)].arg = instr + ' ' + op
-                        self.paths[i+int(IMAGEBASE,16)].sources.append(self.last_instr)
-                        self.last_instr = i
-                        i = i + 1
+                            i = i + 1
 
     def generate_paths(self):
         '''mem_instr and branches have the imagebase subtracted from them!!'''
