@@ -13,6 +13,7 @@ from collections import OrderedDict
 import binascii
 import math
 
+FLOW = []
 FILE_NAME = ''
 IMAGEBASE = '0x80000'
 IS_THUMB_MODE = 1
@@ -240,6 +241,17 @@ class GeneratorCore(object):
 
     def run(self):
         self.generate_paths()
+        #for i in range(len(FLOW)-1):
+        #    try:
+        #        if (int(FLOW[i+1],16) != self.paths[int(FLOW[i],16)].path) and (int(FLOW[i+1],16) != self.paths[int(FLOW[i],16)].branch_path):
+        #            print int(FLOW[i],16), int(FLOW[i+1],16)
+        #            print self.paths[int(FLOW[i],16)].path, self.paths[int(FLOW[i],16)].branch_path
+        #            print int(FLOW[i+1],16) == self.paths[int(FLOW[i],16)].path
+        #            break;
+        #    except:
+        #        print FLOW[i]
+        #        print self.paths[int(FLOW[i],16)]
+        #        break;
         addresses = list(self.paths.keys())
         addresses.sort()
         for i in addresses:
@@ -304,6 +316,7 @@ class GeneratorCore(object):
                     i += 1
             except:
                 print i
+                print(MEM_INSTR[self.branches.pop()])
                 return
 
             if i+int(IMAGEBASE,16) in self.paths:
@@ -388,6 +401,7 @@ class GeneratorCore(object):
 
 # Main
 def main():
+    global FLOW, FILE_NAME
     tmp = False
     if len(sys.argv) > 1:
         FILE_NAME = str(sys.argv[1])
@@ -405,6 +419,10 @@ def main():
             return True
     dc = DisassemblerCore(FILE_NAME)
     dc.run()
+    flow_file = open('flow.txt', 'r')
+    content = flow_file.read()
+    FLOW = content.split(", ")
+    flow_file.close()
     gc = GeneratorCore(MEM_INSTR, BRANCHES)
     gc.run()
 
