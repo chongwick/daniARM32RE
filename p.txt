@@ -1,0 +1,1824 @@
+STARTTTTTTT
+0x80804
+('0x80804', 'ldr', 'r3, [pc, #0x54]')
+('0x80806', 'ldr', 'r2, [pc, #0x58]')
+('0x80808', 'push', '{r4, lr}')
+('0x8080a', 'cmp', 'r3, r2')
+('0x8080c', 'mov', 'r4, r3')
+('0x8080e', 'beq', '#0x80814')
+('0x80814', 'ldr', 'r3, [pc, #0x4c]')
+('0x80816', 'b', '#0x80828')
+('0x80828', 'ldr', 'r2, [pc, #0x40]')
+('0x8082a', 'cmp', 'r3, r2')
+('0x8082c', 'bhs', '#0x80836')
+('0x80836', 'ldr', 'r1, [pc, #0x38]')
+('0x80838', 'ldr', 'r3, [pc, #0x38]')
+('0x8083a', 'bic', 'r2, r1, #0xe0000000')
+('0x8083e', 'add.w', 'r1, r1, #-0x20000000')
+('0x80842', 'bic', 'r2, r2, #0x7f')
+('0x80846', 'cmp.w', 'r1, #0x100000')
+('0x8084a', 'str', 'r2, [r3, #8]')
+('0x8084c', 'bhs', '#0x80856')
+('0x80856', 'ldr', 'r3, [pc, #0x20]')
+('0x80858', 'blx', 'r3')
+('0x81310', 'push', '{r3, lr}')
+('0x81312', 'bl', '#0x81348')
+('0x81348', 'ldr', 'r0, [pc, #4]')
+('0x8134a', 'b.w', '#0x81f04')
+('0x81f04', 'mov.w', 'r3, #0x8000')
+('0x81f08', 'str', 'r3, [r0, #4]')
+('0x81f0a', 'bx', 'lr')
+('0x81316', 'bl', '#0x802f0')
+('0x802f0', 'push.w', '{r4, r5, r6, r7, r8, lr}')
+('0x802f4', 'ldr', 'r5, [pc, #0xfc]')
+('0x802f6', 'bl', '#0x8077c')
+('0x8077c', 'ldr', 'r2, [pc, #0x68]')
+('0x8077e', 'mov.w', 'r3, #0x400')
+('0x80782', 'str', 'r3, [r2]')
+('0x80784', 'str.w', 'r3, [r2, #0x200]')
+('0x80788', 'ldr', 'r3, [pc, #0x60]')
+('0x8078a', 'ldr', 'r2, [r3, #0x20]')
+('0x8078c', 'lsls', 'r2, r2, #7')
+('0x8078e', 'bpl', '#0x80796')
+('0x80796', 'ldr', 'r2, [pc, #0x5c]')
+('0x80798', 'str', 'r2, [r3, #0x20]')
+('0x8079a', 'ldr', 'r2, [r3, #0x68]')
+('0x8079c', 'lsls', 'r0, r2, #0x1f')
+('0x8079e', 'bpl', '#0x8079a')
+('0x807a0', 'b', '#0x80790')
+('0x80790', 'ldr', 'r2, [pc, #0x5c]')
+('0x80792', 'str', 'r2, [r3, #0x20]')
+('0x80794', 'b', '#0x807a2')
+('0x807a2', 'ldr', 'r1, [r3, #0x68]')
+('0x807a4', 'ldr', 'r2, [pc, #0x44]')
+('0x807a6', 'lsls', 'r1, r1, #0xf')
+('0x807a8', 'bpl', '#0x807a2')
+('0x807aa', 'ldr', 'r1, [r2, #0x30]')
+('0x807ac', 'bic', 'r1, r1, #3')
+('0x807b0', 'orr', 'r1, r1, #1')
+('0x807b4', 'str', 'r1, [r2, #0x30]')
+('0x807b6', 'ldr', 'r2, [r3, #0x68]')
+('0x807b8', 'lsls', 'r2, r2, #0x1c')
+('0x807ba', 'bpl', '#0x807b6')
+('0x807bc', 'ldr', 'r1, [pc, #0x38]')
+('0x807be', 'ldr', 'r2, [pc, #0x2c]')
+('0x807c0', 'str', 'r1, [r2, #0x28]')
+('0x807c2', 'ldr', 'r2, [r3, #0x68]')
+('0x807c4', 'lsls', 'r0, r2, #0x1e')
+('0x807c6', 'bpl', '#0x807c2')
+('0x807c8', 'ldr', 'r2, [pc, #0x20]')
+('0x807ca', 'movs', 'r1, #0x11')
+('0x807cc', 'str', 'r1, [r2, #0x30]')
+('0x807ce', 'ldr', 'r2, [r3, #0x68]')
+('0x807d0', 'lsls', 'r1, r2, #0x1c')
+('0x807d2', 'bpl', '#0x807ce')
+('0x807d4', 'ldr', 'r2, [pc, #0x14]')
+('0x807d6', 'movs', 'r1, #0x12')
+('0x807d8', 'str', 'r1, [r2, #0x30]')
+('0x807da', 'ldr', 'r2, [r3, #0x68]')
+('0x807dc', 'lsls', 'r2, r2, #0x1c')
+('0x807de', 'bpl', '#0x807da')
+('0x807e0', 'ldr', 'r2, [pc, #0x18]')
+('0x807e2', 'ldr', 'r3, [pc, #0x1c]')
+('0x807e4', 'str', 'r2, [r3]')
+('0x807e6', 'bx', 'lr')
+('0x802fa', 'ldr', 'r3, [r5]')
+('0x802fc', 'mov.w', 'r2, #0x3e8')
+('0x80300', 'udiv', 'r3, r3, r2')
+('0x80304', 'subs', 'r2, r3, #1')
+('0x80306', 'ldr', 'r3, [pc, #0xf0]')
+('0x80308', 'movs', 'r1, #0xf0')
+('0x8030a', 'str', 'r2, [r3, #4]')
+('0x8030c', 'ldr', 'r2, [pc, #0xec]')
+('0x8030e', 'movs', 'r4, #0')
+('0x80310', 'strb.w', 'r1, [r2, #0x23]')
+('0x80314', 'movs', 'r2, #7')
+('0x80316', 'str', 'r4, [r3, #8]')
+('0x80318', 'str', 'r2, [r3]')
+('0x8031a', 'bl', '#0x823bc')
+('0x823bc', 'push', '{r4, r5, r6, lr}')
+('0x823be', 'ldr', 'r6, [pc, #0x3c]')
+('0x823c0', 'ldr', 'r5, [pc, #0x3c]')
+('0x823c2', 'subs', 'r6, r6, r5')
+('0x823c4', 'asrs', 'r6, r6, #2')
+('0x823c6', 'beq', '#0x823d8')
+('0x823d8', 'ldr', 'r6, [pc, #0x28]')
+('0x823da', 'ldr', 'r5, [pc, #0x2c]')
+('0x823dc', 'bl', '#0x86320')
+('0x86320', 'push', '{r3, r4, r5, r6, r7, lr}')
+('0x86322', 'nop', '')
+('0x86324', 'pop', '{r3, r4, r5, r6, r7}')
+('0x86326', 'pop', '{r3}')
+('0x86328', 'mov', 'lr, r3')
+('0x8632a', 'bx', 'lr')
+('0x823e0', 'subs', 'r6, r6, r5')
+('0x823e2', 'asrs', 'r6, r6, #2')
+('0x823e4', 'beq', '#0x823f8')
+('0x823f8', 'pop', '{r4, r5, r6, pc}')
+('0x8031e', 'mov', 'r8, r5')
+('0x80320', 'mov', 'r0, r4')
+('0x80322', 'movs', 'r1, #0')
+('0x80324', 'adds', 'r4, #1')
+('0x80326', 'bl', '#0x81000')
+('0x81000', 'push', '{r0, r1, r2, r4, r5, r6, r7, lr}')
+('0x81002', 'ldr', 'r6, [pc, #0x64]')
+('0x81004', 'movs', 'r3, #0x1c')
+('0x81006', 'mla', 'r3, r3, r0, r6')
+('0x8100a', 'ldrb', 'r3, [r3, #0xc]')
+('0x8100c', 'mov', 'r4, r0')
+('0x8100e', 'mov', 'r5, r1')
+('0x81010', 'cbz', 'r3, #0x81064')
+('0x81064', 'add', 'sp, #0xc')
+('0x81066', 'pop', '{r4, r5, r6, r7, pc}')
+('0x8032a', 'cmp', 'r4, #0x4f')
+('0x8032c', 'bne', '#0x80320')
+('0x8032e', 'ldr', 'r4, [pc, #0xd0]')
+('0x80330', 'ldr', 'r6, [pc, #0xd0]')
+('0x80332', 'ldr', 'r7, [pc, #0xd4]')
+('0x80334', 'ldr', 'r3, [pc, #0xd4]')
+('0x80336', 'mov.w', 'r5, #-1')
+('0x8033a', 'str.w', 'r5, [r4, #0xa0]')
+('0x8033e', 'mov.w', 'r2, #0x300')
+('0x80342', 'str.w', 'r5, [r6, #0xa0]')
+('0x80346', 'mov', 'r0, r4')
+('0x80348', 'str.w', 'r5, [r3, #0xa0]')
+('0x8034c', 'movs', 'r1, #1')
+('0x8034e', 'movs', 'r3, #0')
+('0x80350', 'str.w', 'r5, [r7, #0xa0]')
+('0x80354', 'bl', '#0x805ac')
+('0x805ac', 'push', '{r0, r1, r2, r4, r5, r6, r7, lr}')
+('0x805ae', 'mov', 'r6, r3')
+('0x805b0', 'subs', 'r3, r1, #1')
+('0x805b2', 'mov', 'r5, r0')
+('0x805b4', 'mov', 'r7, r1')
+('0x805b6', 'mov', 'r4, r2')
+('0x805b8', 'cmp', 'r3, #4')
+('0x805ba', 'bhi', '#0x805fc')
+('0x805fc', 'movs', 'r0, #0')
+('0x805fe', 'add', 'sp, #0xc')
+('0x80600', 'pop', '{r4, r5, r6, r7, pc}')
+('0x80358', 'movs', 'r0, #0')
+('0x8035a', 'movs', 'r1, #1')
+('0x8035c', 'bl', '#0x81000')
+('0x805bc', 'tbb', '[pc, r3]')
+('0x805c0', 'lsls', 'r3, r0, #0xc')
+('0x805c2', 'asrs', 'r4, r1, #8')
+('0x805c4', 'movs', 'r2, r2')
+('0x805c6', 'mov', 'r2, r4')
+('0x805c8', 'ldr', 'r3, [pc, #0x38]')
+('0x805ca', 'blx', 'r3')
+('0x8053a', 'str', 'r2, [r0, #0x44]')
+('0x8053c', 'cmp', 'r1, #5')
+('0x8053e', 'bhi', '#0x8055c')
+('0x8055c', 'str', 'r2, [r0, #4]')
+('0x8055e', 'bx', 'lr')
+('0x805cc', 'lsls', 'r2, r6, #0x1f')
+('0x805ce', 'str', 'r4, [r5, #0x44]')
+('0x805d0', 'ite', 'mi')
+('0x805d2', 'strmi', 'r4, [r5, #0x64]')
+('0x805d4', 'str', 'r4, [r5, #0x60]')
+('0x805d6', 'b', '#0x805e0')
+('0x805e0', 'movs', 'r0, #1')
+('0x805e2', 'b', '#0x805fe')
+('0x80540', 'tbb', '[pc, r1]')
+('0x80544', 'lsls', 'r5, r1, #0xc')
+('0x80546', 'lsrs', 'r1, r1, #0x14')
+('0x80548', 'lsrs', 'r5, r1, #0x14')
+('0x8054a', 'ldr', 'r3, [r0, #0x70]')
+('0x8054c', 'ldr', 'r1, [r0, #0x70]')
+('0x8054e', 'ands', 'r3, r1')
+('0x80550', 'bic.w', 'r3, r3, r2')
+('0x80554', 'b', '#0x8055a')
+('0x8055a', 'str', 'r3, [r0, #0x70]')
+('0x81012', 'ldr', 'r7, [pc, #0x58]')
+('0x81014', 'ldrb', 'r3, [r7, r0]')
+('0x81016', 'and', 'r3, r3, #0xf')
+('0x8101a', 'cmp', 'r3, #5')
+('0x8101c', 'bne', '#0x81024')
+('0x81024', 'ldrb', 'r3, [r7, r4]')
+('0x81026', 'and', 'r3, r3, #0xf')
+('0x8102a', 'orr.w', 'r3, r3, r5, lsl #4')
+('0x8102e', 'strb', 'r3, [r7, r4]')
+('0x81030', 'movs', 'r3, #0x1c')
+('0x81032', 'muls', 'r4, r3, r4')
+('0x81034', 'adds', 'r3, r6, r4')
+('0x81036', 'ldr', 'r6, [r6, r4]')
+('0x81038', 'ldr', 'r4, [r3, #4]')
+('0x8103a', 'mov', 'r0, r6')
+('0x8103c', 'mov', 'r1, r4')
+('0x8103e', 'bl', '#0x80610')
+('0x80610', 'mov', 'r3, r0')
+('0x80612', 'ldr', 'r0, [r0, #8]')
+('0x80614', 'ands', 'r0, r1')
+('0x80616', 'beq', '#0x80622')
+('0x80622', 'bx', 'lr')
+('0x81042', 'cbnz', 'r0, #0x81054')
+('0x81054', 'movs', 'r3, #1')
+('0x81056', 'str', 'r3, [sp]')
+('0x81058', 'mov', 'r0, r6')
+('0x8105a', 'mov', 'r1, r4')
+('0x8105c', 'mov', 'r2, r5')
+('0x8105e', 'movs', 'r3, #0')
+('0x81060', 'bl', '#0x80586')
+('0x80586', 'push', '{r4, lr}')
+('0x80588', 'ldr', 'r4, [sp, #8]')
+('0x8058a', 'str', 'r1, [r0, #0x44]')
+('0x8058c', 'cbz', 'r4, #0x80592')
+('0x80592', 'str', 'r1, [r0, #0x60]')
+('0x80594', 'cbz', 'r3, #0x8059a')
+('0x8059a', 'str', 'r1, [r0, #0x54]')
+('0x8059c', 'cbz', 'r2, #0x805a2')
+('0x805a2', 'str', 'r1, [r0, #0x34]')
+('0x805a4', 'str', 'r1, [r0, #0x10]')
+('0x805a6', 'str', 'r1, [r0]')
+('0x805a8', 'pop', '{r4, pc}')
+('0x8059e', 'str', 'r1, [r0, #0x30]')
+('0x805a0', 'b', '#0x805a4')
+('0x80596', 'str', 'r1, [r0, #0x50]')
+('0x80598', 'b', '#0x8059c')
+('0x8058e', 'str', 'r1, [r0, #0x64]')
+('0x80590', 'b', '#0x80594')
+('0x81044', 'mov', 'r0, r6')
+('0x81046', 'mov', 'r1, r4')
+('0x81048', 'mov', 'r2, r5')
+('0x8104a', 'add', 'sp, #0xc')
+('0x8104c', 'pop.w', '{r4, r5, r6, r7, lr}')
+('0x81050', 'b.w', '#0x80530')
+('0x80530', 'cbz', 'r2, #0x80536')
+('0x80536', 'str', 'r1, [r0, #0x60]')
+('0x80538', 'bx', 'lr')
+('0x80360', 'mov', 'r0, r4')
+('0x80362', 'movs', 'r1, #1')
+('0x80364', 'mov.w', 'r2, #0xc00')
+('0x80368', 'movs', 'r3, #0')
+('0x8036a', 'bl', '#0x805ac')
+('0x80532', 'str', 'r1, [r0, #0x64]')
+('0x80534', 'bx', 'lr')
+('0x8036e', 'mov', 'r0, r4')
+('0x80370', 'movs', 'r1, #1')
+('0x80372', 'mov.w', 'r2, #0x3000')
+('0x80376', 'movs', 'r3, #0')
+('0x80378', 'bl', '#0x805ac')
+('0x80618', 'ldr', 'r3, [r3, #0x18]')
+('0x8061a', 'tst', 'r1, r3')
+('0x8061c', 'ite', 'eq')
+('0x8061e', 'moveq', 'r0, #0')
+('0x80620', 'movs', 'r0, #1')
+('0x80622', 'bx', 'lr')
+('0x8037c', 'mov', 'r0, r7')
+('0x8037e', 'movs', 'r1, #2')
+('0x80380', 'movs', 'r2, #0x30')
+('0x80382', 'movs', 'r3, #0')
+('0x80384', 'bl', '#0x805ac')
+('0x8101e', 'movs', 'r1, #1')
+('0x81020', 'bl', '#0x80ef8')
+('0x80ef8', 'push.w', '{r4, r5, r6, r7, r8, lr}')
+('0x80efc', 'ldr', 'r6, [pc, #0xf4]')
+('0x80efe', 'movs', 'r3, #0x1c')
+('0x80f00', 'mla', 'r3, r3, r0, r6')
+('0x80f04', 'ldrb', 'r2, [r3, #0xc]')
+('0x80f06', 'mov', 'r4, r0')
+('0x80f08', 'mov', 'r7, r1')
+('0x80f0a', 'cmp', 'r2, #0')
+('0x80f0c', 'beq', '#0x80ff0')
+('0x80ff0', 'pop.w', '{r4, r5, r6, r7, r8, pc}')
+('0x80f0e', 'ldr', 'r5, [pc, #0xe8]')
+('0x80f10', 'ldrb', 'r2, [r5, r0]')
+('0x80f12', 'and', 'r2, r2, #0xf')
+('0x80f16', 'cmp', 'r2, #4')
+('0x80f18', 'bne', '#0x80f22')
+('0x80f22', 'ldrb', 'r2, [r5, r4]')
+('0x80f24', 'and', 'r3, r2, #0xf')
+('0x80f28', 'cmp', 'r3, #2')
+('0x80f2a', 'bgt', '#0x80f50')
+('0x80f50', 'cmp', 'r7, #1')
+('0x80f52', 'beq', '#0x80fba')
+('0x80fba', 'movs', 'r3, #0x1c')
+('0x80fbc', 'muls', 'r3, r4, r3')
+('0x80fbe', 'ldr', 'r7, [r6, r3]')
+('0x80fc0', 'lsrs', 'r2, r2, #4')
+('0x80fc2', 'add', 'r6, r3')
+('0x80fc4', 'ite', 'eq')
+('0x80fc6', 'movs', 'r1, #4')
+('0x80fc8', 'movs', 'r1, #5')
+('0x80fca', 'ldr', 'r3, [r6, #0x10]')
+('0x80fcc', 'mov', 'r0, r7')
+('0x80fce', 'ldr', 'r2, [r6, #4]')
+('0x80fd0', 'bl', '#0x805ac')
+('0x80f54', 'cbz', 'r7, #0x80f5e')
+('0x80f5e', 'mov.w', 'r8, #0x1c')
+('0x80f62', 'mul', 'r8, r8, r4')
+('0x80f66', 'add.w', 'r7, r6, r8')
+('0x80f6a', 'ldr', 'r0, [r7, #8]')
+('0x80f6c', 'bl', '#0x80638')
+('0x80638', 'cmp', 'r0, #0x2c')
+('0x8063a', 'bhi', '#0x80670')
+('0x80670', 'movs', 'r0, #1')
+('0x80672', 'bx', 'lr')
+('0x80f70', 'movs', 'r3, #0')
+('0x80f72', 'ldr.w', 'r0, [r6, r8]')
+('0x80f76', 'movs', 'r1, #3')
+('0x80f78', 'ldr', 'r2, [r7, #4]')
+('0x80f7a', 'bl', '#0x805ac')
+('0x8063c', 'cmp', 'r0, #0x1f')
+('0x8063e', 'ldr', 'r3, [pc, #0x38]')
+('0x80640', 'mov.w', 'r2, #1')
+('0x80644', 'bhi', '#0x80658')
+('0x80658', 'subs', 'r0, #0x20')
+('0x8065a', 'lsl.w', 'r0, r2, r0')
+('0x8065e', 'ldr.w', 'r1, [r3, #0x108]')
+('0x80662', 'and.w', 'r2, r0, r1')
+('0x80666', 'cmp', 'r2, r0')
+('0x80668', 'beq', '#0x80674')
+('0x80674', 'movs', 'r0, #0')
+('0x80676', 'bx', 'lr')
+('0x80f7e', 'ldrb', 'r3, [r5, r4]')
+('0x80f80', 'bic', 'r3, r3, #0xf')
+('0x80f84', 'orr', 'r3, r3, #2')
+('0x80f88', 'b', '#0x80fb4')
+('0x80fb4', 'strb', 'r3, [r5, r4]')
+('0x80fb6', 'pop.w', '{r4, r5, r6, r7, r8, pc}')
+('0x80fd4', 'ldrb', 'r3, [r5, r4]')
+('0x80fd6', 'bic', 'r3, r3, #0xf')
+('0x80fda', 'orr', 'r3, r3, #3')
+('0x80fde', 'strb', 'r3, [r5, r4]')
+('0x80fe0', 'ldr', 'r3, [r7, #0x18]')
+('0x80fe2', 'adds', 'r3, #1')
+('0x80fe4', 'bne', '#0x80ff0')
+('0x80ff0', 'pop.w', '{r4, r5, r6, r7, r8, pc}')
+('0x80388', 'mov', 'r0, r6')
+('0x8038a', 'movs', 'r1, #1')
+('0x8038c', 'mov.w', 'r2, #0xc00')
+('0x80390', 'movs', 'r3, #0')
+('0x80392', 'bl', '#0x805ac')
+('0x80fe6', 'ldr', 'r0, [r6, #8]')
+('0x80fe8', 'pop.w', '{r4, r5, r6, r7, r8, lr}')
+('0x80fec', 'b.w', '#0x8067c')
+('0x8067c', 'cmp', 'r0, #0x2c')
+('0x8067e', 'bhi', '#0x806b0')
+('0x806b0', 'movs', 'r0, #1')
+('0x806b2', 'bx', 'lr')
+('0x80396', 'mov', 'r0, r4')
+('0x80398', 'movs', 'r1, #1')
+('0x8039a', 'movs', 'r2, #3')
+('0x8039c', 'movs', 'r3, #0')
+('0x8039e', 'bl', '#0x805ac')
+('0x80680', 'cmp', 'r0, #0x1f')
+('0x80682', 'ldr', 'r3, [pc, #0x34]')
+('0x80684', 'mov.w', 'r1, #1')
+('0x80688', 'bhi', '#0x8069a')
+('0x8069a', 'subs', 'r0, #0x20')
+('0x8069c', 'lsl.w', 'r0, r1, r0')
+('0x806a0', 'ldr.w', 'r2, [r3, #0x108]')
+('0x806a4', 'ands', 'r2, r0')
+('0x806a6', 'cmp', 'r2, r0')
+('0x806a8', 'bne', '#0x806b4')
+('0x806b4', 'movs', 'r0, #0')
+('0x806b6', 'bx', 'lr')
+('0x803a2', 'movs', 'r1, #1')
+('0x803a4', 'mov.w', 'r2, #0xc000')
+('0x803a8', 'movs', 'r3, #0')
+('0x803aa', 'mov', 'r0, r6')
+('0x803ac', 'bl', '#0x805ac')
+('0x806aa', 'str.w', 'r2, [r3, #0x104]')
+('0x806ae', 'b', '#0x806b4')
+('0x8068a', 'lsl.w', 'r0, r1, r0')
+('0x8068e', 'ldr', 'r2, [r3, #0x18]')
+('0x80690', 'ands', 'r2, r0')
+('0x80692', 'cmp', 'r2, r0')
+('0x80694', 'bne', '#0x806b4')
+('0x80696', 'str', 'r2, [r3, #0x14]')
+('0x80698', 'b', '#0x806b4')
+('0x8066a', 'str.w', 'r0, [r3, #0x100]')
+('0x8066e', 'b', '#0x80674')
+('0x80646', 'lsl.w', 'r0, r2, r0')
+('0x8064a', 'ldr', 'r1, [r3, #0x18]')
+('0x8064c', 'and.w', 'r2, r0, r1')
+('0x80650', 'cmp', 'r2, r0')
+('0x80652', 'beq', '#0x80674')
+('0x80654', 'str', 'r0, [r3, #0x10]')
+('0x80656', 'b', '#0x80674')
+('0x80f56', 'cmp', 'r7, #2')
+('0x80f58', 'beq', '#0x80f8a')
+('0x80f8a', 'mov.w', 'r8, #0x1c')
+('0x80f8e', 'mul', 'r8, r8, r4')
+('0x80f92', 'add.w', 'r7, r6, r8')
+('0x80f96', 'ldr', 'r0, [r7, #8]')
+('0x80f98', 'bl', '#0x80638')
+('0x80f5a', 'pop.w', '{r4, r5, r6, r7, r8, pc}')
+('0x80f9c', 'movs', 'r3, #1')
+('0x80f9e', 'ldr.w', 'r0, [r6, r8]')
+('0x80fa2', 'movs', 'r1, #3')
+('0x80fa4', 'ldr', 'r2, [r7, #4]')
+('0x80fa6', 'bl', '#0x805ac')
+('0x80f2c', 'cbz', 'r2, #0x80f50')
+('0x80f2e', 'cmp', 'r3, #2')
+('0x80f30', 'bne', '#0x80f38')
+('0x80f38', 'cmp', 'r3, #1')
+('0x80f3a', 'bne', '#0x80f44')
+('0x80f44', 'cmp', 'r3, #3')
+('0x80f46', 'bne', '#0x80f50')
+('0x80f48', 'cmp', 'r7, #1')
+('0x80f4a', 'bne', '#0x80f54')
+('0x80f4c', 'pop.w', '{r4, r5, r6, r7, r8, pc}')
+('0x80faa', 'ldrb', 'r3, [r5, r4]')
+('0x80fac', 'bic', 'r3, r3, #0xf')
+('0x80fb0', 'orr', 'r3, r3, #1')
+('0x80f3c', 'cmp', 'r7, #2')
+('0x80f3e', 'bne', '#0x80f50')
+('0x80f40', 'pop.w', '{r4, r5, r6, r7, r8, pc}')
+('0x803b0', 'movs', 'r0, #0x25')
+('0x803b2', 'bl', '#0x80638')
+('0x80f32', 'cbnz', 'r7, #0x80f50')
+('0x80f34', 'pop.w', '{r4, r5, r6, r7, r8, pc}')
+('0x803b6', 'ldr.w', 'r1, [r8]')
+('0x803ba', 'ldr', 'r2, [pc, #0x54]')
+('0x803bc', 'movs', 'r3, #0xc')
+('0x803be', 'ldr', 'r0, [pc, #0x54]')
+('0x803c0', 'bl', '#0x8087c')
+('0x8087c', 'push.w', '{r4, r5, r6, r7, r8, lr}')
+('0x80880', 'ldr', 'r5, [pc, #0x88]')
+('0x80882', 'sub', 'sp, #0x40')
+('0x80884', 'mov', 'r4, sp')
+('0x80886', 'mov', 'r6, r0')
+('0x80888', 'mov', 'r7, r1')
+('0x8088a', 'mov', 'r8, r2')
+('0x8088c', 'mov', 'ip, r3')
+('0x8088e', 'ldm', 'r5!, {r0, r1, r2, r3}')
+('0x80890', 'stm', 'r4!, {r0, r1, r2, r3}')
+('0x80892', 'ldm', 'r5!, {r0, r1, r2, r3}')
+('0x80894', 'stm', 'r4!, {r0, r1, r2, r3}')
+('0x80896', 'ldm', 'r5!, {r0, r1, r2, r3}')
+('0x80898', 'stm', 'r4!, {r0, r1, r2, r3}')
+('0x8089a', 'ldm.w', 'r5, {r0, r1, r2, r3}')
+('0x8089e', 'stm.w', 'r4, {r0, r1, r2, r3}')
+('0x808a2', 'movs', 'r3, #1')
+('0x808a4', 'str', 'r3, [r6]')
+('0x808a6', 'movs', 'r1, #0')
+('0x808a8', 'lsl.w', 'r2, r8, #1')
+('0x808ac', 'movw', 'r3, #0x202')
+('0x808b0', 'str', 'r1, [r6, #4]')
+('0x808b2', 'str.w', 'r3, [r6, #0x120]')
+('0x808b6', 'str.w', 'r1, [r6, #0x104]')
+('0x808ba', 'str.w', 'r1, [r6, #0x114]')
+('0x808be', 'udiv', 'r1, r7, r2')
+('0x808c2', 'mls', 'r2, r2, r1, r7')
+('0x808c6', 'cbnz', 'r2, #0x808ca')
+('0x808ca', 'adds', 'r3, r1, #1')
+('0x808cc', 'lsls', 'r3, r3, #1')
+('0x808ce', 'udiv', 'r7, r7, r3')
+('0x808d2', 'ldr', 'r3, [pc, #0x3c]')
+('0x808d4', 'movs', 'r2, #0')
+('0x808d6', 'udiv', 'r7, r7, r3')
+('0x808da', 'mul', 'ip, ip, r7')
+('0x808de', 'ldr.w', 'r0, [sp, r2, lsl #2]')
+('0x808e2', 'cmp', 'r0, ip')
+('0x808e4', 'bhs', '#0x808f2')
+('0x808f2', 'ldr', 'r3, [r6, #4]')
+('0x808f4', 'lsls', 'r1, r1, #8')
+('0x808f6', 'uxth', 'r1, r1')
+('0x808f8', 'lsls', 'r2, r2, #0x10')
+('0x808fa', 'orrs', 'r1, r3')
+('0x808fc', 'and', 'r2, r2, #0xf0000')
+('0x80900', 'orrs', 'r2, r1')
+('0x80902', 'str', 'r2, [r6, #4]')
+('0x80904', 'movs', 'r0, #0')
+('0x80906', 'add', 'sp, #0x40')
+('0x80908', 'pop.w', '{r4, r5, r6, r7, r8, pc}')
+('0x803c4', 'movs', 'r3, #1')
+('0x803c6', 'ldr', 'r0, [pc, #0x4c]')
+('0x803c8', 'movs', 'r1, #0')
+('0x803ca', 'mov.w', 'r2, #0x300000')
+('0x803ce', 'bl', '#0x80922')
+('0x80922', 'push', '{r4, lr}')
+('0x80924', 'ldr', 'r4, [r0, #4]')
+('0x80926', 'lsls', 'r1, r1, #0x18')
+('0x80928', 'orrs', 'r2, r4')
+('0x8092a', 'lsls', 'r3, r3, #0x1c')
+('0x8092c', 'and', 'r4, r1, #0xf000000')
+('0x80930', 'orrs', 'r2, r4')
+('0x80932', 'and', 'r3, r3, #0x30000000')
+('0x80936', 'orrs', 'r2, r3')
+('0x80938', 'str', 'r2, [r0, #4]')
+('0x8093a', 'pop', '{r4, pc}')
+('0x803d2', 'movs', 'r1, #0')
+('0x803d4', 'mov', 'r2, r1')
+('0x803d6', 'ldr', 'r0, [pc, #0x3c]')
+('0x803d8', 'bl', '#0x80914')
+('0x80914', 'ldr', 'r3, [r0, #4]')
+('0x80916', 'lsls', 'r2, r2, #7')
+('0x80918', 'orrs', 'r1, r3')
+('0x8091a', 'uxtb', 'r3, r2')
+('0x8091c', 'orrs', 'r1, r3')
+('0x8091e', 'str', 'r1, [r0, #4]')
+('0x80920', 'bx', 'lr')
+('0x803dc', 'mov', 'r1, r5')
+('0x803de', 'ldr', 'r0, [pc, #0x34]')
+('0x803e0', 'bl', '#0x8094e')
+('0x8094e', 'str', 'r1, [r0, #0x28]')
+('0x80950', 'bx', 'lr')
+('0x803e4', 'ldr', 'r0, [pc, #0x2c]')
+('0x803e6', 'bl', '#0x80946')
+('0x80946', 'movw', 'r3, #0xffff')
+('0x8094a', 'str', 'r3, [r0, #0x14]')
+('0x8094c', 'bx', 'lr')
+('0x803ea', 'pop.w', '{r4, r5, r6, r7, r8, lr}')
+('0x803ee', 'b.w', '#0x80c34')
+('0x80c34', 'bx', 'lr')
+('0x8131a', 'bl', '#0x8130c')
+('0x8130c', 'bx', 'lr')
+('0x8131e', 'movs', 'r0, #1')
+('0x81320', 'bl', '#0x81354')
+('0x81354', 'push', '{r3, r4, r5, lr}')
+('0x81356', 'mov', 'r4, r0')
+('0x81358', 'cbz', 'r0, #0x8136e')
+('0x8136e', 'pop', '{r3, r4, r5, pc}')
+('0x81324', 'ldr', 'r0, [pc, #0x18]')
+('0x81326', 'bl', '#0x81628')
+('0x81628', 'push', '{r3, lr}')
+('0x8162a', 'ldr', 'r3, [pc, #0x14]')
+('0x8162c', 'ldr', 'r0, [r3]')
+('0x8162e', 'cbz', 'r0, #0x8163c')
+('0x8163c', 'pop', '{r3, pc}')
+('0x8132a', 'bl', '#0x80210')
+('0x80210', 'push', '{r3, lr}')
+('0x80212', 'movs', 'r0, #0xd')
+('0x80214', 'movs', 'r1, #1')
+('0x80216', 'bl', '#0x80ef8')
+('0x81630', 'bl', '#0x81fe8')
+('0x81fe8', 'ldr', 'r3, [pc, #0x44]')
+('0x81fea', 'push', '{r4, lr}')
+('0x81fec', 'ldr', 'r1, [r3]')
+('0x81fee', 'cpsid', 'i')
+('0x81ff0', 'dmb', 'sy')
+('0x81ff4', 'mov', 'r2, r3')
+('0x81ff6', 'movs', 'r3, #0')
+('0x81ff8', 'str', 'r3, [r2]')
+('0x81ffa', 'ldr', 'r3, [pc, #0x38]')
+('0x81ffc', 'ldr.w', 'r0, [r3, #0x800]')
+('0x82000', 'mov', 'r4, r3')
+('0x82002', 'bic', 'r0, r0, #0x4000')
+('0x82006', 'str.w', 'r0, [r3, #0x800]')
+('0x8200a', 'ldr.w', 'r0, [r4, #0x804]')
+('0x8200e', 'ldr', 'r3, [pc, #0x24]')
+('0x82010', 'lsls', 'r0, r0, #0x11')
+('0x82012', 'bpl', '#0x8200a')
+('0x82014', 'ldr', 'r0, [r3]')
+('0x82016', 'bic', 'r0, r0, #0x100')
+('0x8201a', 'str', 'r0, [r3]')
+('0x8201c', 'movs', 'r0, #8')
+('0x8201e', 'str', 'r0, [r3, #0x18]')
+('0x82020', 'cbz', 'r1, #0x8202c')
+('0x8202c', 'pop', '{r4, pc}')
+('0x81634', 'ldr', 'r3, [pc, #0xc]')
+('0x81636', 'movs', 'r2, #0')
+('0x81638', 'str', 'r2, [r3]')
+('0x8163a', 'movs', 'r0, #1')
+('0x8163c', 'pop', '{r3, pc}')
+('0x8021a', 'movs', 'r0, #2')
+('0x8021c', 'movs', 'r1, #1')
+('0x8021e', 'bl', '#0x80ef8')
+('0x82022', 'movs', 'r3, #1')
+('0x82024', 'str', 'r3, [r2]')
+('0x82026', 'dmb', 'sy')
+('0x8202a', 'cpsie', 'i')
+('0x8202c', 'pop', '{r4, pc}')
+('0x80222', 'movs', 'r0, #2')
+('0x80224', 'movs', 'r1, #0xff')
+('0x80226', 'bl', '#0x80c38')
+('0x80c38', 'ldr', 'r2, [pc, #0x284]')
+('0x80c3a', 'movs', 'r3, #0x1c')
+('0x80c3c', 'mla', 'r3, r3, r0, r2')
+('0x80c40', 'push.w', '{r4, r5, r6, r7, r8, sb, sl, fp, lr}')
+('0x80c44', 'mov', 'r6, r1')
+('0x80c46', 'ldr', 'r1, [r3, #0x14]')
+('0x80c48', 'sub', 'sp, #0x14')
+('0x80c4a', 'tst.w', 'r1, #2')
+('0x80c4e', 'mov', 'r4, r0')
+('0x80c50', 'mov', 'r8, r2')
+('0x80c52', 'ldr', 'r5, [pc, #0x270]')
+('0x80c54', 'beq', '#0x80ce0')
+('0x80ce0', 'lsls', 'r3, r1, #0x1c')
+('0x80ce2', 'bpl', '#0x80d78')
+('0x80d78', 'ands', 'r7, r1, #0x10')
+('0x80d7c', 'beq.w', '#0x80e90')
+('0x80e90', 'mov', 'r0, r4')
+('0x80e92', 'movs', 'r1, #1')
+('0x80e94', 'bl', '#0x80ef8')
+('0x80d80', 'mov', 'r0, r6')
+('0x80d82', 'ldr', 'r1, [r5]')
+('0x80d84', 'movs', 'r2, #8')
+('0x80d86', 'bl', '#0x80c22')
+('0x80c22', 'cmp', 'r1, r2')
+('0x80c24', 'beq', '#0x80c32')
+('0x80c32', 'bx', 'lr')
+('0x80d8a', 'movw', 'sb, #0xa410')
+('0x80d8e', 'mul', 'r0, sb, r0')
+('0x80d92', 'movs', 'r3, #0xff')
+('0x80d94', 'udiv', 'fp, r0, r3')
+('0x80d98', 'movs', 'r3, #0x1c')
+('0x80d9a', 'mla', 'r3, r3, r4, r8')
+('0x80d9e', 'ldr', 'r2, [pc, #0x140]')
+('0x80da0', 'ldrsb.w', 'r3, [r3, #0x1b]')
+('0x80da4', 'ldr.w', 'r6, [r2, r3, lsl #2]')
+('0x80da8', 'ldr', 'r2, [pc, #0x138]')
+('0x80daa', 'ldr.w', 'ip, [r2, r3, lsl #2]')
+('0x80dae', 'ldr', 'r2, [pc, #0x138]')
+('0x80db0', 'ldr.w', 'r5, [r2, r3, lsl #2]')
+('0x80db4', 'ldr', 'r2, [pc, #0x134]')
+('0x80db6', 'ldr.w', 'r7, [r2, r3, lsl #2]')
+('0x80dba', 'ldr', 'r3, [pc, #0x134]')
+('0x80dbc', 'ldrb', 'r2, [r3, r7]')
+('0x80dbe', 'mov', 'sl, r3')
+('0x80dc0', 'cbnz', 'r2, #0x80de6')
+('0x80de6', 'lsl.w', 'sb, r6, #6')
+('0x80dea', 'cmp.w', 'fp, #0')
+('0x80dee', 'bne', '#0x80e10')
+('0x80e10', 'mov', 'r0, r5')
+('0x80e12', 'mov', 'r1, r6')
+('0x80e14', 'mov', 'r2, fp')
+('0x80e16', 'cmp.w', 'ip, #0')
+('0x80e1a', 'beq', '#0x80e30')
+('0x80e30', 'bl', '#0x8076c')
+('0x8076c', 'add.w', 'r1, r0, r1, lsl #6')
+('0x80770', 'str', 'r2, [r1, #0x18]')
+('0x80772', 'bx', 'lr')
+('0x80e34', 'add.w', 'r3, r5, sb')
+('0x80e38', 'ldr', 'r2, [r3, #4]')
+('0x80e3a', 'bic', 'r2, r2, #0xf000000')
+('0x80e3e', 'orr', 'r2, r2, #0x6000000')
+('0x80e42', 'ldr.w', 'sb, [pc, #0x94]')
+('0x80e46', 'str', 'r2, [r3, #4]')
+('0x80e48', 'ldrb.w', 'r3, [sb, r4]')
+('0x80e4c', 'and', 'r3, r3, #0xf')
+('0x80e50', 'cmp', 'r3, #5')
+('0x80e52', 'beq', '#0x80e7a')
+('0x80e7a', 'ldrb.w', 'r3, [sl, r7]')
+('0x80e7e', 'cbnz', 'r3, #0x80eb8')
+('0x80eb8', 'add', 'sp, #0x14')
+('0x80eba', 'pop.w', '{r4, r5, r6, r7, r8, sb, sl, fp, pc}')
+('0x80e98', 'ldr', 'r1, [r5]')
+('0x80e9a', 'mov', 'r0, r6')
+('0x80e9c', 'movs', 'r2, #8')
+('0x80e9e', 'bl', '#0x80c22')
+('0x80e80', 'mov', 'r0, r5')
+('0x80e82', 'mov', 'r1, r6')
+('0x80e84', 'bl', '#0x80730')
+('0x80730', 'cmp', 'r1, #2')
+('0x80732', 'push', '{r4, lr}')
+('0x80734', 'bls', '#0x80742')
+('0x80742', 'lsls', 'r1, r1, #6')
+('0x80744', 'movs', 'r3, #5')
+('0x80746', 'str', 'r3, [r0, r1]')
+('0x80748', 'pop', '{r4, pc}')
+('0x80736', 'ldr', 'r0, [pc, #0x14]')
+('0x80738', 'movs', 'r1, #0x5c')
+('0x8073a', 'ldr', 'r2, [pc, #0x14]')
+('0x8073c', 'ldr', 'r3, [pc, #0x14]')
+('0x8073e', 'ldr', 'r4, [pc, #0x18]')
+('0x80740', 'blx', 'r4')
+('0x82358', 'push', '{lr}')
+('0x8235a', 'ldr', 'r4, [pc, #0x28]')
+('0x8235c', 'mov', 'r5, r0')
+('0x8235e', 'ldr', 'r4, [r4]')
+('0x82360', 'sub', 'sp, #0x14')
+('0x82362', 'ldr', 'r0, [r4, #0xc]')
+('0x82364', 'cbz', 'r2, #0x8237c')
+('0x8237c', 'ldr', 'r4, [pc, #0x10]')
+('0x8237e', 'mov', 'r2, r4')
+('0x82380', 'b', '#0x82368')
+('0x82368', 'stm.w', 'sp, {r1, r4}')
+('0x8236c', 'str', 'r2, [sp, #8]')
+('0x8236e', 'ldr', 'r1, [pc, #0x1c]')
+('0x82370', 'mov', 'r2, r3')
+('0x82372', 'mov', 'r3, r5')
+('0x82374', 'bl', '#0x82394')
+('0x82394', 'push', '{r1, r2, r3}')
+('0x82396', 'push', '{r4, r5, lr}')
+('0x82398', 'sub', 'sp, #8')
+('0x8239a', 'add', 'r4, sp, #0x14')
+('0x8239c', 'ldr', 'r2, [r4], #4')
+('0x823a0', 'ldr', 'r5, [pc, #0x14]')
+('0x823a2', 'mov', 'r1, r0')
+('0x823a4', 'mov', 'r3, r4')
+('0x823a6', 'ldr', 'r0, [r5]')
+('0x823a8', 'str', 'r4, [sp, #4]')
+('0x823aa', 'bl', '#0x82588')
+('0x82588', 'push.w', '{r4, r5, r6, r7, r8, sb, sl, fp, lr}')
+('0x8258c', 'sub', 'sp, #0xc4')
+('0x8258e', 'mov', 'r4, r3')
+('0x82590', 'str', 'r1, [sp, #8]')
+('0x82592', 'mov', 'r8, r2')
+('0x82594', 'str', 'r3, [sp, #0x20]')
+('0x82596', 'str', 'r0, [sp, #0x18]')
+('0x82598', 'cbz', 'r0, #0x825a2')
+('0x825a2', 'ldr', 'r5, [sp, #8]')
+('0x825a4', 'ldrh', 'r3, [r5, #0xc]')
+('0x825a6', 'uxth', 'r2, r3')
+('0x825a8', 'lsls', 'r0, r2, #0x12')
+('0x825aa', 'bmi', '#0x825bc')
+('0x825bc', 'lsls', 'r1, r2, #0x1c')
+('0x825be', 'bpl.w', '#0x82730')
+('0x82730', 'ldr', 'r0, [sp, #0x18]')
+('0x82732', 'ldr', 'r1, [sp, #8]')
+('0x82734', 'bl', '#0x83258')
+('0x83258', 'ldr', 'r3, [pc, #0xbc]')
+('0x8325a', 'push', '{r4, r5, r6, lr}')
+('0x8325c', 'mov', 'r6, r0')
+('0x8325e', 'ldr', 'r0, [r3]')
+('0x83260', 'mov', 'r4, r1')
+('0x83262', 'cbz', 'r0, #0x8326a')
+('0x8326a', 'ldrh', 'r5, [r4, #0xc]')
+('0x8326c', 'uxth', 'r3, r5')
+('0x8326e', 'lsls', 'r1, r3, #0x1c')
+('0x83270', 'bpl', '#0x8328c')
+('0x8328c', 'lsls', 'r2, r3, #0x1b')
+('0x8328e', 'bpl', '#0x83306')
+('0x83306', 'orr', 'r5, r5, #0x40')
+('0x8330a', 'movs', 'r3, #9')
+('0x8330c', 'str', 'r3, [r6]')
+('0x8330e', 'mov.w', 'r0, #-1')
+('0x83312', 'strh', 'r5, [r4, #0xc]')
+('0x83314', 'pop', '{r4, r5, r6, pc}')
+('0x82738', 'cbnz', 'r0, #0x82768')
+('0x82768', 'mov.w', 'r0, #-1')
+('0x8276c', 'add', 'sp, #0xc4')
+('0x8276e', 'pop.w', '{r4, r5, r6, r7, r8, sb, sl, fp, pc}')
+('0x823ae', 'add', 'sp, #8')
+('0x823b0', 'pop.w', '{r4, r5, lr}')
+('0x823b4', 'add', 'sp, #0xc')
+('0x823b6', 'bx', 'lr')
+('0x82378', 'bl', '#0x83330')
+('0x83330', 'push', '{r3, lr}')
+('0x83332', 'movs', 'r0, #6')
+('0x83334', 'bl', '#0x84904')
+('0x84904', 'ldr', 'r3, [pc, #8]')
+('0x84906', 'mov', 'r1, r0')
+('0x84908', 'ldr', 'r0, [r3]')
+('0x8490a', 'b.w', '#0x848ac')
+('0x848ac', 'cmp', 'r1, #0x1f')
+('0x848ae', 'push', '{r3, r4, r5, lr}')
+('0x848b0', 'mov', 'r4, r1')
+('0x848b2', 'mov', 'r5, r0')
+('0x848b4', 'bhi', '#0x848f8')
+('0x848f8', 'movs', 'r3, #0x16')
+('0x848fa', 'str', 'r3, [r0]')
+('0x848fc', 'mov.w', 'r0, #-1')
+('0x84900', 'pop', '{r3, r4, r5, pc}')
+('0x83338', 'movs', 'r0, #1')
+('0x8333a', 'bl', '#0x80c18')
+('0x80c18', 'b', '#0x80c18')
+('0x848b6', 'ldr.w', 'r2, [r0, #0x2dc]')
+('0x848ba', 'cbz', 'r2, #0x848e4')
+('0x848e4', 'mov', 'r0, r5')
+('0x848e6', 'bl', '#0x8493c')
+('0x8493c', 'b.w', '#0x80c1c')
+('0x80c1c', 'mov.w', 'r0, #-1')
+('0x80c20', 'bx', 'lr')
+('0x848ea', 'mov', 'r2, r4')
+('0x848ec', 'mov', 'r1, r0')
+('0x848ee', 'mov', 'r0, r5')
+('0x848f0', 'pop.w', '{r3, r4, r5, lr}')
+('0x848f4', 'b.w', '#0x84914')
+('0x84914', 'push', '{r3, r4, r5, lr}')
+('0x84916', 'ldr', 'r4, [pc, #0x20]')
+('0x84918', 'movs', 'r3, #0')
+('0x8491a', 'mov', 'r5, r0')
+('0x8491c', 'mov', 'r0, r1')
+('0x8491e', 'mov', 'r1, r2')
+('0x84920', 'str', 'r3, [r4]')
+('0x84922', 'bl', '#0x80c1a')
+('0x80c1a', 'bx', 'lr')
+('0x84926', 'adds', 'r3, r0, #1')
+('0x84928', 'beq', '#0x8492c')
+('0x8492c', 'ldr', 'r3, [r4]')
+('0x8492e', 'cmp', 'r3, #0')
+('0x84930', 'beq', '#0x8492a')
+('0x8492a', 'pop', '{r3, r4, r5, pc}')
+('0x8333e', 'nop', '')
+('0x83340', 'mov', 'r1, r0')
+('0x83342', 'movs', 'r0, #0')
+('0x83344', 'mov', 'r2, r0')
+('0x83346', 'mov', 'r3, r0')
+('0x83348', 'b.w', '#0x84b00')
+('0x84b00', 'push', '{r4, r5, r6, r7, lr}')
+('0x84b02', 'ldr', 'r4, [pc, #0x9c]')
+('0x84b04', 'sub', 'sp, #0x14')
+('0x84b06', 'ldr', 'r6, [r4]')
+('0x84b08', 'mov', 'r7, r0')
+('0x84b0a', 'ldr.w', 'r4, [r6, #0x148]')
+('0x84b0e', 'cmp', 'r4, #0')
+('0x84b10', 'beq', '#0x84b94')
+('0x84b94', 'add.w', 'r4, r6, #0x14c')
+('0x84b98', 'str.w', 'r4, [r6, #0x148]')
+('0x84b9c', 'b', '#0x84b12')
+('0x84b12', 'ldr', 'r5, [r4, #4]')
+('0x84b14', 'cmp', 'r5, #0x1f')
+('0x84b16', 'ble', '#0x84b56')
+('0x84b56', 'cbnz', 'r7, #0x84b68')
+('0x84b68', 'movs', 'r6, #1')
+('0x84b6a', 'lsls', 'r6, r5')
+('0x84b6c', 'add.w', 'r0, r4, r5, lsl #2')
+('0x84b70', 'str.w', 'r2, [r0, #0x88]')
+('0x84b74', 'ldr.w', 'r2, [r4, #0x188]')
+('0x84b78', 'cmp', 'r7, #2')
+('0x84b7a', 'orr.w', 'r2, r2, r6')
+('0x84b7e', 'str.w', 'r2, [r4, #0x188]')
+('0x84b82', 'str.w', 'r3, [r0, #0x108]')
+('0x84b86', 'bne', '#0x84b58')
+('0x84b58', 'adds', 'r3, r5, #1')
+('0x84b5a', 'movs', 'r0, #0')
+('0x84b5c', 'adds', 'r5, #2')
+('0x84b5e', 'str', 'r3, [r4, #4]')
+('0x84b60', 'str.w', 'r1, [r4, r5, lsl #2]')
+('0x84b64', 'add', 'sp, #0x14')
+('0x84b66', 'pop', '{r4, r5, r6, r7, pc}')
+('0x84b18', 'ldr', 'r0, [pc, #0x88]')
+('0x84b1a', 'cbnz', 'r0, #0x84b24')
+('0x84b24', 'mov.w', 'r0, #0x190')
+('0x84b28', 'str', 'r1, [sp, #0xc]')
+('0x84b2a', 'str', 'r2, [sp, #8]')
+('0x84b2c', 'str', 'r3, [sp, #4]')
+('0x84b2e', 'nop.w', '')
+('0x84b32', 'ldr', 'r1, [sp, #0xc]')
+('0x84b34', 'mov', 'r4, r0')
+('0x84b36', 'ldr', 'r2, [sp, #8]')
+('0x84b38', 'ldr', 'r3, [sp, #4]')
+('0x84b3a', 'cmp', 'r0, #0')
+('0x84b3c', 'beq', '#0x84b1c')
+('0x84b1c', 'mov.w', 'r0, #-1')
+('0x84b20', 'add', 'sp, #0x14')
+('0x84b22', 'pop', '{r4, r5, r6, r7, pc}')
+('0x84b3e', 'ldr.w', 'r5, [r6, #0x148]')
+('0x84b42', 'movs', 'r0, #0')
+('0x84b44', 'str', 'r5, [r4]')
+('0x84b46', 'str', 'r0, [r4, #4]')
+('0x84b48', 'mov', 'r5, r0')
+('0x84b4a', 'str.w', 'r4, [r6, #0x148]')
+('0x84b4e', 'str.w', 'r0, [r4, #0x188]')
+('0x84b52', 'str.w', 'r0, [r4, #0x18c]')
+('0x84b88', 'ldr.w', 'r3, [r4, #0x18c]')
+('0x84b8c', 'orrs', 'r6, r3')
+('0x84b8e', 'str.w', 'r6, [r4, #0x18c]')
+('0x84b92', 'b', '#0x84b58')
+('0x84932', 'str', 'r3, [r5]')
+('0x84934', 'pop', '{r3, r4, r5, pc}')
+('0x8492a', 'pop', '{r3, r4, r5, pc}')
+('0x80e88', 'ldr', 'r3, [pc, #0x64]')
+('0x80e8a', 'movs', 'r2, #1')
+('0x80e8c', 'strb', 'r2, [r3, r7]')
+('0x80e8e', 'b', '#0x80eb8')
+('0x848bc', 'ldr.w', 'r3, [r2, r1, lsl #2]')
+('0x848c0', 'cbz', 'r3, #0x848e4')
+('0x848c2', 'cmp', 'r3, #1')
+('0x848c4', 'beq', '#0x848e0')
+('0x848e0', 'movs', 'r0, #0')
+('0x848e2', 'pop', '{r3, r4, r5, pc}')
+('0x80ea2', 'cmp', 'r0, #0x7f')
+('0x80ea4', 'it', 'ls')
+('0x80ea6', 'mov', 'r1, r7')
+('0x80ea8', 'mov', 'r0, r4')
+('0x80eaa', 'it', 'hi')
+('0x80eac', 'movhi', 'r1, #1')
+('0x80eae', 'add', 'sp, #0x14')
+('0x80eb0', 'pop.w', '{r4, r5, r6, r7, r8, sb, sl, fp, lr}')
+('0x80eb4', 'b.w', '#0x81000')
+('0x848c6', 'adds', 'r1, r3, #1')
+('0x848c8', 'beq', '#0x848d8')
+('0x848d8', 'movs', 'r3, #0x16')
+('0x848da', 'str', 'r3, [r0]')
+('0x848dc', 'movs', 'r0, #1')
+('0x848de', 'pop', '{r3, r4, r5, pc}')
+('0x8022a', 'ldr', 'r2, [pc, #0x54]')
+('0x8022c', 'mov.w', 'r3, #0x2000000')
+('0x80230', 'str', 'r3, [r2]')
+('0x80232', 'str', 'r3, [r2, #0x6c]')
+('0x80234', 'ldr', 'r3, [pc, #0x4c]')
+('0x80236', 'ldr', 'r2, [pc, #0x50]')
+('0x80238', 'ldr', 'r0, [pc, #0x50]')
+('0x8023a', 'str', 'r2, [r3]')
+('0x8023c', 'ldr', 'r2, [pc, #0x50]')
+('0x8023e', 'movs', 'r1, #0')
+('0x80240', 'str', 'r2, [r3, #-0xe0]')
+('0x80244', 'ldr', 'r2, [pc, #0x4c]')
+('0x80246', 'str', 'r2, [r3, #-0xc8]')
+('0x8024a', 'ldr', 'r2, [pc, #0x4c]')
+('0x8024c', 'str', 'r2, [r3, #-0xd0]')
+('0x80250', 'movs', 'r2, #5')
+('0x80252', 'str', 'r2, [r3, #-0xe4]')
+('0x80256', 'movs', 'r2, #0x10')
+('0x80258', 'str', 'r2, [r3, #-0xc0]')
+('0x8025c', 'movs', 'r2, #0xef')
+('0x8025e', 'str', 'r2, [r3, #-0xbc]')
+('0x80262', 'ldr', 'r3, [pc, #0x38]')
+('0x80264', 'mov.w', 'r2, #0x8000000')
+('0x80268', 'str', 'r2, [r3]')
+('0x8026a', 'movs', 'r3, #4')
+('0x8026c', 'movs', 'r2, #0x1e')
+('0x8026e', 'bl', '#0x801a0')
+('0x801a0', 'push', '{r3, r4, r5, r6, r7, lr}')
+('0x801a2', 'mov', 'r4, r0')
+('0x801a4', 'mov', 'r6, r2')
+('0x801a6', 'movs', 'r0, #0')
+('0x801a8', 'mov', 'r5, r1')
+('0x801aa', 'mov', 'r7, r3')
+('0x801ac', 'bl', '#0x806dc')
+('0x806dc', 'ldr', 'r3, [pc, #0xc]')
+('0x806de', 'cbz', 'r0, #0x806e4')
+('0x806e4', 'ldr', 'r2, [pc, #0xc]')
+('0x806e6', 'str.w', 'r2, [r3, #0xe4]')
+('0x806ea', 'bx', 'lr')
+('0x801b0', 'mov', 'r0, r6')
+('0x801b2', 'bl', '#0x80638')
+('0x806e0', 'ldr', 'r2, [pc, #0xc]')
+('0x806e2', 'b', '#0x806e6')
+('0x848ca', 'movs', 'r5, #0')
+('0x848cc', 'mov', 'r0, r4')
+('0x848ce', 'str.w', 'r5, [r2, r4, lsl #2]')
+('0x848d2', 'blx', 'r3')
+1074136575
+0
+Address: 0x801a0  First Path: 0x801a2   Branch Path: 0x0   Instruction: push {r3, r4, r5, r6, r7, lr}
+Address: 0x801a2  First Path: 0x801a4   Branch Path: 0x0   Instruction: mov r4, r0
+Address: 0x801a4  First Path: 0x801a6   Branch Path: 0x0   Instruction: mov r6, r2
+Address: 0x801a6  First Path: 0x801a8   Branch Path: 0x0   Instruction: movs r0, #0
+Address: 0x801a8  First Path: 0x801aa   Branch Path: 0x0   Instruction: mov r5, r1
+Address: 0x801aa  First Path: 0x801ac   Branch Path: 0x0   Instruction: mov r7, r3
+Address: 0x801ac  First Path: 0x0   Branch Path: 0x806dc   Instruction: bl #0x806dc
+Address: 0x801b0  First Path: 0x801b2   Branch Path: 0x0   Instruction: mov r0, r6
+Address: 0x801b2  First Path: 0x0   Branch Path: 0x80638   Instruction: bl #0x80638
+Address: 0x80210  First Path: 0x80212   Branch Path: 0x0   Instruction: push {r3, lr}
+Address: 0x80212  First Path: 0x80214   Branch Path: 0x0   Instruction: movs r0, #0xd
+Address: 0x80214  First Path: 0x80216   Branch Path: 0x0   Instruction: movs r1, #1
+Address: 0x80216  First Path: 0x0   Branch Path: 0x80ef8   Instruction: bl #0x80ef8
+Address: 0x8021a  First Path: 0x8021c   Branch Path: 0x0   Instruction: movs r0, #2
+Address: 0x8021c  First Path: 0x8021e   Branch Path: 0x0   Instruction: movs r1, #1
+Address: 0x8021e  First Path: 0x0   Branch Path: 0x80ef8   Instruction: bl #0x80ef8
+Address: 0x80222  First Path: 0x80224   Branch Path: 0x0   Instruction: movs r0, #2
+Address: 0x80224  First Path: 0x80226   Branch Path: 0x0   Instruction: movs r1, #0xff
+Address: 0x80226  First Path: 0x0   Branch Path: 0x80c38   Instruction: bl #0x80c38
+Address: 0x8022a  First Path: 0x8022c   Branch Path: 0x0   Instruction: ldr r2, [pc, #0x54]
+Address: 0x8022c  First Path: 0x80230   Branch Path: 0x0   Instruction: mov.w r3, #0x2000000
+Address: 0x80230  First Path: 0x80232   Branch Path: 0x0   Instruction: str r3, [r2]
+Address: 0x80232  First Path: 0x80234   Branch Path: 0x0   Instruction: str r3, [r2, #0x6c]
+Address: 0x80234  First Path: 0x80236   Branch Path: 0x0   Instruction: ldr r3, [pc, #0x4c]
+Address: 0x80236  First Path: 0x80238   Branch Path: 0x0   Instruction: ldr r2, [pc, #0x50]
+Address: 0x80238  First Path: 0x8023a   Branch Path: 0x0   Instruction: ldr r0, [pc, #0x50]
+Address: 0x8023a  First Path: 0x8023c   Branch Path: 0x0   Instruction: str r2, [r3]
+Address: 0x8023c  First Path: 0x8023e   Branch Path: 0x0   Instruction: ldr r2, [pc, #0x50]
+Address: 0x8023e  First Path: 0x80240   Branch Path: 0x0   Instruction: movs r1, #0
+Address: 0x80240  First Path: 0x80244   Branch Path: 0x0   Instruction: str r2, [r3, #-0xe0]
+Address: 0x80244  First Path: 0x80246   Branch Path: 0x0   Instruction: ldr r2, [pc, #0x4c]
+Address: 0x80246  First Path: 0x8024a   Branch Path: 0x0   Instruction: str r2, [r3, #-0xc8]
+Address: 0x8024a  First Path: 0x8024c   Branch Path: 0x0   Instruction: ldr r2, [pc, #0x4c]
+Address: 0x8024c  First Path: 0x80250   Branch Path: 0x0   Instruction: str r2, [r3, #-0xd0]
+Address: 0x80250  First Path: 0x80252   Branch Path: 0x0   Instruction: movs r2, #5
+Address: 0x80252  First Path: 0x80256   Branch Path: 0x0   Instruction: str r2, [r3, #-0xe4]
+Address: 0x80256  First Path: 0x80258   Branch Path: 0x0   Instruction: movs r2, #0x10
+Address: 0x80258  First Path: 0x8025c   Branch Path: 0x0   Instruction: str r2, [r3, #-0xc0]
+Address: 0x8025c  First Path: 0x8025e   Branch Path: 0x0   Instruction: movs r2, #0xef
+Address: 0x8025e  First Path: 0x80262   Branch Path: 0x0   Instruction: str r2, [r3, #-0xbc]
+Address: 0x80262  First Path: 0x80264   Branch Path: 0x0   Instruction: ldr r3, [pc, #0x38]
+Address: 0x80264  First Path: 0x80268   Branch Path: 0x0   Instruction: mov.w r2, #0x8000000
+Address: 0x80268  First Path: 0x8026a   Branch Path: 0x0   Instruction: str r2, [r3]
+Address: 0x8026a  First Path: 0x8026c   Branch Path: 0x0   Instruction: movs r3, #4
+Address: 0x8026c  First Path: 0x8026e   Branch Path: 0x0   Instruction: movs r2, #0x1e
+Address: 0x8026e  First Path: 0x0   Branch Path: 0x801a0   Instruction: bl #0x801a0
+Address: 0x802f0  First Path: 0x802f4   Branch Path: 0x0   Instruction: push.w {r4, r5, r6, r7, r8, lr}
+Address: 0x802f4  First Path: 0x802f6   Branch Path: 0x0   Instruction: ldr r5, [pc, #0xfc]
+Address: 0x802f6  First Path: 0x0   Branch Path: 0x8077c   Instruction: bl #0x8077c
+Address: 0x802fa  First Path: 0x802fc   Branch Path: 0x0   Instruction: ldr r3, [r5]
+Address: 0x802fc  First Path: 0x80300   Branch Path: 0x0   Instruction: mov.w r2, #0x3e8
+Address: 0x80300  First Path: 0x80304   Branch Path: 0x0   Instruction: udiv r3, r3, r2
+Address: 0x80304  First Path: 0x80306   Branch Path: 0x0   Instruction: subs r2, r3, #1
+Address: 0x80306  First Path: 0x80308   Branch Path: 0x0   Instruction: ldr r3, [pc, #0xf0]
+Address: 0x80308  First Path: 0x8030a   Branch Path: 0x0   Instruction: movs r1, #0xf0
+Address: 0x8030a  First Path: 0x8030c   Branch Path: 0x0   Instruction: str r2, [r3, #4]
+Address: 0x8030c  First Path: 0x8030e   Branch Path: 0x0   Instruction: ldr r2, [pc, #0xec]
+Address: 0x8030e  First Path: 0x80310   Branch Path: 0x0   Instruction: movs r4, #0
+Address: 0x80310  First Path: 0x80314   Branch Path: 0x0   Instruction: strb.w r1, [r2, #0x23]
+Address: 0x80314  First Path: 0x80316   Branch Path: 0x0   Instruction: movs r2, #7
+Address: 0x80316  First Path: 0x80318   Branch Path: 0x0   Instruction: str r4, [r3, #8]
+Address: 0x80318  First Path: 0x8031a   Branch Path: 0x0   Instruction: str r2, [r3]
+Address: 0x8031a  First Path: 0x0   Branch Path: 0x823bc   Instruction: bl #0x823bc
+Address: 0x8031e  First Path: 0x80320   Branch Path: 0x0   Instruction: mov r8, r5
+Address: 0x80320  First Path: 0x80322   Branch Path: 0x0   Instruction: mov r0, r4
+Address: 0x80322  First Path: 0x80324   Branch Path: 0x0   Instruction: movs r1, #0
+Address: 0x80324  First Path: 0x80326   Branch Path: 0x0   Instruction: adds r4, #1
+Address: 0x80326  First Path: 0x0   Branch Path: 0x81000   Instruction: bl #0x81000
+Address: 0x8032a  First Path: 0x8032c   Branch Path: 0x0   Instruction: cmp r4, #0x4f
+Address: 0x8032c  First Path: 0x8032e   Branch Path: 0x80320   Instruction: bne #0x80320
+Address: 0x8032e  First Path: 0x80330   Branch Path: 0x0   Instruction: ldr r4, [pc, #0xd0]
+Address: 0x80330  First Path: 0x80332   Branch Path: 0x0   Instruction: ldr r6, [pc, #0xd0]
+Address: 0x80332  First Path: 0x80334   Branch Path: 0x0   Instruction: ldr r7, [pc, #0xd4]
+Address: 0x80334  First Path: 0x80336   Branch Path: 0x0   Instruction: ldr r3, [pc, #0xd4]
+Address: 0x80336  First Path: 0x8033a   Branch Path: 0x0   Instruction: mov.w r5, #-1
+Address: 0x8033a  First Path: 0x8033e   Branch Path: 0x0   Instruction: str.w r5, [r4, #0xa0]
+Address: 0x8033e  First Path: 0x80342   Branch Path: 0x0   Instruction: mov.w r2, #0x300
+Address: 0x80342  First Path: 0x80346   Branch Path: 0x0   Instruction: str.w r5, [r6, #0xa0]
+Address: 0x80346  First Path: 0x80348   Branch Path: 0x0   Instruction: mov r0, r4
+Address: 0x80348  First Path: 0x8034c   Branch Path: 0x0   Instruction: str.w r5, [r3, #0xa0]
+Address: 0x8034c  First Path: 0x8034e   Branch Path: 0x0   Instruction: movs r1, #1
+Address: 0x8034e  First Path: 0x80350   Branch Path: 0x0   Instruction: movs r3, #0
+Address: 0x80350  First Path: 0x80354   Branch Path: 0x0   Instruction: str.w r5, [r7, #0xa0]
+Address: 0x80354  First Path: 0x0   Branch Path: 0x805ac   Instruction: bl #0x805ac
+Address: 0x80358  First Path: 0x8035a   Branch Path: 0x0   Instruction: movs r0, #0
+Address: 0x8035a  First Path: 0x8035c   Branch Path: 0x0   Instruction: movs r1, #1
+Address: 0x8035c  First Path: 0x0   Branch Path: 0x81000   Instruction: bl #0x81000
+Address: 0x80360  First Path: 0x80362   Branch Path: 0x0   Instruction: mov r0, r4
+Address: 0x80362  First Path: 0x80364   Branch Path: 0x0   Instruction: movs r1, #1
+Address: 0x80364  First Path: 0x80368   Branch Path: 0x0   Instruction: mov.w r2, #0xc00
+Address: 0x80368  First Path: 0x8036a   Branch Path: 0x0   Instruction: movs r3, #0
+Address: 0x8036a  First Path: 0x0   Branch Path: 0x805ac   Instruction: bl #0x805ac
+Address: 0x8036e  First Path: 0x80370   Branch Path: 0x0   Instruction: mov r0, r4
+Address: 0x80370  First Path: 0x80372   Branch Path: 0x0   Instruction: movs r1, #1
+Address: 0x80372  First Path: 0x80376   Branch Path: 0x0   Instruction: mov.w r2, #0x3000
+Address: 0x80376  First Path: 0x80378   Branch Path: 0x0   Instruction: movs r3, #0
+Address: 0x80378  First Path: 0x0   Branch Path: 0x805ac   Instruction: bl #0x805ac
+Address: 0x8037c  First Path: 0x8037e   Branch Path: 0x0   Instruction: mov r0, r7
+Address: 0x8037e  First Path: 0x80380   Branch Path: 0x0   Instruction: movs r1, #2
+Address: 0x80380  First Path: 0x80382   Branch Path: 0x0   Instruction: movs r2, #0x30
+Address: 0x80382  First Path: 0x80384   Branch Path: 0x0   Instruction: movs r3, #0
+Address: 0x80384  First Path: 0x0   Branch Path: 0x805ac   Instruction: bl #0x805ac
+Address: 0x80388  First Path: 0x8038a   Branch Path: 0x0   Instruction: mov r0, r6
+Address: 0x8038a  First Path: 0x8038c   Branch Path: 0x0   Instruction: movs r1, #1
+Address: 0x8038c  First Path: 0x80390   Branch Path: 0x0   Instruction: mov.w r2, #0xc00
+Address: 0x80390  First Path: 0x80392   Branch Path: 0x0   Instruction: movs r3, #0
+Address: 0x80392  First Path: 0x0   Branch Path: 0x805ac   Instruction: bl #0x805ac
+Address: 0x80396  First Path: 0x80398   Branch Path: 0x0   Instruction: mov r0, r4
+Address: 0x80398  First Path: 0x8039a   Branch Path: 0x0   Instruction: movs r1, #1
+Address: 0x8039a  First Path: 0x8039c   Branch Path: 0x0   Instruction: movs r2, #3
+Address: 0x8039c  First Path: 0x8039e   Branch Path: 0x0   Instruction: movs r3, #0
+Address: 0x8039e  First Path: 0x0   Branch Path: 0x805ac   Instruction: bl #0x805ac
+Address: 0x803a2  First Path: 0x803a4   Branch Path: 0x0   Instruction: movs r1, #1
+Address: 0x803a4  First Path: 0x803a8   Branch Path: 0x0   Instruction: mov.w r2, #0xc000
+Address: 0x803a8  First Path: 0x803aa   Branch Path: 0x0   Instruction: movs r3, #0
+Address: 0x803aa  First Path: 0x803ac   Branch Path: 0x0   Instruction: mov r0, r6
+Address: 0x803ac  First Path: 0x0   Branch Path: 0x805ac   Instruction: bl #0x805ac
+Address: 0x803b0  First Path: 0x803b2   Branch Path: 0x0   Instruction: movs r0, #0x25
+Address: 0x803b2  First Path: 0x0   Branch Path: 0x80638   Instruction: bl #0x80638
+Address: 0x803b6  First Path: 0x803ba   Branch Path: 0x0   Instruction: ldr.w r1, [r8]
+Address: 0x803ba  First Path: 0x803bc   Branch Path: 0x0   Instruction: ldr r2, [pc, #0x54]
+Address: 0x803bc  First Path: 0x803be   Branch Path: 0x0   Instruction: movs r3, #0xc
+Address: 0x803be  First Path: 0x803c0   Branch Path: 0x0   Instruction: ldr r0, [pc, #0x54]
+Address: 0x803c0  First Path: 0x0   Branch Path: 0x8087c   Instruction: bl #0x8087c
+Address: 0x803c4  First Path: 0x803c6   Branch Path: 0x0   Instruction: movs r3, #1
+Address: 0x803c6  First Path: 0x803c8   Branch Path: 0x0   Instruction: ldr r0, [pc, #0x4c]
+Address: 0x803c8  First Path: 0x803ca   Branch Path: 0x0   Instruction: movs r1, #0
+Address: 0x803ca  First Path: 0x803ce   Branch Path: 0x0   Instruction: mov.w r2, #0x300000
+Address: 0x803ce  First Path: 0x0   Branch Path: 0x80922   Instruction: bl #0x80922
+Address: 0x803d2  First Path: 0x803d4   Branch Path: 0x0   Instruction: movs r1, #0
+Address: 0x803d4  First Path: 0x803d6   Branch Path: 0x0   Instruction: mov r2, r1
+Address: 0x803d6  First Path: 0x803d8   Branch Path: 0x0   Instruction: ldr r0, [pc, #0x3c]
+Address: 0x803d8  First Path: 0x0   Branch Path: 0x80914   Instruction: bl #0x80914
+Address: 0x803dc  First Path: 0x803de   Branch Path: 0x0   Instruction: mov r1, r5
+Address: 0x803de  First Path: 0x803e0   Branch Path: 0x0   Instruction: ldr r0, [pc, #0x34]
+Address: 0x803e0  First Path: 0x0   Branch Path: 0x8094e   Instruction: bl #0x8094e
+Address: 0x803e4  First Path: 0x803e6   Branch Path: 0x0   Instruction: ldr r0, [pc, #0x2c]
+Address: 0x803e6  First Path: 0x0   Branch Path: 0x80946   Instruction: bl #0x80946
+Address: 0x803ea  First Path: 0x803ee   Branch Path: 0x0   Instruction: pop.w {r4, r5, r6, r7, r8, lr}
+Address: 0x803ee  First Path: 0x0   Branch Path: 0x80c34   Instruction: b.w #0x80c34
+Address: 0x80530  First Path: 0x80532   Branch Path: 0x80536   Instruction: cbz r2, #0x80536
+Address: 0x80532  First Path: 0x80534   Branch Path: 0x0   Instruction: str r1, [r0, #0x64]
+Address: 0x80536  First Path: 0x80538   Branch Path: 0x0   Instruction: str r1, [r0, #0x60]
+Address: 0x8053a  First Path: 0x8053c   Branch Path: 0x0   Instruction: str r2, [r0, #0x44]
+Address: 0x8053c  First Path: 0x8053e   Branch Path: 0x0   Instruction: cmp r1, #5
+Address: 0x8053e  First Path: 0x80540   Branch Path: 0x8055c   Instruction: bhi #0x8055c
+Address: 0x80540  First Path: 0x80544   Branch Path: 0x0   Instruction: tbb [pc, r1]
+Address: 0x80544  First Path: 0x80546   Branch Path: 0x0   Instruction: lsls r5, r1, #0xc
+Address: 0x80546  First Path: 0x80548   Branch Path: 0x0   Instruction: lsrs r1, r1, #0x14
+Address: 0x80548  First Path: 0x8054a   Branch Path: 0x0   Instruction: lsrs r5, r1, #0x14
+Address: 0x8054a  First Path: 0x8054c   Branch Path: 0x0   Instruction: ldr r3, [r0, #0x70]
+Address: 0x8054c  First Path: 0x8054e   Branch Path: 0x0   Instruction: ldr r1, [r0, #0x70]
+Address: 0x8054e  First Path: 0x80550   Branch Path: 0x0   Instruction: ands r3, r1
+Address: 0x80550  First Path: 0x80554   Branch Path: 0x0   Instruction: bic.w r3, r3, r2
+Address: 0x80554  First Path: 0x0   Branch Path: 0x8055a   Instruction: b #0x8055a
+Address: 0x8055a  First Path: 0x8055c   Branch Path: 0x0   Instruction: str r3, [r0, #0x70]
+Address: 0x8055c  First Path: 0x8055e   Branch Path: 0x0   Instruction: str r2, [r0, #4]
+Address: 0x80586  First Path: 0x80588   Branch Path: 0x0   Instruction: push {r4, lr}
+Address: 0x80588  First Path: 0x8058a   Branch Path: 0x0   Instruction: ldr r4, [sp, #8]
+Address: 0x8058a  First Path: 0x8058c   Branch Path: 0x0   Instruction: str r1, [r0, #0x44]
+Address: 0x8058c  First Path: 0x8058e   Branch Path: 0x80592   Instruction: cbz r4, #0x80592
+Address: 0x8058e  First Path: 0x80590   Branch Path: 0x0   Instruction: str r1, [r0, #0x64]
+Address: 0x80590  First Path: 0x0   Branch Path: 0x80594   Instruction: b #0x80594
+Address: 0x80592  First Path: 0x80594   Branch Path: 0x0   Instruction: str r1, [r0, #0x60]
+Address: 0x80594  First Path: 0x80596   Branch Path: 0x8059a   Instruction: cbz r3, #0x8059a
+Address: 0x80596  First Path: 0x80598   Branch Path: 0x0   Instruction: str r1, [r0, #0x50]
+Address: 0x80598  First Path: 0x0   Branch Path: 0x8059c   Instruction: b #0x8059c
+Address: 0x8059a  First Path: 0x8059c   Branch Path: 0x0   Instruction: str r1, [r0, #0x54]
+Address: 0x8059c  First Path: 0x8059e   Branch Path: 0x805a2   Instruction: cbz r2, #0x805a2
+Address: 0x8059e  First Path: 0x805a0   Branch Path: 0x0   Instruction: str r1, [r0, #0x30]
+Address: 0x805a0  First Path: 0x0   Branch Path: 0x805a4   Instruction: b #0x805a4
+Address: 0x805a2  First Path: 0x805a4   Branch Path: 0x0   Instruction: str r1, [r0, #0x34]
+Address: 0x805a4  First Path: 0x805a6   Branch Path: 0x0   Instruction: str r1, [r0, #0x10]
+Address: 0x805a6  First Path: 0x805a8   Branch Path: 0x0   Instruction: str r1, [r0]
+Address: 0x805ac  First Path: 0x805ae   Branch Path: 0x0   Instruction: push {r0, r1, r2, r4, r5, r6, r7, lr}
+Address: 0x805ae  First Path: 0x805b0   Branch Path: 0x0   Instruction: mov r6, r3
+Address: 0x805b0  First Path: 0x805b2   Branch Path: 0x0   Instruction: subs r3, r1, #1
+Address: 0x805b2  First Path: 0x805b4   Branch Path: 0x0   Instruction: mov r5, r0
+Address: 0x805b4  First Path: 0x805b6   Branch Path: 0x0   Instruction: mov r7, r1
+Address: 0x805b6  First Path: 0x805b8   Branch Path: 0x0   Instruction: mov r4, r2
+Address: 0x805b8  First Path: 0x805ba   Branch Path: 0x0   Instruction: cmp r3, #4
+Address: 0x805ba  First Path: 0x805bc   Branch Path: 0x805fc   Instruction: bhi #0x805fc
+Address: 0x805bc  First Path: 0x805c0   Branch Path: 0x0   Instruction: tbb [pc, r3]
+Address: 0x805c0  First Path: 0x805c2   Branch Path: 0x0   Instruction: lsls r3, r0, #0xc
+Address: 0x805c2  First Path: 0x805c4   Branch Path: 0x0   Instruction: asrs r4, r1, #8
+Address: 0x805c4  First Path: 0x805c6   Branch Path: 0x0   Instruction: movs r2, r2
+Address: 0x805c6  First Path: 0x805c8   Branch Path: 0x0   Instruction: mov r2, r4
+Address: 0x805c8  First Path: 0x805ca   Branch Path: 0x0   Instruction: ldr r3, [pc, #0x38]
+Address: 0x805ca  First Path: 0x0   Branch Path: 0x8053a   Instruction: blx r3
+Address: 0x805cc  First Path: 0x805ce   Branch Path: 0x0   Instruction: lsls r2, r6, #0x1f
+Address: 0x805ce  First Path: 0x805d0   Branch Path: 0x0   Instruction: str r4, [r5, #0x44]
+Address: 0x805d0  First Path: 0x805d2   Branch Path: 0x0   Instruction: ite mi
+Address: 0x805d2  First Path: 0x805d4   Branch Path: 0x0   Instruction: strmi r4, [r5, #0x64]
+Address: 0x805d4  First Path: 0x805d6   Branch Path: 0x0   Instruction: str r4, [r5, #0x60]
+Address: 0x805d6  First Path: 0x0   Branch Path: 0x805e0   Instruction: b #0x805e0
+Address: 0x805e0  First Path: 0x805e2   Branch Path: 0x0   Instruction: movs r0, #1
+Address: 0x805e2  First Path: 0x0   Branch Path: 0x805fe   Instruction: b #0x805fe
+Address: 0x805fc  First Path: 0x805fe   Branch Path: 0x0   Instruction: movs r0, #0
+Address: 0x805fe  First Path: 0x80600   Branch Path: 0x0   Instruction: add sp, #0xc
+Address: 0x80610  First Path: 0x80612   Branch Path: 0x0   Instruction: mov r3, r0
+Address: 0x80612  First Path: 0x80614   Branch Path: 0x0   Instruction: ldr r0, [r0, #8]
+Address: 0x80614  First Path: 0x80616   Branch Path: 0x0   Instruction: ands r0, r1
+Address: 0x80616  First Path: 0x80618   Branch Path: 0x80622   Instruction: beq #0x80622
+Address: 0x80618  First Path: 0x8061a   Branch Path: 0x0   Instruction: ldr r3, [r3, #0x18]
+Address: 0x8061a  First Path: 0x8061c   Branch Path: 0x0   Instruction: tst r1, r3
+Address: 0x8061c  First Path: 0x8061e   Branch Path: 0x0   Instruction: ite eq
+Address: 0x8061e  First Path: 0x80620   Branch Path: 0x0   Instruction: moveq r0, #0
+Address: 0x80620  First Path: 0x80622   Branch Path: 0x0   Instruction: movs r0, #1
+Address: 0x80638  First Path: 0x8063a   Branch Path: 0x0   Instruction: cmp r0, #0x2c
+Address: 0x8063a  First Path: 0x8063c   Branch Path: 0x80670   Instruction: bhi #0x80670
+Address: 0x8063c  First Path: 0x8063e   Branch Path: 0x0   Instruction: cmp r0, #0x1f
+Address: 0x8063e  First Path: 0x80640   Branch Path: 0x0   Instruction: ldr r3, [pc, #0x38]
+Address: 0x80640  First Path: 0x80644   Branch Path: 0x0   Instruction: mov.w r2, #1
+Address: 0x80644  First Path: 0x80646   Branch Path: 0x80658   Instruction: bhi #0x80658
+Address: 0x80646  First Path: 0x8064a   Branch Path: 0x0   Instruction: lsl.w r0, r2, r0
+Address: 0x8064a  First Path: 0x8064c   Branch Path: 0x0   Instruction: ldr r1, [r3, #0x18]
+Address: 0x8064c  First Path: 0x80650   Branch Path: 0x0   Instruction: and.w r2, r0, r1
+Address: 0x80650  First Path: 0x80652   Branch Path: 0x0   Instruction: cmp r2, r0
+Address: 0x80652  First Path: 0x80654   Branch Path: 0x80674   Instruction: beq #0x80674
+Address: 0x80654  First Path: 0x80656   Branch Path: 0x0   Instruction: str r0, [r3, #0x10]
+Address: 0x80656  First Path: 0x0   Branch Path: 0x80674   Instruction: b #0x80674
+Address: 0x80658  First Path: 0x8065a   Branch Path: 0x0   Instruction: subs r0, #0x20
+Address: 0x8065a  First Path: 0x8065e   Branch Path: 0x0   Instruction: lsl.w r0, r2, r0
+Address: 0x8065e  First Path: 0x80662   Branch Path: 0x0   Instruction: ldr.w r1, [r3, #0x108]
+Address: 0x80662  First Path: 0x80666   Branch Path: 0x0   Instruction: and.w r2, r0, r1
+Address: 0x80666  First Path: 0x80668   Branch Path: 0x0   Instruction: cmp r2, r0
+Address: 0x80668  First Path: 0x8066a   Branch Path: 0x80674   Instruction: beq #0x80674
+Address: 0x8066a  First Path: 0x8066e   Branch Path: 0x0   Instruction: str.w r0, [r3, #0x100]
+Address: 0x8066e  First Path: 0x0   Branch Path: 0x80674   Instruction: b #0x80674
+Address: 0x80670  First Path: 0x80672   Branch Path: 0x0   Instruction: movs r0, #1
+Address: 0x80674  First Path: 0x80676   Branch Path: 0x0   Instruction: movs r0, #0
+Address: 0x8067c  First Path: 0x8067e   Branch Path: 0x0   Instruction: cmp r0, #0x2c
+Address: 0x8067e  First Path: 0x80680   Branch Path: 0x806b0   Instruction: bhi #0x806b0
+Address: 0x80680  First Path: 0x80682   Branch Path: 0x0   Instruction: cmp r0, #0x1f
+Address: 0x80682  First Path: 0x80684   Branch Path: 0x0   Instruction: ldr r3, [pc, #0x34]
+Address: 0x80684  First Path: 0x80688   Branch Path: 0x0   Instruction: mov.w r1, #1
+Address: 0x80688  First Path: 0x8068a   Branch Path: 0x8069a   Instruction: bhi #0x8069a
+Address: 0x8068a  First Path: 0x8068e   Branch Path: 0x0   Instruction: lsl.w r0, r1, r0
+Address: 0x8068e  First Path: 0x80690   Branch Path: 0x0   Instruction: ldr r2, [r3, #0x18]
+Address: 0x80690  First Path: 0x80692   Branch Path: 0x0   Instruction: ands r2, r0
+Address: 0x80692  First Path: 0x80694   Branch Path: 0x0   Instruction: cmp r2, r0
+Address: 0x80694  First Path: 0x80696   Branch Path: 0x806b4   Instruction: bne #0x806b4
+Address: 0x80696  First Path: 0x80698   Branch Path: 0x0   Instruction: str r2, [r3, #0x14]
+Address: 0x80698  First Path: 0x0   Branch Path: 0x806b4   Instruction: b #0x806b4
+Address: 0x8069a  First Path: 0x8069c   Branch Path: 0x0   Instruction: subs r0, #0x20
+Address: 0x8069c  First Path: 0x806a0   Branch Path: 0x0   Instruction: lsl.w r0, r1, r0
+Address: 0x806a0  First Path: 0x806a4   Branch Path: 0x0   Instruction: ldr.w r2, [r3, #0x108]
+Address: 0x806a4  First Path: 0x806a6   Branch Path: 0x0   Instruction: ands r2, r0
+Address: 0x806a6  First Path: 0x806a8   Branch Path: 0x0   Instruction: cmp r2, r0
+Address: 0x806a8  First Path: 0x806aa   Branch Path: 0x806b4   Instruction: bne #0x806b4
+Address: 0x806aa  First Path: 0x806ae   Branch Path: 0x0   Instruction: str.w r2, [r3, #0x104]
+Address: 0x806ae  First Path: 0x0   Branch Path: 0x806b4   Instruction: b #0x806b4
+Address: 0x806b0  First Path: 0x806b2   Branch Path: 0x0   Instruction: movs r0, #1
+Address: 0x806b4  First Path: 0x806b6   Branch Path: 0x0   Instruction: movs r0, #0
+Address: 0x806dc  First Path: 0x806de   Branch Path: 0x0   Instruction: ldr r3, [pc, #0xc]
+Address: 0x806de  First Path: 0x806e0   Branch Path: 0x806e4   Instruction: cbz r0, #0x806e4
+Address: 0x806e0  First Path: 0x806e2   Branch Path: 0x0   Instruction: ldr r2, [pc, #0xc]
+Address: 0x806e2  First Path: 0x0   Branch Path: 0x806e6   Instruction: b #0x806e6
+Address: 0x806e4  First Path: 0x806e6   Branch Path: 0x0   Instruction: ldr r2, [pc, #0xc]
+Address: 0x806e6  First Path: 0x806ea   Branch Path: 0x0   Instruction: str.w r2, [r3, #0xe4]
+Address: 0x80730  First Path: 0x80732   Branch Path: 0x0   Instruction: cmp r1, #2
+Address: 0x80732  First Path: 0x80734   Branch Path: 0x0   Instruction: push {r4, lr}
+Address: 0x80734  First Path: 0x80736   Branch Path: 0x80742   Instruction: bls #0x80742
+Address: 0x80736  First Path: 0x80738   Branch Path: 0x0   Instruction: ldr r0, [pc, #0x14]
+Address: 0x80738  First Path: 0x8073a   Branch Path: 0x0   Instruction: movs r1, #0x5c
+Address: 0x8073a  First Path: 0x8073c   Branch Path: 0x0   Instruction: ldr r2, [pc, #0x14]
+Address: 0x8073c  First Path: 0x8073e   Branch Path: 0x0   Instruction: ldr r3, [pc, #0x14]
+Address: 0x8073e  First Path: 0x80740   Branch Path: 0x0   Instruction: ldr r4, [pc, #0x18]
+Address: 0x80740  First Path: 0x0   Branch Path: 0x82358   Instruction: blx r4
+Address: 0x80742  First Path: 0x80744   Branch Path: 0x0   Instruction: lsls r1, r1, #6
+Address: 0x80744  First Path: 0x80746   Branch Path: 0x0   Instruction: movs r3, #5
+Address: 0x80746  First Path: 0x80748   Branch Path: 0x0   Instruction: str r3, [r0, r1]
+Address: 0x8076c  First Path: 0x80770   Branch Path: 0x0   Instruction: add.w r1, r0, r1, lsl #6
+Address: 0x80770  First Path: 0x80772   Branch Path: 0x0   Instruction: str r2, [r1, #0x18]
+Address: 0x8077c  First Path: 0x8077e   Branch Path: 0x0   Instruction: ldr r2, [pc, #0x68]
+Address: 0x8077e  First Path: 0x80782   Branch Path: 0x0   Instruction: mov.w r3, #0x400
+Address: 0x80782  First Path: 0x80784   Branch Path: 0x0   Instruction: str r3, [r2]
+Address: 0x80784  First Path: 0x80788   Branch Path: 0x0   Instruction: str.w r3, [r2, #0x200]
+Address: 0x80788  First Path: 0x8078a   Branch Path: 0x0   Instruction: ldr r3, [pc, #0x60]
+Address: 0x8078a  First Path: 0x8078c   Branch Path: 0x0   Instruction: ldr r2, [r3, #0x20]
+Address: 0x8078c  First Path: 0x8078e   Branch Path: 0x0   Instruction: lsls r2, r2, #7
+Address: 0x8078e  First Path: 0x80790   Branch Path: 0x80796   Instruction: bpl #0x80796
+Address: 0x80790  First Path: 0x80792   Branch Path: 0x0   Instruction: ldr r2, [pc, #0x5c]
+Address: 0x80792  First Path: 0x80794   Branch Path: 0x0   Instruction: str r2, [r3, #0x20]
+Address: 0x80794  First Path: 0x0   Branch Path: 0x807a2   Instruction: b #0x807a2
+Address: 0x80796  First Path: 0x80798   Branch Path: 0x0   Instruction: ldr r2, [pc, #0x5c]
+Address: 0x80798  First Path: 0x8079a   Branch Path: 0x0   Instruction: str r2, [r3, #0x20]
+Address: 0x8079a  First Path: 0x8079c   Branch Path: 0x0   Instruction: ldr r2, [r3, #0x68]
+Address: 0x8079c  First Path: 0x8079e   Branch Path: 0x0   Instruction: lsls r0, r2, #0x1f
+Address: 0x8079e  First Path: 0x807a0   Branch Path: 0x8079a   Instruction: bpl #0x8079a
+Address: 0x807a0  First Path: 0x0   Branch Path: 0x80790   Instruction: b #0x80790
+Address: 0x807a2  First Path: 0x807a4   Branch Path: 0x0   Instruction: ldr r1, [r3, #0x68]
+Address: 0x807a4  First Path: 0x807a6   Branch Path: 0x0   Instruction: ldr r2, [pc, #0x44]
+Address: 0x807a6  First Path: 0x807a8   Branch Path: 0x0   Instruction: lsls r1, r1, #0xf
+Address: 0x807a8  First Path: 0x807aa   Branch Path: 0x807a2   Instruction: bpl #0x807a2
+Address: 0x807aa  First Path: 0x807ac   Branch Path: 0x0   Instruction: ldr r1, [r2, #0x30]
+Address: 0x807ac  First Path: 0x807b0   Branch Path: 0x0   Instruction: bic r1, r1, #3
+Address: 0x807b0  First Path: 0x807b4   Branch Path: 0x0   Instruction: orr r1, r1, #1
+Address: 0x807b4  First Path: 0x807b6   Branch Path: 0x0   Instruction: str r1, [r2, #0x30]
+Address: 0x807b6  First Path: 0x807b8   Branch Path: 0x0   Instruction: ldr r2, [r3, #0x68]
+Address: 0x807b8  First Path: 0x807ba   Branch Path: 0x0   Instruction: lsls r2, r2, #0x1c
+Address: 0x807ba  First Path: 0x807bc   Branch Path: 0x807b6   Instruction: bpl #0x807b6
+Address: 0x807bc  First Path: 0x807be   Branch Path: 0x0   Instruction: ldr r1, [pc, #0x38]
+Address: 0x807be  First Path: 0x807c0   Branch Path: 0x0   Instruction: ldr r2, [pc, #0x2c]
+Address: 0x807c0  First Path: 0x807c2   Branch Path: 0x0   Instruction: str r1, [r2, #0x28]
+Address: 0x807c2  First Path: 0x807c4   Branch Path: 0x0   Instruction: ldr r2, [r3, #0x68]
+Address: 0x807c4  First Path: 0x807c6   Branch Path: 0x0   Instruction: lsls r0, r2, #0x1e
+Address: 0x807c6  First Path: 0x807c8   Branch Path: 0x807c2   Instruction: bpl #0x807c2
+Address: 0x807c8  First Path: 0x807ca   Branch Path: 0x0   Instruction: ldr r2, [pc, #0x20]
+Address: 0x807ca  First Path: 0x807cc   Branch Path: 0x0   Instruction: movs r1, #0x11
+Address: 0x807cc  First Path: 0x807ce   Branch Path: 0x0   Instruction: str r1, [r2, #0x30]
+Address: 0x807ce  First Path: 0x807d0   Branch Path: 0x0   Instruction: ldr r2, [r3, #0x68]
+Address: 0x807d0  First Path: 0x807d2   Branch Path: 0x0   Instruction: lsls r1, r2, #0x1c
+Address: 0x807d2  First Path: 0x807d4   Branch Path: 0x807ce   Instruction: bpl #0x807ce
+Address: 0x807d4  First Path: 0x807d6   Branch Path: 0x0   Instruction: ldr r2, [pc, #0x14]
+Address: 0x807d6  First Path: 0x807d8   Branch Path: 0x0   Instruction: movs r1, #0x12
+Address: 0x807d8  First Path: 0x807da   Branch Path: 0x0   Instruction: str r1, [r2, #0x30]
+Address: 0x807da  First Path: 0x807dc   Branch Path: 0x0   Instruction: ldr r2, [r3, #0x68]
+Address: 0x807dc  First Path: 0x807de   Branch Path: 0x0   Instruction: lsls r2, r2, #0x1c
+Address: 0x807de  First Path: 0x807e0   Branch Path: 0x807da   Instruction: bpl #0x807da
+Address: 0x807e0  First Path: 0x807e2   Branch Path: 0x0   Instruction: ldr r2, [pc, #0x18]
+Address: 0x807e2  First Path: 0x807e4   Branch Path: 0x0   Instruction: ldr r3, [pc, #0x1c]
+Address: 0x807e4  First Path: 0x807e6   Branch Path: 0x0   Instruction: str r2, [r3]
+Address: 0x80804  First Path: 0x80806   Branch Path: 0x0   Instruction: ldr r3, [pc, #0x54]
+Address: 0x80806  First Path: 0x80808   Branch Path: 0x0   Instruction: ldr r2, [pc, #0x58]
+Address: 0x80808  First Path: 0x8080a   Branch Path: 0x0   Instruction: push {r4, lr}
+Address: 0x8080a  First Path: 0x8080c   Branch Path: 0x0   Instruction: cmp r3, r2
+Address: 0x8080c  First Path: 0x8080e   Branch Path: 0x0   Instruction: mov r4, r3
+Address: 0x8080e  First Path: 0x80810   Branch Path: 0x80814   Instruction: beq #0x80814
+Address: 0x80814  First Path: 0x80816   Branch Path: 0x0   Instruction: ldr r3, [pc, #0x4c]
+Address: 0x80816  First Path: 0x0   Branch Path: 0x80828   Instruction: b #0x80828
+Address: 0x80828  First Path: 0x8082a   Branch Path: 0x0   Instruction: ldr r2, [pc, #0x40]
+Address: 0x8082a  First Path: 0x8082c   Branch Path: 0x0   Instruction: cmp r3, r2
+Address: 0x8082c  First Path: 0x8082e   Branch Path: 0x80836   Instruction: bhs #0x80836
+Address: 0x80836  First Path: 0x80838   Branch Path: 0x0   Instruction: ldr r1, [pc, #0x38]
+Address: 0x80838  First Path: 0x8083a   Branch Path: 0x0   Instruction: ldr r3, [pc, #0x38]
+Address: 0x8083a  First Path: 0x8083e   Branch Path: 0x0   Instruction: bic r2, r1, #0xe0000000
+Address: 0x8083e  First Path: 0x80842   Branch Path: 0x0   Instruction: add.w r1, r1, #-0x20000000
+Address: 0x80842  First Path: 0x80846   Branch Path: 0x0   Instruction: bic r2, r2, #0x7f
+Address: 0x80846  First Path: 0x8084a   Branch Path: 0x0   Instruction: cmp.w r1, #0x100000
+Address: 0x8084a  First Path: 0x8084c   Branch Path: 0x0   Instruction: str r2, [r3, #8]
+Address: 0x8084c  First Path: 0x8084e   Branch Path: 0x80856   Instruction: bhs #0x80856
+Address: 0x80856  First Path: 0x80858   Branch Path: 0x0   Instruction: ldr r3, [pc, #0x20]
+Address: 0x80858  First Path: 0x0   Branch Path: 0x81310   Instruction: blx r3
+Address: 0x8087c  First Path: 0x80880   Branch Path: 0x0   Instruction: push.w {r4, r5, r6, r7, r8, lr}
+Address: 0x80880  First Path: 0x80882   Branch Path: 0x0   Instruction: ldr r5, [pc, #0x88]
+Address: 0x80882  First Path: 0x80884   Branch Path: 0x0   Instruction: sub sp, #0x40
+Address: 0x80884  First Path: 0x80886   Branch Path: 0x0   Instruction: mov r4, sp
+Address: 0x80886  First Path: 0x80888   Branch Path: 0x0   Instruction: mov r6, r0
+Address: 0x80888  First Path: 0x8088a   Branch Path: 0x0   Instruction: mov r7, r1
+Address: 0x8088a  First Path: 0x8088c   Branch Path: 0x0   Instruction: mov r8, r2
+Address: 0x8088c  First Path: 0x8088e   Branch Path: 0x0   Instruction: mov ip, r3
+Address: 0x8088e  First Path: 0x80890   Branch Path: 0x0   Instruction: ldm r5!, {r0, r1, r2, r3}
+Address: 0x80890  First Path: 0x80892   Branch Path: 0x0   Instruction: stm r4!, {r0, r1, r2, r3}
+Address: 0x80892  First Path: 0x80894   Branch Path: 0x0   Instruction: ldm r5!, {r0, r1, r2, r3}
+Address: 0x80894  First Path: 0x80896   Branch Path: 0x0   Instruction: stm r4!, {r0, r1, r2, r3}
+Address: 0x80896  First Path: 0x80898   Branch Path: 0x0   Instruction: ldm r5!, {r0, r1, r2, r3}
+Address: 0x80898  First Path: 0x8089a   Branch Path: 0x0   Instruction: stm r4!, {r0, r1, r2, r3}
+Address: 0x8089a  First Path: 0x8089e   Branch Path: 0x0   Instruction: ldm.w r5, {r0, r1, r2, r3}
+Address: 0x8089e  First Path: 0x808a2   Branch Path: 0x0   Instruction: stm.w r4, {r0, r1, r2, r3}
+Address: 0x808a2  First Path: 0x808a4   Branch Path: 0x0   Instruction: movs r3, #1
+Address: 0x808a4  First Path: 0x808a6   Branch Path: 0x0   Instruction: str r3, [r6]
+Address: 0x808a6  First Path: 0x808a8   Branch Path: 0x0   Instruction: movs r1, #0
+Address: 0x808a8  First Path: 0x808ac   Branch Path: 0x0   Instruction: lsl.w r2, r8, #1
+Address: 0x808ac  First Path: 0x808b0   Branch Path: 0x0   Instruction: movw r3, #0x202
+Address: 0x808b0  First Path: 0x808b2   Branch Path: 0x0   Instruction: str r1, [r6, #4]
+Address: 0x808b2  First Path: 0x808b6   Branch Path: 0x0   Instruction: str.w r3, [r6, #0x120]
+Address: 0x808b6  First Path: 0x808ba   Branch Path: 0x0   Instruction: str.w r1, [r6, #0x104]
+Address: 0x808ba  First Path: 0x808be   Branch Path: 0x0   Instruction: str.w r1, [r6, #0x114]
+Address: 0x808be  First Path: 0x808c2   Branch Path: 0x0   Instruction: udiv r1, r7, r2
+Address: 0x808c2  First Path: 0x808c6   Branch Path: 0x0   Instruction: mls r2, r2, r1, r7
+Address: 0x808c6  First Path: 0x808c8   Branch Path: 0x808ca   Instruction: cbnz r2, #0x808ca
+Address: 0x808ca  First Path: 0x808cc   Branch Path: 0x0   Instruction: adds r3, r1, #1
+Address: 0x808cc  First Path: 0x808ce   Branch Path: 0x0   Instruction: lsls r3, r3, #1
+Address: 0x808ce  First Path: 0x808d2   Branch Path: 0x0   Instruction: udiv r7, r7, r3
+Address: 0x808d2  First Path: 0x808d4   Branch Path: 0x0   Instruction: ldr r3, [pc, #0x3c]
+Address: 0x808d4  First Path: 0x808d6   Branch Path: 0x0   Instruction: movs r2, #0
+Address: 0x808d6  First Path: 0x808da   Branch Path: 0x0   Instruction: udiv r7, r7, r3
+Address: 0x808da  First Path: 0x808de   Branch Path: 0x0   Instruction: mul ip, ip, r7
+Address: 0x808de  First Path: 0x808e2   Branch Path: 0x0   Instruction: ldr.w r0, [sp, r2, lsl #2]
+Address: 0x808e2  First Path: 0x808e4   Branch Path: 0x0   Instruction: cmp r0, ip
+Address: 0x808e4  First Path: 0x808e6   Branch Path: 0x808f2   Instruction: bhs #0x808f2
+Address: 0x808f2  First Path: 0x808f4   Branch Path: 0x0   Instruction: ldr r3, [r6, #4]
+Address: 0x808f4  First Path: 0x808f6   Branch Path: 0x0   Instruction: lsls r1, r1, #8
+Address: 0x808f6  First Path: 0x808f8   Branch Path: 0x0   Instruction: uxth r1, r1
+Address: 0x808f8  First Path: 0x808fa   Branch Path: 0x0   Instruction: lsls r2, r2, #0x10
+Address: 0x808fa  First Path: 0x808fc   Branch Path: 0x0   Instruction: orrs r1, r3
+Address: 0x808fc  First Path: 0x80900   Branch Path: 0x0   Instruction: and r2, r2, #0xf0000
+Address: 0x80900  First Path: 0x80902   Branch Path: 0x0   Instruction: orrs r2, r1
+Address: 0x80902  First Path: 0x80904   Branch Path: 0x0   Instruction: str r2, [r6, #4]
+Address: 0x80904  First Path: 0x80906   Branch Path: 0x0   Instruction: movs r0, #0
+Address: 0x80906  First Path: 0x80908   Branch Path: 0x0   Instruction: add sp, #0x40
+Address: 0x80914  First Path: 0x80916   Branch Path: 0x0   Instruction: ldr r3, [r0, #4]
+Address: 0x80916  First Path: 0x80918   Branch Path: 0x0   Instruction: lsls r2, r2, #7
+Address: 0x80918  First Path: 0x8091a   Branch Path: 0x0   Instruction: orrs r1, r3
+Address: 0x8091a  First Path: 0x8091c   Branch Path: 0x0   Instruction: uxtb r3, r2
+Address: 0x8091c  First Path: 0x8091e   Branch Path: 0x0   Instruction: orrs r1, r3
+Address: 0x8091e  First Path: 0x80920   Branch Path: 0x0   Instruction: str r1, [r0, #4]
+Address: 0x80922  First Path: 0x80924   Branch Path: 0x0   Instruction: push {r4, lr}
+Address: 0x80924  First Path: 0x80926   Branch Path: 0x0   Instruction: ldr r4, [r0, #4]
+Address: 0x80926  First Path: 0x80928   Branch Path: 0x0   Instruction: lsls r1, r1, #0x18
+Address: 0x80928  First Path: 0x8092a   Branch Path: 0x0   Instruction: orrs r2, r4
+Address: 0x8092a  First Path: 0x8092c   Branch Path: 0x0   Instruction: lsls r3, r3, #0x1c
+Address: 0x8092c  First Path: 0x80930   Branch Path: 0x0   Instruction: and r4, r1, #0xf000000
+Address: 0x80930  First Path: 0x80932   Branch Path: 0x0   Instruction: orrs r2, r4
+Address: 0x80932  First Path: 0x80936   Branch Path: 0x0   Instruction: and r3, r3, #0x30000000
+Address: 0x80936  First Path: 0x80938   Branch Path: 0x0   Instruction: orrs r2, r3
+Address: 0x80938  First Path: 0x8093a   Branch Path: 0x0   Instruction: str r2, [r0, #4]
+Address: 0x80946  First Path: 0x8094a   Branch Path: 0x0   Instruction: movw r3, #0xffff
+Address: 0x8094a  First Path: 0x8094c   Branch Path: 0x0   Instruction: str r3, [r0, #0x14]
+Address: 0x8094e  First Path: 0x80950   Branch Path: 0x0   Instruction: str r1, [r0, #0x28]
+Address: 0x80c18  First Path: 0x0   Branch Path: 0x80c18   Instruction: b #0x80c18
+Address: 0x80c1c  First Path: 0x80c20   Branch Path: 0x0   Instruction: mov.w r0, #-1
+Address: 0x80c22  First Path: 0x80c24   Branch Path: 0x0   Instruction: cmp r1, r2
+Address: 0x80c24  First Path: 0x80c26   Branch Path: 0x80c32   Instruction: beq #0x80c32
+Address: 0x80c38  First Path: 0x80c3a   Branch Path: 0x0   Instruction: ldr r2, [pc, #0x284]
+Address: 0x80c3a  First Path: 0x80c3c   Branch Path: 0x0   Instruction: movs r3, #0x1c
+Address: 0x80c3c  First Path: 0x80c40   Branch Path: 0x0   Instruction: mla r3, r3, r0, r2
+Address: 0x80c40  First Path: 0x80c44   Branch Path: 0x0   Instruction: push.w {r4, r5, r6, r7, r8, sb, sl, fp, lr}
+Address: 0x80c44  First Path: 0x80c46   Branch Path: 0x0   Instruction: mov r6, r1
+Address: 0x80c46  First Path: 0x80c48   Branch Path: 0x0   Instruction: ldr r1, [r3, #0x14]
+Address: 0x80c48  First Path: 0x80c4a   Branch Path: 0x0   Instruction: sub sp, #0x14
+Address: 0x80c4a  First Path: 0x80c4e   Branch Path: 0x0   Instruction: tst.w r1, #2
+Address: 0x80c4e  First Path: 0x80c50   Branch Path: 0x0   Instruction: mov r4, r0
+Address: 0x80c50  First Path: 0x80c52   Branch Path: 0x0   Instruction: mov r8, r2
+Address: 0x80c52  First Path: 0x80c54   Branch Path: 0x0   Instruction: ldr r5, [pc, #0x270]
+Address: 0x80c54  First Path: 0x80c56   Branch Path: 0x80ce0   Instruction: beq #0x80ce0
+Address: 0x80ce0  First Path: 0x80ce2   Branch Path: 0x0   Instruction: lsls r3, r1, #0x1c
+Address: 0x80ce2  First Path: 0x80ce4   Branch Path: 0x80d78   Instruction: bpl #0x80d78
+Address: 0x80d78  First Path: 0x80d7c   Branch Path: 0x0   Instruction: ands r7, r1, #0x10
+Address: 0x80d7c  First Path: 0x80d80   Branch Path: 0x80e90   Instruction: beq.w #0x80e90
+Address: 0x80d80  First Path: 0x80d82   Branch Path: 0x0   Instruction: mov r0, r6
+Address: 0x80d82  First Path: 0x80d84   Branch Path: 0x0   Instruction: ldr r1, [r5]
+Address: 0x80d84  First Path: 0x80d86   Branch Path: 0x0   Instruction: movs r2, #8
+Address: 0x80d86  First Path: 0x0   Branch Path: 0x80c22   Instruction: bl #0x80c22
+Address: 0x80d8a  First Path: 0x80d8e   Branch Path: 0x0   Instruction: movw sb, #0xa410
+Address: 0x80d8e  First Path: 0x80d92   Branch Path: 0x0   Instruction: mul r0, sb, r0
+Address: 0x80d92  First Path: 0x80d94   Branch Path: 0x0   Instruction: movs r3, #0xff
+Address: 0x80d94  First Path: 0x80d98   Branch Path: 0x0   Instruction: udiv fp, r0, r3
+Address: 0x80d98  First Path: 0x80d9a   Branch Path: 0x0   Instruction: movs r3, #0x1c
+Address: 0x80d9a  First Path: 0x80d9e   Branch Path: 0x0   Instruction: mla r3, r3, r4, r8
+Address: 0x80d9e  First Path: 0x80da0   Branch Path: 0x0   Instruction: ldr r2, [pc, #0x140]
+Address: 0x80da0  First Path: 0x80da4   Branch Path: 0x0   Instruction: ldrsb.w r3, [r3, #0x1b]
+Address: 0x80da4  First Path: 0x80da8   Branch Path: 0x0   Instruction: ldr.w r6, [r2, r3, lsl #2]
+Address: 0x80da8  First Path: 0x80daa   Branch Path: 0x0   Instruction: ldr r2, [pc, #0x138]
+Address: 0x80daa  First Path: 0x80dae   Branch Path: 0x0   Instruction: ldr.w ip, [r2, r3, lsl #2]
+Address: 0x80dae  First Path: 0x80db0   Branch Path: 0x0   Instruction: ldr r2, [pc, #0x138]
+Address: 0x80db0  First Path: 0x80db4   Branch Path: 0x0   Instruction: ldr.w r5, [r2, r3, lsl #2]
+Address: 0x80db4  First Path: 0x80db6   Branch Path: 0x0   Instruction: ldr r2, [pc, #0x134]
+Address: 0x80db6  First Path: 0x80dba   Branch Path: 0x0   Instruction: ldr.w r7, [r2, r3, lsl #2]
+Address: 0x80dba  First Path: 0x80dbc   Branch Path: 0x0   Instruction: ldr r3, [pc, #0x134]
+Address: 0x80dbc  First Path: 0x80dbe   Branch Path: 0x0   Instruction: ldrb r2, [r3, r7]
+Address: 0x80dbe  First Path: 0x80dc0   Branch Path: 0x0   Instruction: mov sl, r3
+Address: 0x80dc0  First Path: 0x80dc2   Branch Path: 0x80de6   Instruction: cbnz r2, #0x80de6
+Address: 0x80de6  First Path: 0x80dea   Branch Path: 0x0   Instruction: lsl.w sb, r6, #6
+Address: 0x80dea  First Path: 0x80dee   Branch Path: 0x0   Instruction: cmp.w fp, #0
+Address: 0x80dee  First Path: 0x80df0   Branch Path: 0x80e10   Instruction: bne #0x80e10
+Address: 0x80e10  First Path: 0x80e12   Branch Path: 0x0   Instruction: mov r0, r5
+Address: 0x80e12  First Path: 0x80e14   Branch Path: 0x0   Instruction: mov r1, r6
+Address: 0x80e14  First Path: 0x80e16   Branch Path: 0x0   Instruction: mov r2, fp
+Address: 0x80e16  First Path: 0x80e1a   Branch Path: 0x0   Instruction: cmp.w ip, #0
+Address: 0x80e1a  First Path: 0x80e1c   Branch Path: 0x80e30   Instruction: beq #0x80e30
+Address: 0x80e30  First Path: 0x0   Branch Path: 0x8076c   Instruction: bl #0x8076c
+Address: 0x80e34  First Path: 0x80e38   Branch Path: 0x0   Instruction: add.w r3, r5, sb
+Address: 0x80e38  First Path: 0x80e3a   Branch Path: 0x0   Instruction: ldr r2, [r3, #4]
+Address: 0x80e3a  First Path: 0x80e3e   Branch Path: 0x0   Instruction: bic r2, r2, #0xf000000
+Address: 0x80e3e  First Path: 0x80e42   Branch Path: 0x0   Instruction: orr r2, r2, #0x6000000
+Address: 0x80e42  First Path: 0x80e46   Branch Path: 0x0   Instruction: ldr.w sb, [pc, #0x94]
+Address: 0x80e46  First Path: 0x80e48   Branch Path: 0x0   Instruction: str r2, [r3, #4]
+Address: 0x80e48  First Path: 0x80e4c   Branch Path: 0x0   Instruction: ldrb.w r3, [sb, r4]
+Address: 0x80e4c  First Path: 0x80e50   Branch Path: 0x0   Instruction: and r3, r3, #0xf
+Address: 0x80e50  First Path: 0x80e52   Branch Path: 0x0   Instruction: cmp r3, #5
+Address: 0x80e52  First Path: 0x80e54   Branch Path: 0x80e7a   Instruction: beq #0x80e7a
+Address: 0x80e7a  First Path: 0x80e7e   Branch Path: 0x0   Instruction: ldrb.w r3, [sl, r7]
+Address: 0x80e7e  First Path: 0x80e80   Branch Path: 0x80eb8   Instruction: cbnz r3, #0x80eb8
+Address: 0x80e80  First Path: 0x80e82   Branch Path: 0x0   Instruction: mov r0, r5
+Address: 0x80e82  First Path: 0x80e84   Branch Path: 0x0   Instruction: mov r1, r6
+Address: 0x80e84  First Path: 0x0   Branch Path: 0x80730   Instruction: bl #0x80730
+Address: 0x80e88  First Path: 0x80e8a   Branch Path: 0x0   Instruction: ldr r3, [pc, #0x64]
+Address: 0x80e8a  First Path: 0x80e8c   Branch Path: 0x0   Instruction: movs r2, #1
+Address: 0x80e8c  First Path: 0x80e8e   Branch Path: 0x0   Instruction: strb r2, [r3, r7]
+Address: 0x80e8e  First Path: 0x0   Branch Path: 0x80eb8   Instruction: b #0x80eb8
+Address: 0x80e90  First Path: 0x80e92   Branch Path: 0x0   Instruction: mov r0, r4
+Address: 0x80e92  First Path: 0x80e94   Branch Path: 0x0   Instruction: movs r1, #1
+Address: 0x80e94  First Path: 0x0   Branch Path: 0x80ef8   Instruction: bl #0x80ef8
+Address: 0x80e98  First Path: 0x80e9a   Branch Path: 0x0   Instruction: ldr r1, [r5]
+Address: 0x80e9a  First Path: 0x80e9c   Branch Path: 0x0   Instruction: mov r0, r6
+Address: 0x80e9c  First Path: 0x80e9e   Branch Path: 0x0   Instruction: movs r2, #8
+Address: 0x80e9e  First Path: 0x0   Branch Path: 0x80c22   Instruction: bl #0x80c22
+Address: 0x80ea2  First Path: 0x80ea4   Branch Path: 0x0   Instruction: cmp r0, #0x7f
+Address: 0x80ea4  First Path: 0x80ea6   Branch Path: 0x0   Instruction: it ls
+Address: 0x80ea6  First Path: 0x80ea8   Branch Path: 0x0   Instruction: mov r1, r7
+Address: 0x80ea8  First Path: 0x80eaa   Branch Path: 0x0   Instruction: mov r0, r4
+Address: 0x80eaa  First Path: 0x80eac   Branch Path: 0x0   Instruction: it hi
+Address: 0x80eac  First Path: 0x80eae   Branch Path: 0x0   Instruction: movhi r1, #1
+Address: 0x80eae  First Path: 0x80eb0   Branch Path: 0x0   Instruction: add sp, #0x14
+Address: 0x80eb0  First Path: 0x80eb4   Branch Path: 0x0   Instruction: pop.w {r4, r5, r6, r7, r8, sb, sl, fp, lr}
+Address: 0x80eb4  First Path: 0x0   Branch Path: 0x81000   Instruction: b.w #0x81000
+Address: 0x80eb8  First Path: 0x80eba   Branch Path: 0x0   Instruction: add sp, #0x14
+Address: 0x80ef8  First Path: 0x80efc   Branch Path: 0x0   Instruction: push.w {r4, r5, r6, r7, r8, lr}
+Address: 0x80efc  First Path: 0x80efe   Branch Path: 0x0   Instruction: ldr r6, [pc, #0xf4]
+Address: 0x80efe  First Path: 0x80f00   Branch Path: 0x0   Instruction: movs r3, #0x1c
+Address: 0x80f00  First Path: 0x80f04   Branch Path: 0x0   Instruction: mla r3, r3, r0, r6
+Address: 0x80f04  First Path: 0x80f06   Branch Path: 0x0   Instruction: ldrb r2, [r3, #0xc]
+Address: 0x80f06  First Path: 0x80f08   Branch Path: 0x0   Instruction: mov r4, r0
+Address: 0x80f08  First Path: 0x80f0a   Branch Path: 0x0   Instruction: mov r7, r1
+Address: 0x80f0a  First Path: 0x80f0c   Branch Path: 0x0   Instruction: cmp r2, #0
+Address: 0x80f0c  First Path: 0x80f0e   Branch Path: 0x80ff0   Instruction: beq #0x80ff0
+Address: 0x80f0e  First Path: 0x80f10   Branch Path: 0x0   Instruction: ldr r5, [pc, #0xe8]
+Address: 0x80f10  First Path: 0x80f12   Branch Path: 0x0   Instruction: ldrb r2, [r5, r0]
+Address: 0x80f12  First Path: 0x80f16   Branch Path: 0x0   Instruction: and r2, r2, #0xf
+Address: 0x80f16  First Path: 0x80f18   Branch Path: 0x0   Instruction: cmp r2, #4
+Address: 0x80f18  First Path: 0x80f1a   Branch Path: 0x80f22   Instruction: bne #0x80f22
+Address: 0x80f22  First Path: 0x80f24   Branch Path: 0x0   Instruction: ldrb r2, [r5, r4]
+Address: 0x80f24  First Path: 0x80f28   Branch Path: 0x0   Instruction: and r3, r2, #0xf
+Address: 0x80f28  First Path: 0x80f2a   Branch Path: 0x0   Instruction: cmp r3, #2
+Address: 0x80f2a  First Path: 0x80f2c   Branch Path: 0x80f50   Instruction: bgt #0x80f50
+Address: 0x80f2c  First Path: 0x80f2e   Branch Path: 0x80f50   Instruction: cbz r2, #0x80f50
+Address: 0x80f2e  First Path: 0x80f30   Branch Path: 0x0   Instruction: cmp r3, #2
+Address: 0x80f30  First Path: 0x80f32   Branch Path: 0x80f38   Instruction: bne #0x80f38
+Address: 0x80f32  First Path: 0x80f34   Branch Path: 0x80f50   Instruction: cbnz r7, #0x80f50
+Address: 0x80f38  First Path: 0x80f3a   Branch Path: 0x0   Instruction: cmp r3, #1
+Address: 0x80f3a  First Path: 0x80f3c   Branch Path: 0x80f44   Instruction: bne #0x80f44
+Address: 0x80f3c  First Path: 0x80f3e   Branch Path: 0x0   Instruction: cmp r7, #2
+Address: 0x80f3e  First Path: 0x80f40   Branch Path: 0x80f50   Instruction: bne #0x80f50
+Address: 0x80f44  First Path: 0x80f46   Branch Path: 0x0   Instruction: cmp r3, #3
+Address: 0x80f46  First Path: 0x80f48   Branch Path: 0x80f50   Instruction: bne #0x80f50
+Address: 0x80f48  First Path: 0x80f4a   Branch Path: 0x0   Instruction: cmp r7, #1
+Address: 0x80f4a  First Path: 0x80f4c   Branch Path: 0x80f54   Instruction: bne #0x80f54
+Address: 0x80f50  First Path: 0x80f52   Branch Path: 0x0   Instruction: cmp r7, #1
+Address: 0x80f52  First Path: 0x80f54   Branch Path: 0x80fba   Instruction: beq #0x80fba
+Address: 0x80f54  First Path: 0x80f56   Branch Path: 0x80f5e   Instruction: cbz r7, #0x80f5e
+Address: 0x80f56  First Path: 0x80f58   Branch Path: 0x0   Instruction: cmp r7, #2
+Address: 0x80f58  First Path: 0x80f5a   Branch Path: 0x80f8a   Instruction: beq #0x80f8a
+Address: 0x80f5e  First Path: 0x80f62   Branch Path: 0x0   Instruction: mov.w r8, #0x1c
+Address: 0x80f62  First Path: 0x80f66   Branch Path: 0x0   Instruction: mul r8, r8, r4
+Address: 0x80f66  First Path: 0x80f6a   Branch Path: 0x0   Instruction: add.w r7, r6, r8
+Address: 0x80f6a  First Path: 0x80f6c   Branch Path: 0x0   Instruction: ldr r0, [r7, #8]
+Address: 0x80f6c  First Path: 0x0   Branch Path: 0x80638   Instruction: bl #0x80638
+Address: 0x80f70  First Path: 0x80f72   Branch Path: 0x0   Instruction: movs r3, #0
+Address: 0x80f72  First Path: 0x80f76   Branch Path: 0x0   Instruction: ldr.w r0, [r6, r8]
+Address: 0x80f76  First Path: 0x80f78   Branch Path: 0x0   Instruction: movs r1, #3
+Address: 0x80f78  First Path: 0x80f7a   Branch Path: 0x0   Instruction: ldr r2, [r7, #4]
+Address: 0x80f7a  First Path: 0x0   Branch Path: 0x805ac   Instruction: bl #0x805ac
+Address: 0x80f7e  First Path: 0x80f80   Branch Path: 0x0   Instruction: ldrb r3, [r5, r4]
+Address: 0x80f80  First Path: 0x80f84   Branch Path: 0x0   Instruction: bic r3, r3, #0xf
+Address: 0x80f84  First Path: 0x80f88   Branch Path: 0x0   Instruction: orr r3, r3, #2
+Address: 0x80f88  First Path: 0x0   Branch Path: 0x80fb4   Instruction: b #0x80fb4
+Address: 0x80f8a  First Path: 0x80f8e   Branch Path: 0x0   Instruction: mov.w r8, #0x1c
+Address: 0x80f8e  First Path: 0x80f92   Branch Path: 0x0   Instruction: mul r8, r8, r4
+Address: 0x80f92  First Path: 0x80f96   Branch Path: 0x0   Instruction: add.w r7, r6, r8
+Address: 0x80f96  First Path: 0x80f98   Branch Path: 0x0   Instruction: ldr r0, [r7, #8]
+Address: 0x80f98  First Path: 0x0   Branch Path: 0x80638   Instruction: bl #0x80638
+Address: 0x80f9c  First Path: 0x80f9e   Branch Path: 0x0   Instruction: movs r3, #1
+Address: 0x80f9e  First Path: 0x80fa2   Branch Path: 0x0   Instruction: ldr.w r0, [r6, r8]
+Address: 0x80fa2  First Path: 0x80fa4   Branch Path: 0x0   Instruction: movs r1, #3
+Address: 0x80fa4  First Path: 0x80fa6   Branch Path: 0x0   Instruction: ldr r2, [r7, #4]
+Address: 0x80fa6  First Path: 0x0   Branch Path: 0x805ac   Instruction: bl #0x805ac
+Address: 0x80faa  First Path: 0x80fac   Branch Path: 0x0   Instruction: ldrb r3, [r5, r4]
+Address: 0x80fac  First Path: 0x80fb0   Branch Path: 0x0   Instruction: bic r3, r3, #0xf
+Address: 0x80fb0  First Path: 0x80fb4   Branch Path: 0x0   Instruction: orr r3, r3, #1
+Address: 0x80fb4  First Path: 0x80fb6   Branch Path: 0x0   Instruction: strb r3, [r5, r4]
+Address: 0x80fba  First Path: 0x80fbc   Branch Path: 0x0   Instruction: movs r3, #0x1c
+Address: 0x80fbc  First Path: 0x80fbe   Branch Path: 0x0   Instruction: muls r3, r4, r3
+Address: 0x80fbe  First Path: 0x80fc0   Branch Path: 0x0   Instruction: ldr r7, [r6, r3]
+Address: 0x80fc0  First Path: 0x80fc2   Branch Path: 0x0   Instruction: lsrs r2, r2, #4
+Address: 0x80fc2  First Path: 0x80fc4   Branch Path: 0x0   Instruction: add r6, r3
+Address: 0x80fc4  First Path: 0x80fc6   Branch Path: 0x0   Instruction: ite eq
+Address: 0x80fc6  First Path: 0x80fc8   Branch Path: 0x0   Instruction: movs r1, #4
+Address: 0x80fc8  First Path: 0x80fca   Branch Path: 0x0   Instruction: movs r1, #5
+Address: 0x80fca  First Path: 0x80fcc   Branch Path: 0x0   Instruction: ldr r3, [r6, #0x10]
+Address: 0x80fcc  First Path: 0x80fce   Branch Path: 0x0   Instruction: mov r0, r7
+Address: 0x80fce  First Path: 0x80fd0   Branch Path: 0x0   Instruction: ldr r2, [r6, #4]
+Address: 0x80fd0  First Path: 0x0   Branch Path: 0x805ac   Instruction: bl #0x805ac
+Address: 0x80fd4  First Path: 0x80fd6   Branch Path: 0x0   Instruction: ldrb r3, [r5, r4]
+Address: 0x80fd6  First Path: 0x80fda   Branch Path: 0x0   Instruction: bic r3, r3, #0xf
+Address: 0x80fda  First Path: 0x80fde   Branch Path: 0x0   Instruction: orr r3, r3, #3
+Address: 0x80fde  First Path: 0x80fe0   Branch Path: 0x0   Instruction: strb r3, [r5, r4]
+Address: 0x80fe0  First Path: 0x80fe2   Branch Path: 0x0   Instruction: ldr r3, [r7, #0x18]
+Address: 0x80fe2  First Path: 0x80fe4   Branch Path: 0x0   Instruction: adds r3, #1
+Address: 0x80fe4  First Path: 0x80fe6   Branch Path: 0x80ff0   Instruction: bne #0x80ff0
+Address: 0x80fe6  First Path: 0x80fe8   Branch Path: 0x0   Instruction: ldr r0, [r6, #8]
+Address: 0x80fe8  First Path: 0x80fec   Branch Path: 0x0   Instruction: pop.w {r4, r5, r6, r7, r8, lr}
+Address: 0x80fec  First Path: 0x0   Branch Path: 0x8067c   Instruction: b.w #0x8067c
+Address: 0x81000  First Path: 0x81002   Branch Path: 0x0   Instruction: push {r0, r1, r2, r4, r5, r6, r7, lr}
+Address: 0x81002  First Path: 0x81004   Branch Path: 0x0   Instruction: ldr r6, [pc, #0x64]
+Address: 0x81004  First Path: 0x81006   Branch Path: 0x0   Instruction: movs r3, #0x1c
+Address: 0x81006  First Path: 0x8100a   Branch Path: 0x0   Instruction: mla r3, r3, r0, r6
+Address: 0x8100a  First Path: 0x8100c   Branch Path: 0x0   Instruction: ldrb r3, [r3, #0xc]
+Address: 0x8100c  First Path: 0x8100e   Branch Path: 0x0   Instruction: mov r4, r0
+Address: 0x8100e  First Path: 0x81010   Branch Path: 0x0   Instruction: mov r5, r1
+Address: 0x81010  First Path: 0x81012   Branch Path: 0x81064   Instruction: cbz r3, #0x81064
+Address: 0x81012  First Path: 0x81014   Branch Path: 0x0   Instruction: ldr r7, [pc, #0x58]
+Address: 0x81014  First Path: 0x81016   Branch Path: 0x0   Instruction: ldrb r3, [r7, r0]
+Address: 0x81016  First Path: 0x8101a   Branch Path: 0x0   Instruction: and r3, r3, #0xf
+Address: 0x8101a  First Path: 0x8101c   Branch Path: 0x0   Instruction: cmp r3, #5
+Address: 0x8101c  First Path: 0x8101e   Branch Path: 0x81024   Instruction: bne #0x81024
+Address: 0x8101e  First Path: 0x81020   Branch Path: 0x0   Instruction: movs r1, #1
+Address: 0x81020  First Path: 0x0   Branch Path: 0x80ef8   Instruction: bl #0x80ef8
+Address: 0x81024  First Path: 0x81026   Branch Path: 0x0   Instruction: ldrb r3, [r7, r4]
+Address: 0x81026  First Path: 0x8102a   Branch Path: 0x0   Instruction: and r3, r3, #0xf
+Address: 0x8102a  First Path: 0x8102e   Branch Path: 0x0   Instruction: orr.w r3, r3, r5, lsl #4
+Address: 0x8102e  First Path: 0x81030   Branch Path: 0x0   Instruction: strb r3, [r7, r4]
+Address: 0x81030  First Path: 0x81032   Branch Path: 0x0   Instruction: movs r3, #0x1c
+Address: 0x81032  First Path: 0x81034   Branch Path: 0x0   Instruction: muls r4, r3, r4
+Address: 0x81034  First Path: 0x81036   Branch Path: 0x0   Instruction: adds r3, r6, r4
+Address: 0x81036  First Path: 0x81038   Branch Path: 0x0   Instruction: ldr r6, [r6, r4]
+Address: 0x81038  First Path: 0x8103a   Branch Path: 0x0   Instruction: ldr r4, [r3, #4]
+Address: 0x8103a  First Path: 0x8103c   Branch Path: 0x0   Instruction: mov r0, r6
+Address: 0x8103c  First Path: 0x8103e   Branch Path: 0x0   Instruction: mov r1, r4
+Address: 0x8103e  First Path: 0x0   Branch Path: 0x80610   Instruction: bl #0x80610
+Address: 0x81042  First Path: 0x81044   Branch Path: 0x81054   Instruction: cbnz r0, #0x81054
+Address: 0x81044  First Path: 0x81046   Branch Path: 0x0   Instruction: mov r0, r6
+Address: 0x81046  First Path: 0x81048   Branch Path: 0x0   Instruction: mov r1, r4
+Address: 0x81048  First Path: 0x8104a   Branch Path: 0x0   Instruction: mov r2, r5
+Address: 0x8104a  First Path: 0x8104c   Branch Path: 0x0   Instruction: add sp, #0xc
+Address: 0x8104c  First Path: 0x81050   Branch Path: 0x0   Instruction: pop.w {r4, r5, r6, r7, lr}
+Address: 0x81050  First Path: 0x0   Branch Path: 0x80530   Instruction: b.w #0x80530
+Address: 0x81054  First Path: 0x81056   Branch Path: 0x0   Instruction: movs r3, #1
+Address: 0x81056  First Path: 0x81058   Branch Path: 0x0   Instruction: str r3, [sp]
+Address: 0x81058  First Path: 0x8105a   Branch Path: 0x0   Instruction: mov r0, r6
+Address: 0x8105a  First Path: 0x8105c   Branch Path: 0x0   Instruction: mov r1, r4
+Address: 0x8105c  First Path: 0x8105e   Branch Path: 0x0   Instruction: mov r2, r5
+Address: 0x8105e  First Path: 0x81060   Branch Path: 0x0   Instruction: movs r3, #0
+Address: 0x81060  First Path: 0x0   Branch Path: 0x80586   Instruction: bl #0x80586
+Address: 0x81064  First Path: 0x81066   Branch Path: 0x0   Instruction: add sp, #0xc
+Address: 0x81310  First Path: 0x81312   Branch Path: 0x0   Instruction: push {r3, lr}
+Address: 0x81312  First Path: 0x0   Branch Path: 0x81348   Instruction: bl #0x81348
+Address: 0x81316  First Path: 0x0   Branch Path: 0x802f0   Instruction: bl #0x802f0
+Address: 0x8131a  First Path: 0x0   Branch Path: 0x8130c   Instruction: bl #0x8130c
+Address: 0x8131e  First Path: 0x81320   Branch Path: 0x0   Instruction: movs r0, #1
+Address: 0x81320  First Path: 0x0   Branch Path: 0x81354   Instruction: bl #0x81354
+Address: 0x81324  First Path: 0x81326   Branch Path: 0x0   Instruction: ldr r0, [pc, #0x18]
+Address: 0x81326  First Path: 0x0   Branch Path: 0x81628   Instruction: bl #0x81628
+Address: 0x8132a  First Path: 0x0   Branch Path: 0x80210   Instruction: bl #0x80210
+Address: 0x81348  First Path: 0x8134a   Branch Path: 0x0   Instruction: ldr r0, [pc, #4]
+Address: 0x8134a  First Path: 0x0   Branch Path: 0x81f04   Instruction: b.w #0x81f04
+Address: 0x81354  First Path: 0x81356   Branch Path: 0x0   Instruction: push {r3, r4, r5, lr}
+Address: 0x81356  First Path: 0x81358   Branch Path: 0x0   Instruction: mov r4, r0
+Address: 0x81358  First Path: 0x8135a   Branch Path: 0x8136e   Instruction: cbz r0, #0x8136e
+Address: 0x81628  First Path: 0x8162a   Branch Path: 0x0   Instruction: push {r3, lr}
+Address: 0x8162a  First Path: 0x8162c   Branch Path: 0x0   Instruction: ldr r3, [pc, #0x14]
+Address: 0x8162c  First Path: 0x8162e   Branch Path: 0x0   Instruction: ldr r0, [r3]
+Address: 0x8162e  First Path: 0x81630   Branch Path: 0x8163c   Instruction: cbz r0, #0x8163c
+Address: 0x81630  First Path: 0x0   Branch Path: 0x81fe8   Instruction: bl #0x81fe8
+Address: 0x81634  First Path: 0x81636   Branch Path: 0x0   Instruction: ldr r3, [pc, #0xc]
+Address: 0x81636  First Path: 0x81638   Branch Path: 0x0   Instruction: movs r2, #0
+Address: 0x81638  First Path: 0x8163a   Branch Path: 0x0   Instruction: str r2, [r3]
+Address: 0x8163a  First Path: 0x8163c   Branch Path: 0x0   Instruction: movs r0, #1
+Address: 0x81f04  First Path: 0x81f08   Branch Path: 0x0   Instruction: mov.w r3, #0x8000
+Address: 0x81f08  First Path: 0x81f0a   Branch Path: 0x0   Instruction: str r3, [r0, #4]
+Address: 0x81fe8  First Path: 0x81fea   Branch Path: 0x0   Instruction: ldr r3, [pc, #0x44]
+Address: 0x81fea  First Path: 0x81fec   Branch Path: 0x0   Instruction: push {r4, lr}
+Address: 0x81fec  First Path: 0x81fee   Branch Path: 0x0   Instruction: ldr r1, [r3]
+Address: 0x81fee  First Path: 0x81ff0   Branch Path: 0x0   Instruction: cpsid i
+Address: 0x81ff0  First Path: 0x81ff4   Branch Path: 0x0   Instruction: dmb sy
+Address: 0x81ff4  First Path: 0x81ff6   Branch Path: 0x0   Instruction: mov r2, r3
+Address: 0x81ff6  First Path: 0x81ff8   Branch Path: 0x0   Instruction: movs r3, #0
+Address: 0x81ff8  First Path: 0x81ffa   Branch Path: 0x0   Instruction: str r3, [r2]
+Address: 0x81ffa  First Path: 0x81ffc   Branch Path: 0x0   Instruction: ldr r3, [pc, #0x38]
+Address: 0x81ffc  First Path: 0x82000   Branch Path: 0x0   Instruction: ldr.w r0, [r3, #0x800]
+Address: 0x82000  First Path: 0x82002   Branch Path: 0x0   Instruction: mov r4, r3
+Address: 0x82002  First Path: 0x82006   Branch Path: 0x0   Instruction: bic r0, r0, #0x4000
+Address: 0x82006  First Path: 0x8200a   Branch Path: 0x0   Instruction: str.w r0, [r3, #0x800]
+Address: 0x8200a  First Path: 0x8200e   Branch Path: 0x0   Instruction: ldr.w r0, [r4, #0x804]
+Address: 0x8200e  First Path: 0x82010   Branch Path: 0x0   Instruction: ldr r3, [pc, #0x24]
+Address: 0x82010  First Path: 0x82012   Branch Path: 0x0   Instruction: lsls r0, r0, #0x11
+Address: 0x82012  First Path: 0x82014   Branch Path: 0x8200a   Instruction: bpl #0x8200a
+Address: 0x82014  First Path: 0x82016   Branch Path: 0x0   Instruction: ldr r0, [r3]
+Address: 0x82016  First Path: 0x8201a   Branch Path: 0x0   Instruction: bic r0, r0, #0x100
+Address: 0x8201a  First Path: 0x8201c   Branch Path: 0x0   Instruction: str r0, [r3]
+Address: 0x8201c  First Path: 0x8201e   Branch Path: 0x0   Instruction: movs r0, #8
+Address: 0x8201e  First Path: 0x82020   Branch Path: 0x0   Instruction: str r0, [r3, #0x18]
+Address: 0x82020  First Path: 0x82022   Branch Path: 0x8202c   Instruction: cbz r1, #0x8202c
+Address: 0x82022  First Path: 0x82024   Branch Path: 0x0   Instruction: movs r3, #1
+Address: 0x82024  First Path: 0x82026   Branch Path: 0x0   Instruction: str r3, [r2]
+Address: 0x82026  First Path: 0x8202a   Branch Path: 0x0   Instruction: dmb sy
+Address: 0x8202a  First Path: 0x8202c   Branch Path: 0x0   Instruction: cpsie i
+Address: 0x82358  First Path: 0x8235a   Branch Path: 0x0   Instruction: push {lr}
+Address: 0x8235a  First Path: 0x8235c   Branch Path: 0x0   Instruction: ldr r4, [pc, #0x28]
+Address: 0x8235c  First Path: 0x8235e   Branch Path: 0x0   Instruction: mov r5, r0
+Address: 0x8235e  First Path: 0x82360   Branch Path: 0x0   Instruction: ldr r4, [r4]
+Address: 0x82360  First Path: 0x82362   Branch Path: 0x0   Instruction: sub sp, #0x14
+Address: 0x82362  First Path: 0x82364   Branch Path: 0x0   Instruction: ldr r0, [r4, #0xc]
+Address: 0x82364  First Path: 0x82366   Branch Path: 0x8237c   Instruction: cbz r2, #0x8237c
+Address: 0x82368  First Path: 0x8236c   Branch Path: 0x0   Instruction: stm.w sp, {r1, r4}
+Address: 0x8236c  First Path: 0x8236e   Branch Path: 0x0   Instruction: str r2, [sp, #8]
+Address: 0x8236e  First Path: 0x82370   Branch Path: 0x0   Instruction: ldr r1, [pc, #0x1c]
+Address: 0x82370  First Path: 0x82372   Branch Path: 0x0   Instruction: mov r2, r3
+Address: 0x82372  First Path: 0x82374   Branch Path: 0x0   Instruction: mov r3, r5
+Address: 0x82374  First Path: 0x0   Branch Path: 0x82394   Instruction: bl #0x82394
+Address: 0x82378  First Path: 0x0   Branch Path: 0x83330   Instruction: bl #0x83330
+Address: 0x8237c  First Path: 0x8237e   Branch Path: 0x0   Instruction: ldr r4, [pc, #0x10]
+Address: 0x8237e  First Path: 0x82380   Branch Path: 0x0   Instruction: mov r2, r4
+Address: 0x82380  First Path: 0x0   Branch Path: 0x82368   Instruction: b #0x82368
+Address: 0x82394  First Path: 0x82396   Branch Path: 0x0   Instruction: push {r1, r2, r3}
+Address: 0x82396  First Path: 0x82398   Branch Path: 0x0   Instruction: push {r4, r5, lr}
+Address: 0x82398  First Path: 0x8239a   Branch Path: 0x0   Instruction: sub sp, #8
+Address: 0x8239a  First Path: 0x8239c   Branch Path: 0x0   Instruction: add r4, sp, #0x14
+Address: 0x8239c  First Path: 0x823a0   Branch Path: 0x0   Instruction: ldr r2, [r4], #4
+Address: 0x823a0  First Path: 0x823a2   Branch Path: 0x0   Instruction: ldr r5, [pc, #0x14]
+Address: 0x823a2  First Path: 0x823a4   Branch Path: 0x0   Instruction: mov r1, r0
+Address: 0x823a4  First Path: 0x823a6   Branch Path: 0x0   Instruction: mov r3, r4
+Address: 0x823a6  First Path: 0x823a8   Branch Path: 0x0   Instruction: ldr r0, [r5]
+Address: 0x823a8  First Path: 0x823aa   Branch Path: 0x0   Instruction: str r4, [sp, #4]
+Address: 0x823aa  First Path: 0x0   Branch Path: 0x82588   Instruction: bl #0x82588
+Address: 0x823ae  First Path: 0x823b0   Branch Path: 0x0   Instruction: add sp, #8
+Address: 0x823b0  First Path: 0x823b4   Branch Path: 0x0   Instruction: pop.w {r4, r5, lr}
+Address: 0x823b4  First Path: 0x823b6   Branch Path: 0x0   Instruction: add sp, #0xc
+Address: 0x823bc  First Path: 0x823be   Branch Path: 0x0   Instruction: push {r4, r5, r6, lr}
+Address: 0x823be  First Path: 0x823c0   Branch Path: 0x0   Instruction: ldr r6, [pc, #0x3c]
+Address: 0x823c0  First Path: 0x823c2   Branch Path: 0x0   Instruction: ldr r5, [pc, #0x3c]
+Address: 0x823c2  First Path: 0x823c4   Branch Path: 0x0   Instruction: subs r6, r6, r5
+Address: 0x823c4  First Path: 0x823c6   Branch Path: 0x0   Instruction: asrs r6, r6, #2
+Address: 0x823c6  First Path: 0x823c8   Branch Path: 0x823d8   Instruction: beq #0x823d8
+Address: 0x823d8  First Path: 0x823da   Branch Path: 0x0   Instruction: ldr r6, [pc, #0x28]
+Address: 0x823da  First Path: 0x823dc   Branch Path: 0x0   Instruction: ldr r5, [pc, #0x2c]
+Address: 0x823dc  First Path: 0x0   Branch Path: 0x86320   Instruction: bl #0x86320
+Address: 0x823e0  First Path: 0x823e2   Branch Path: 0x0   Instruction: subs r6, r6, r5
+Address: 0x823e2  First Path: 0x823e4   Branch Path: 0x0   Instruction: asrs r6, r6, #2
+Address: 0x823e4  First Path: 0x823e6   Branch Path: 0x823f8   Instruction: beq #0x823f8
+Address: 0x82588  First Path: 0x8258c   Branch Path: 0x0   Instruction: push.w {r4, r5, r6, r7, r8, sb, sl, fp, lr}
+Address: 0x8258c  First Path: 0x8258e   Branch Path: 0x0   Instruction: sub sp, #0xc4
+Address: 0x8258e  First Path: 0x82590   Branch Path: 0x0   Instruction: mov r4, r3
+Address: 0x82590  First Path: 0x82592   Branch Path: 0x0   Instruction: str r1, [sp, #8]
+Address: 0x82592  First Path: 0x82594   Branch Path: 0x0   Instruction: mov r8, r2
+Address: 0x82594  First Path: 0x82596   Branch Path: 0x0   Instruction: str r3, [sp, #0x20]
+Address: 0x82596  First Path: 0x82598   Branch Path: 0x0   Instruction: str r0, [sp, #0x18]
+Address: 0x82598  First Path: 0x8259a   Branch Path: 0x825a2   Instruction: cbz r0, #0x825a2
+Address: 0x825a2  First Path: 0x825a4   Branch Path: 0x0   Instruction: ldr r5, [sp, #8]
+Address: 0x825a4  First Path: 0x825a6   Branch Path: 0x0   Instruction: ldrh r3, [r5, #0xc]
+Address: 0x825a6  First Path: 0x825a8   Branch Path: 0x0   Instruction: uxth r2, r3
+Address: 0x825a8  First Path: 0x825aa   Branch Path: 0x0   Instruction: lsls r0, r2, #0x12
+Address: 0x825aa  First Path: 0x825ac   Branch Path: 0x825bc   Instruction: bmi #0x825bc
+Address: 0x825bc  First Path: 0x825be   Branch Path: 0x0   Instruction: lsls r1, r2, #0x1c
+Address: 0x825be  First Path: 0x825c2   Branch Path: 0x82730   Instruction: bpl.w #0x82730
+Address: 0x82730  First Path: 0x82732   Branch Path: 0x0   Instruction: ldr r0, [sp, #0x18]
+Address: 0x82732  First Path: 0x82734   Branch Path: 0x0   Instruction: ldr r1, [sp, #8]
+Address: 0x82734  First Path: 0x0   Branch Path: 0x83258   Instruction: bl #0x83258
+Address: 0x82738  First Path: 0x8273a   Branch Path: 0x82768   Instruction: cbnz r0, #0x82768
+Address: 0x82768  First Path: 0x8276c   Branch Path: 0x0   Instruction: mov.w r0, #-1
+Address: 0x8276c  First Path: 0x8276e   Branch Path: 0x0   Instruction: add sp, #0xc4
+Address: 0x83258  First Path: 0x8325a   Branch Path: 0x0   Instruction: ldr r3, [pc, #0xbc]
+Address: 0x8325a  First Path: 0x8325c   Branch Path: 0x0   Instruction: push {r4, r5, r6, lr}
+Address: 0x8325c  First Path: 0x8325e   Branch Path: 0x0   Instruction: mov r6, r0
+Address: 0x8325e  First Path: 0x83260   Branch Path: 0x0   Instruction: ldr r0, [r3]
+Address: 0x83260  First Path: 0x83262   Branch Path: 0x0   Instruction: mov r4, r1
+Address: 0x83262  First Path: 0x83264   Branch Path: 0x8326a   Instruction: cbz r0, #0x8326a
+Address: 0x8326a  First Path: 0x8326c   Branch Path: 0x0   Instruction: ldrh r5, [r4, #0xc]
+Address: 0x8326c  First Path: 0x8326e   Branch Path: 0x0   Instruction: uxth r3, r5
+Address: 0x8326e  First Path: 0x83270   Branch Path: 0x0   Instruction: lsls r1, r3, #0x1c
+Address: 0x83270  First Path: 0x83272   Branch Path: 0x8328c   Instruction: bpl #0x8328c
+Address: 0x8328c  First Path: 0x8328e   Branch Path: 0x0   Instruction: lsls r2, r3, #0x1b
+Address: 0x8328e  First Path: 0x83290   Branch Path: 0x83306   Instruction: bpl #0x83306
+Address: 0x83306  First Path: 0x8330a   Branch Path: 0x0   Instruction: orr r5, r5, #0x40
+Address: 0x8330a  First Path: 0x8330c   Branch Path: 0x0   Instruction: movs r3, #9
+Address: 0x8330c  First Path: 0x8330e   Branch Path: 0x0   Instruction: str r3, [r6]
+Address: 0x8330e  First Path: 0x83312   Branch Path: 0x0   Instruction: mov.w r0, #-1
+Address: 0x83312  First Path: 0x83314   Branch Path: 0x0   Instruction: strh r5, [r4, #0xc]
+Address: 0x83330  First Path: 0x83332   Branch Path: 0x0   Instruction: push {r3, lr}
+Address: 0x83332  First Path: 0x83334   Branch Path: 0x0   Instruction: movs r0, #6
+Address: 0x83334  First Path: 0x0   Branch Path: 0x84904   Instruction: bl #0x84904
+Address: 0x83338  First Path: 0x8333a   Branch Path: 0x0   Instruction: movs r0, #1
+Address: 0x8333a  First Path: 0x0   Branch Path: 0x80c18   Instruction: bl #0x80c18
+Address: 0x8333e  First Path: 0x83340   Branch Path: 0x0   Instruction: nop 
+Address: 0x83340  First Path: 0x83342   Branch Path: 0x0   Instruction: mov r1, r0
+Address: 0x83342  First Path: 0x83344   Branch Path: 0x0   Instruction: movs r0, #0
+Address: 0x83344  First Path: 0x83346   Branch Path: 0x0   Instruction: mov r2, r0
+Address: 0x83346  First Path: 0x83348   Branch Path: 0x0   Instruction: mov r3, r0
+Address: 0x83348  First Path: 0x0   Branch Path: 0x84b00   Instruction: b.w #0x84b00
+Address: 0x848ac  First Path: 0x848ae   Branch Path: 0x0   Instruction: cmp r1, #0x1f
+Address: 0x848ae  First Path: 0x848b0   Branch Path: 0x0   Instruction: push {r3, r4, r5, lr}
+Address: 0x848b0  First Path: 0x848b2   Branch Path: 0x0   Instruction: mov r4, r1
+Address: 0x848b2  First Path: 0x848b4   Branch Path: 0x0   Instruction: mov r5, r0
+Address: 0x848b4  First Path: 0x848b6   Branch Path: 0x848f8   Instruction: bhi #0x848f8
+Address: 0x848b6  First Path: 0x848ba   Branch Path: 0x0   Instruction: ldr.w r2, [r0, #0x2dc]
+Address: 0x848ba  First Path: 0x848bc   Branch Path: 0x848e4   Instruction: cbz r2, #0x848e4
+Address: 0x848bc  First Path: 0x848c0   Branch Path: 0x0   Instruction: ldr.w r3, [r2, r1, lsl #2]
+Address: 0x848c0  First Path: 0x848c2   Branch Path: 0x848e4   Instruction: cbz r3, #0x848e4
+Address: 0x848c2  First Path: 0x848c4   Branch Path: 0x0   Instruction: cmp r3, #1
+Address: 0x848c4  First Path: 0x848c6   Branch Path: 0x848e0   Instruction: beq #0x848e0
+Address: 0x848c6  First Path: 0x848c8   Branch Path: 0x0   Instruction: adds r1, r3, #1
+Address: 0x848c8  First Path: 0x848ca   Branch Path: 0x848d8   Instruction: beq #0x848d8
+Address: 0x848ca  First Path: 0x848cc   Branch Path: 0x0   Instruction: movs r5, #0
+Address: 0x848cc  First Path: 0x848ce   Branch Path: 0x0   Instruction: mov r0, r4
+Address: 0x848ce  First Path: 0x848d2   Branch Path: 0x0   Instruction: str.w r5, [r2, r4, lsl #2]
+Address: 0x848d2  First Path: 0x0   Branch Path: 0x400e05ff   Instruction: blx r3
+Address: 0x848d8  First Path: 0x848da   Branch Path: 0x0   Instruction: movs r3, #0x16
+Address: 0x848da  First Path: 0x848dc   Branch Path: 0x0   Instruction: str r3, [r0]
+Address: 0x848dc  First Path: 0x848de   Branch Path: 0x0   Instruction: movs r0, #1
+Address: 0x848e0  First Path: 0x848e2   Branch Path: 0x0   Instruction: movs r0, #0
+Address: 0x848e4  First Path: 0x848e6   Branch Path: 0x0   Instruction: mov r0, r5
+Address: 0x848e6  First Path: 0x0   Branch Path: 0x8493c   Instruction: bl #0x8493c
+Address: 0x848ea  First Path: 0x848ec   Branch Path: 0x0   Instruction: mov r2, r4
+Address: 0x848ec  First Path: 0x848ee   Branch Path: 0x0   Instruction: mov r1, r0
+Address: 0x848ee  First Path: 0x848f0   Branch Path: 0x0   Instruction: mov r0, r5
+Address: 0x848f0  First Path: 0x848f4   Branch Path: 0x0   Instruction: pop.w {r3, r4, r5, lr}
+Address: 0x848f4  First Path: 0x0   Branch Path: 0x84914   Instruction: b.w #0x84914
+Address: 0x848f8  First Path: 0x848fa   Branch Path: 0x0   Instruction: movs r3, #0x16
+Address: 0x848fa  First Path: 0x848fc   Branch Path: 0x0   Instruction: str r3, [r0]
+Address: 0x848fc  First Path: 0x84900   Branch Path: 0x0   Instruction: mov.w r0, #-1
+Address: 0x84904  First Path: 0x84906   Branch Path: 0x0   Instruction: ldr r3, [pc, #8]
+Address: 0x84906  First Path: 0x84908   Branch Path: 0x0   Instruction: mov r1, r0
+Address: 0x84908  First Path: 0x8490a   Branch Path: 0x0   Instruction: ldr r0, [r3]
+Address: 0x8490a  First Path: 0x0   Branch Path: 0x848ac   Instruction: b.w #0x848ac
+Address: 0x84914  First Path: 0x84916   Branch Path: 0x0   Instruction: push {r3, r4, r5, lr}
+Address: 0x84916  First Path: 0x84918   Branch Path: 0x0   Instruction: ldr r4, [pc, #0x20]
+Address: 0x84918  First Path: 0x8491a   Branch Path: 0x0   Instruction: movs r3, #0
+Address: 0x8491a  First Path: 0x8491c   Branch Path: 0x0   Instruction: mov r5, r0
+Address: 0x8491c  First Path: 0x8491e   Branch Path: 0x0   Instruction: mov r0, r1
+Address: 0x8491e  First Path: 0x84920   Branch Path: 0x0   Instruction: mov r1, r2
+Address: 0x84920  First Path: 0x84922   Branch Path: 0x0   Instruction: str r3, [r4]
+Address: 0x84922  First Path: 0x0   Branch Path: 0x80c1a   Instruction: bl #0x80c1a
+Address: 0x84926  First Path: 0x84928   Branch Path: 0x0   Instruction: adds r3, r0, #1
+Address: 0x84928  First Path: 0x8492a   Branch Path: 0x8492c   Instruction: beq #0x8492c
+Address: 0x8492c  First Path: 0x8492e   Branch Path: 0x0   Instruction: ldr r3, [r4]
+Address: 0x8492e  First Path: 0x84930   Branch Path: 0x0   Instruction: cmp r3, #0
+Address: 0x84930  First Path: 0x84932   Branch Path: 0x8492a   Instruction: beq #0x8492a
+Address: 0x84932  First Path: 0x84934   Branch Path: 0x0   Instruction: str r3, [r5]
+Address: 0x8493c  First Path: 0x0   Branch Path: 0x80c1c   Instruction: b.w #0x80c1c
+Address: 0x84b00  First Path: 0x84b02   Branch Path: 0x0   Instruction: push {r4, r5, r6, r7, lr}
+Address: 0x84b02  First Path: 0x84b04   Branch Path: 0x0   Instruction: ldr r4, [pc, #0x9c]
+Address: 0x84b04  First Path: 0x84b06   Branch Path: 0x0   Instruction: sub sp, #0x14
+Address: 0x84b06  First Path: 0x84b08   Branch Path: 0x0   Instruction: ldr r6, [r4]
+Address: 0x84b08  First Path: 0x84b0a   Branch Path: 0x0   Instruction: mov r7, r0
+Address: 0x84b0a  First Path: 0x84b0e   Branch Path: 0x0   Instruction: ldr.w r4, [r6, #0x148]
+Address: 0x84b0e  First Path: 0x84b10   Branch Path: 0x0   Instruction: cmp r4, #0
+Address: 0x84b10  First Path: 0x84b12   Branch Path: 0x84b94   Instruction: beq #0x84b94
+Address: 0x84b12  First Path: 0x84b14   Branch Path: 0x0   Instruction: ldr r5, [r4, #4]
+Address: 0x84b14  First Path: 0x84b16   Branch Path: 0x0   Instruction: cmp r5, #0x1f
+Address: 0x84b16  First Path: 0x84b18   Branch Path: 0x84b56   Instruction: ble #0x84b56
+Address: 0x84b18  First Path: 0x84b1a   Branch Path: 0x0   Instruction: ldr r0, [pc, #0x88]
+Address: 0x84b1a  First Path: 0x84b1c   Branch Path: 0x84b24   Instruction: cbnz r0, #0x84b24
+Address: 0x84b1c  First Path: 0x84b20   Branch Path: 0x0   Instruction: mov.w r0, #-1
+Address: 0x84b20  First Path: 0x84b22   Branch Path: 0x0   Instruction: add sp, #0x14
+Address: 0x84b24  First Path: 0x84b28   Branch Path: 0x0   Instruction: mov.w r0, #0x190
+Address: 0x84b28  First Path: 0x84b2a   Branch Path: 0x0   Instruction: str r1, [sp, #0xc]
+Address: 0x84b2a  First Path: 0x84b2c   Branch Path: 0x0   Instruction: str r2, [sp, #8]
+Address: 0x84b2c  First Path: 0x84b2e   Branch Path: 0x0   Instruction: str r3, [sp, #4]
+Address: 0x84b2e  First Path: 0x84b32   Branch Path: 0x0   Instruction: nop.w 
+Address: 0x84b32  First Path: 0x84b34   Branch Path: 0x0   Instruction: ldr r1, [sp, #0xc]
+Address: 0x84b34  First Path: 0x84b36   Branch Path: 0x0   Instruction: mov r4, r0
+Address: 0x84b36  First Path: 0x84b38   Branch Path: 0x0   Instruction: ldr r2, [sp, #8]
+Address: 0x84b38  First Path: 0x84b3a   Branch Path: 0x0   Instruction: ldr r3, [sp, #4]
+Address: 0x84b3a  First Path: 0x84b3c   Branch Path: 0x0   Instruction: cmp r0, #0
+Address: 0x84b3c  First Path: 0x84b3e   Branch Path: 0x84b1c   Instruction: beq #0x84b1c
+Address: 0x84b3e  First Path: 0x84b42   Branch Path: 0x0   Instruction: ldr.w r5, [r6, #0x148]
+Address: 0x84b42  First Path: 0x84b44   Branch Path: 0x0   Instruction: movs r0, #0
+Address: 0x84b44  First Path: 0x84b46   Branch Path: 0x0   Instruction: str r5, [r4]
+Address: 0x84b46  First Path: 0x84b48   Branch Path: 0x0   Instruction: str r0, [r4, #4]
+Address: 0x84b48  First Path: 0x84b4a   Branch Path: 0x0   Instruction: mov r5, r0
+Address: 0x84b4a  First Path: 0x84b4e   Branch Path: 0x0   Instruction: str.w r4, [r6, #0x148]
+Address: 0x84b4e  First Path: 0x84b52   Branch Path: 0x0   Instruction: str.w r0, [r4, #0x188]
+Address: 0x84b52  First Path: 0x84b56   Branch Path: 0x0   Instruction: str.w r0, [r4, #0x18c]
+Address: 0x84b56  First Path: 0x84b58   Branch Path: 0x84b68   Instruction: cbnz r7, #0x84b68
+Address: 0x84b58  First Path: 0x84b5a   Branch Path: 0x0   Instruction: adds r3, r5, #1
+Address: 0x84b5a  First Path: 0x84b5c   Branch Path: 0x0   Instruction: movs r0, #0
+Address: 0x84b5c  First Path: 0x84b5e   Branch Path: 0x0   Instruction: adds r5, #2
+Address: 0x84b5e  First Path: 0x84b60   Branch Path: 0x0   Instruction: str r3, [r4, #4]
+Address: 0x84b60  First Path: 0x84b64   Branch Path: 0x0   Instruction: str.w r1, [r4, r5, lsl #2]
+Address: 0x84b64  First Path: 0x84b66   Branch Path: 0x0   Instruction: add sp, #0x14
+Address: 0x84b68  First Path: 0x84b6a   Branch Path: 0x0   Instruction: movs r6, #1
+Address: 0x84b6a  First Path: 0x84b6c   Branch Path: 0x0   Instruction: lsls r6, r5
+Address: 0x84b6c  First Path: 0x84b70   Branch Path: 0x0   Instruction: add.w r0, r4, r5, lsl #2
+Address: 0x84b70  First Path: 0x84b74   Branch Path: 0x0   Instruction: str.w r2, [r0, #0x88]
+Address: 0x84b74  First Path: 0x84b78   Branch Path: 0x0   Instruction: ldr.w r2, [r4, #0x188]
+Address: 0x84b78  First Path: 0x84b7a   Branch Path: 0x0   Instruction: cmp r7, #2
+Address: 0x84b7a  First Path: 0x84b7e   Branch Path: 0x0   Instruction: orr.w r2, r2, r6
+Address: 0x84b7e  First Path: 0x84b82   Branch Path: 0x0   Instruction: str.w r2, [r4, #0x188]
+Address: 0x84b82  First Path: 0x84b86   Branch Path: 0x0   Instruction: str.w r3, [r0, #0x108]
+Address: 0x84b86  First Path: 0x84b88   Branch Path: 0x84b58   Instruction: bne #0x84b58
+Address: 0x84b88  First Path: 0x84b8c   Branch Path: 0x0   Instruction: ldr.w r3, [r4, #0x18c]
+Address: 0x84b8c  First Path: 0x84b8e   Branch Path: 0x0   Instruction: orrs r6, r3
+Address: 0x84b8e  First Path: 0x84b92   Branch Path: 0x0   Instruction: str.w r6, [r4, #0x18c]
+Address: 0x84b92  First Path: 0x0   Branch Path: 0x84b58   Instruction: b #0x84b58
+Address: 0x84b94  First Path: 0x84b98   Branch Path: 0x0   Instruction: add.w r4, r6, #0x14c
+Address: 0x84b98  First Path: 0x84b9c   Branch Path: 0x0   Instruction: str.w r4, [r6, #0x148]
+Address: 0x84b9c  First Path: 0x0   Branch Path: 0x84b12   Instruction: b #0x84b12
+Address: 0x86320  First Path: 0x86322   Branch Path: 0x0   Instruction: push {r3, r4, r5, r6, r7, lr}
+Address: 0x86322  First Path: 0x86324   Branch Path: 0x0   Instruction: nop 
+Address: 0x86324  First Path: 0x86326   Branch Path: 0x0   Instruction: pop {r3, r4, r5, r6, r7}
+Address: 0x86326  First Path: 0x86328   Branch Path: 0x0   Instruction: pop {r3}
+Address: 0x86328  First Path: 0x8632a   Branch Path: 0x0   Instruction: mov lr, r3
+883

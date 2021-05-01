@@ -13,7 +13,6 @@ from collections import OrderedDict
 import binascii
 import math
 
-FLOW = []
 FILE_NAME = ''
 IMAGEBASE = '0x80000'
 IS_THUMB_MODE = 1
@@ -82,11 +81,10 @@ class DisassemblerCore(object):
         self.disassemble()
         #print('\n\n\nDisassembly\n\n\n')
         disassembled_instrs = 0
-        #print 'DISASSEMBLY'
-        #for i in range(len(MEM_INSTR)):
-        #    if MEM_INSTR[i] != 0:
-        #        disassembled_instrs += 1
-        #        print('%s\t%s'%(hex(i+int(IMAGEBASE,16)), MEM_INSTR[i].instr+' '+MEM_INSTR[i].op))
+        for i in range(len(MEM_INSTR)):
+            if MEM_INSTR[i] != 0:
+                disassembled_instrs += 1
+                print('%s\t%s'%(hex(i+int(IMAGEBASE,16)), MEM_INSTR[i].instr+' '+MEM_INSTR[i].op))
         #        #if 'b\t#' + hex(i+int(IMAGEBASE,16)) == MEM_INSTR[i]:
         #        #    print'banana'
         #        #    break;
@@ -210,9 +208,6 @@ class GeneratorCore(object):
     def __init__(self, disassembly, branches):
         self.mem_instr = disassembly
         self.paths = {}
-        # key = branch instruction, value = branch setter
-        self.set_branch_pairs = {}
-        self.current_setter = 0
         self.register_branches = {}
         self.register_branches['r0'] = []
         self.register_branches['r1'] = []
@@ -239,34 +234,16 @@ class GeneratorCore(object):
         self.linked_instrs = {}
         # Conditional branch p                                                aths that were unexplored
         self.branches = []
-        self.cond_branches = []
-        #Keep track of the last instruction to add to sources
-        self.last_instr = 0
-        #Keep track of which isr is being analyzed
-        self.isr_num = 0
 
     def run(self):
         self.generate_paths()
-        #for i in range(len(FLOW)-1):
-        #    try:
-        #        if (int(FLOW[i+1],16) != self.paths[int(FLOW[i],16)].path) and (int(FLOW[i+1],16) != self.paths[int(FLOW[i],16)].branch_path):
-        #            print int(FLOW[i],16), int(FLOW[i+1],16)
-        #            print self.paths[int(FLOW[i],16)].path, self.paths[int(FLOW[i],16)].branch_path
-        #            print int(FLOW[i+1],16) == self.paths[int(FLOW[i],16)].path
-        #            break;
-        #    except:
-        #        print FLOW[i]
-        #        print self.paths[int(FLOW[i],16)]
-        #        break;
         addresses = list(self.paths.keys())
         addresses.sort()
-        #for i in addresses:
-        #    print("Address: %s  First Path: %s   Branch Path: %s   Instruction: %s"%(hex(i), hex(self.paths[i].path), hex(self.paths[i].branch_path), self.paths[i].arg))
+        for i in addresses:
+            print("Address: %s  First Path: %s   Branch Path: %s   Instruction: %s  Sources: %s"%(hex(i), hex(self.paths[i].path), hex(self.paths[i].branch_path), self.paths[i].arg, (' '.join(hex(x) for x in self.paths[i].sources))))
 
         print len(self.paths)
            #     print("Address: %s  First Path: %s   Branch Path: %s   Instruction: %s"%(hex(i), hex(self.paths[i].path), hex(self.paths[i].branch_path)))
-
-        return (self.paths, self.set_branch_pairs)
 
     # Calculate the location of a branch with a register as the argument
     def register_branch_calc(self, instr, op, curr_addr):
@@ -314,150 +291,86 @@ class GeneratorCore(object):
         else:
             return (False, 0, 0, 0)
 
-    # Link remaining instructions after reaching end in while loop
-    def branch_end_handler(self):
-        if len(self.branches) != 0:
-            self.last_instr = self.cond_branches.pop()
-            tmp = self.branches.pop()
-            while(MEM_INSTR[tmp] == 0):
-                tmp += 1
-            return tmp
-        elif self.isr_num != len(ISR_POINTERS)-1:
-            self.last_instr = 0
-            self.isr_num += 1
-            tmp = ISR_POINTERS[self.isr_num]  - int(IMAGEBASE,16)
-            while(MEM_INSTR[tmp] == 0):
-                tmp += 1
-            return tmp
-        else:
-            return 0
-
-    def pair_set_branch(self, i, instr):
-        global CONDITIONAL_BRANCHES
-
-        if instr.split('.')[0] == 'mlss':
-            self.current_setter = i
-            return
-        elif ((instr.split('.')[0][-1] == 's' and
-            instr.split('.')[0] != 'mls') or
-            instr.split('.')[0] == 'cmp' or
-            instr.split('.')[0] == 'cmn'):
-            self.current_setter = i
-            return
-        if instr in CONDITIONAL_BRANCHES:
-            self.set_branch_pairs[instr] = self.current_setter
-            self.current_setter = 0
-
+    # Link all other instructions
     def instruction_linking(self, i):
         global BRANCH_INSTRUCTIONS, REGISTER_NAMES, CONDITIONAL_BRANCHES, MEM_INSTR, ISR_POINTERS
+        isr_num = 0
         while True:
             try:
                 while(MEM_INSTR[i] == 0):
                     i += 1
             except:
-                #print i
-                #print(MEM_INSTR[self.branches.pop()])
-                #print "return 1\n\n\n"
-                #print len(self.branches)
-                tmp = self.branch_end_handler()
-                if tmp == 0:
-                    return
-                else:
-                    i = tmp
+                print i
+                return
 
             if i+int(IMAGEBASE,16) in self.paths:
-                tmp = self.branch_end_handler()
-                if tmp == 0:
-                    return
+                if len(self.branches) != 0:
+                    i = self.branches.pop()
                 else:
-                    i = tmp
-                #if len(self.branches) != 0:
-                #    i = self.branches.pop()
-                #else:
-                #    if self.isr_num != len(ISR_POINTERS):
-                #        i = ISR_POINTERS[self.isr_num] - int(IMAGEBASE,16)
-                #        self.isr_num += 1
-                #    else:
-                #        print "return 2\n\n\n"
-                #        return 
+                    if isr_num != len(ISR_POINTERS):
+                        i = ISR_POINTERS[isr_num] - int(IMAGEBASE,16)
+                        isr_num += 1
+                    else:
+                        return 
             else:
                 instr = MEM_INSTR[i].instr
                 op = MEM_INSTR[i].op
 
-                self.pair_set_branch(i, instr)
-
                 if (instr == 'b' and op not in REGISTER_NAMES) and (int(op.split('#')[1],16)-int(IMAGEBASE,16) == i):
                     self.paths[i+int(IMAGEBASE,16)] = path_data(0, int(op.split('#')[1],16))
                     self.paths[i+int(IMAGEBASE,16)].arg = instr + ' ' + op
-                    self.paths[i+int(IMAGEBASE,16)].sources.append(self.last_instr)
-                    #print(hex(i+int(IMAGEBASE,16)), instr, op)
-                    tmp = self.branch_end_handler()
-                    if tmp == 0:
-                        return
+                    print(hex(i+int(IMAGEBASE,16)), instr, op)
+                    if len(self.branches) != 0:
+                        i = self.branches.pop()
+                    elif isr_num != len(ISR_POINTERS):
+                        i = ISR_POINTERS[isr_num] - int(IMAGEBASE,16)
+                        isr_num += 1
                     else:
-                        i = tmp
-                    #if len(self.branches) != 0:
-                    #    i = self.branches.pop()
-                    #    self.last_instr = self.cond_branches.pop()
-                    #elif self.isr_num != len(ISR_POINTERS):
-                    #    i = ISR_POINTERS[self.isr_num] - int(IMAGEBASE,16)
-                    #    self.isr_num += 1
-                    #    self.last_instr = 0
-                    #else:
-                    #    print "return 3\n\n\n"
-                    #    print 'CFG complete'
-                    #    return
+                        print 'CFG complete'
+                        return
                 else:
 
-                    #print(hex(i+int(IMAGEBASE,16)), instr, op)
+                    print(hex(i+int(IMAGEBASE,16)), instr, op)
                     
                     self.register_branch_calc(instr, op, i)
 
-                    try:
-                        if ('pop' in instr and 'pc' in op) or ('ldr' in instr and 'pc' in op and 'sp' in op):
-                            if len(self.return_address_stack) != 0:
-                                self.last_instr = i
-                                i = self.return_address_stack.pop()-int(IMAGEBASE,16)
-                            else:
-                                i = self.branch_end_handler()
-                        elif (instr in BRANCH_INSTRUCTIONS or instr in CONDITIONAL_BRANCHES) and 'lr' in op:
-                            if len(self.return_address_stack) != 0:
-                                self.last_instr = i
-                                i = self.return_address_stack.pop()-int(IMAGEBASE,16)
-                            else:
-                                i = self.branch_end_handler()
-                        else:
-                            b_result = self.branch_destination_handler(instr, op, i)
-                            if b_result[0] == True:
-                                self.paths[i+int(IMAGEBASE,16)] = path_data(b_result[1], b_result[2])
-                                self.paths[i+int(IMAGEBASE,16)].arg = instr + ' ' + op
-                                self.paths[i+int(IMAGEBASE,16)].sources.append(self.last_instr)
-                                if 'bl' in instr:
-                                    index = i + 1
-                                    while(MEM_INSTR[index] == 0):
-                                        index += 1
-                                    index += int(IMAGEBASE,16)
-                                    self.return_address_stack.append(index)
-                                if b_result[3] != 0:
-                                    self.branches.append(b_result[3])
-                                    self.cond_branches.append(i)
-                                    self.last_instr = i
-                                    i = b_result[2]-int(IMAGEBASE,16)
-                                else:
-                                    self.last_instr = i
-                                    i = b_result[2]-int(IMAGEBASE,16)
-                            else:
+                    if ('pop' in instr and 'pc' in op) or ('ldr' in instr and 'pc' in op and 'sp' in op):
+                        i = self.return_address_stack.pop()-int(IMAGEBASE,16)
+                    elif (instr in BRANCH_INSTRUCTIONS or instr in CONDITIONAL_BRANCHES) and 'lr' in op:
+                        i = self.return_address_stack.pop()-int(IMAGEBASE,16)
+                    else:
+                        b_result = self.branch_destination_handler(instr, op, i)
+                        if b_result[0] == True:
+                            self.paths[i+int(IMAGEBASE,16)] = path_data(b_result[1], b_result[2])
+                            self.paths[i+int(IMAGEBASE,16)].arg = instr + ' ' + op
+                            if 'bl' in instr:
                                 index = i + 1
                                 while(MEM_INSTR[index] == 0):
                                     index += 1
                                 index += int(IMAGEBASE,16)
-                                self.paths[i+int(IMAGEBASE,16)] = path_data(index, 0)
-                                self.paths[i+int(IMAGEBASE,16)].arg = instr + ' ' + op
-                                self.paths[i+int(IMAGEBASE,16)].sources.append(self.last_instr)
-                                self.last_instr = i
-                                i = i + 1
-                    except:
-                        i = self.branch_end_handler()
+                                self.return_address_stack.append(index)
+                            if b_result[3] != 0:
+                                self.branches.append(b_result[3])
+                                i = b_result[2]-int(IMAGEBASE,16)
+                            else:
+                                i = b_result[2]-int(IMAGEBASE,16)
+                        else:
+                            index = i + 1
+                            while(MEM_INSTR[index] == 0):
+                                index += 1
+                            index += int(IMAGEBASE,16)
+                            self.paths[i+int(IMAGEBASE,16)] = path_data(index, 0)
+                            self.paths[i+int(IMAGEBASE,16)].arg = instr + ' ' + op
+                            i = i + 1
+
+    def source_generation(self):
+        for i in self.paths:
+            path = self.paths[i].path
+            branch_path = self.paths[i].branch_path
+            if path != 0 and path in self.paths:
+                self.paths[path].sources.append(i)
+            if branch_path != 0 and branch_path in self.paths:
+                self.paths[branch_path].sources.append(i)
 
     def generate_paths(self):
         '''mem_instr and branches have the imagebase subtracted from them!!'''
@@ -466,22 +379,11 @@ class GeneratorCore(object):
         i = STARTING_ADDRESS-int(IMAGEBASE,16)-IS_THUMB_MODE
 
         self.instruction_linking(i)
+        self.source_generation()
         return 0
-
-#Generate models that represent conditional branch paths
-def symbolic_exec(paths, set_branch_pairs):
-    model = ''
-    #print("Address: %s  First Path: %s   Branch Path: %s   Instruction: %s"%(hex(i), hex(self.paths[i].path), hex(self.paths[i].branch_path), self.paths[i].arg))
-    for i in paths:
-        mnemonic = paths[i].arg.split()[0]
-        if mnemonic in CONDITIONAL_BRANCHES:
-            branch_condition = mnemonic.split('b')[1]
-            print branch_condition
-            break;
 
 # Main
 def main():
-    global FLOW, FILE_NAME
     tmp = False
     if len(sys.argv) > 1:
         FILE_NAME = str(sys.argv[1])
@@ -499,13 +401,8 @@ def main():
             return True
     dc = DisassemblerCore(FILE_NAME)
     dc.run()
-    flow_file = open('flow.txt', 'r')
-    content = flow_file.read()
-    FLOW = content.split(", ")
-    flow_file.close()
-    gc = GeneratorCore(MEM_INSTR, BRANCHES)
-    paths, set_branch_pairs = gc.run()
-    symbolic_exec(paths, set_branch_pairs)
+    #gc = GeneratorCore(MEM_INSTR, BRANCHES)
+    #gc.run()
 
 if __name__ == '__main__':
     main()
