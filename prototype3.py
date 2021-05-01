@@ -345,7 +345,7 @@ class GeneratorCore(object):
             self.current_setter = i
             return
         if instr in CONDITIONAL_BRANCHES:
-            self.set_branch_pairs[instr] = self.current_setter
+            self.set_branch_pairs[i] = self.current_setter
             self.current_setter = 0
 
     def instruction_linking(self, i):
@@ -470,14 +470,40 @@ class GeneratorCore(object):
 
 #Generate models that represent conditional branch paths
 def symbolic_exec(paths, set_branch_pairs):
+    #key is branch instruction
+    global MEM_INSTR
+    sym_models = {}
     model = ''
-    #print("Address: %s  First Path: %s   Branch Path: %s   Instruction: %s"%(hex(i), hex(self.paths[i].path), hex(self.paths[i].branch_path), self.paths[i].arg))
-    for i in paths:
-        mnemonic = paths[i].arg.split()[0]
-        if mnemonic in CONDITIONAL_BRANCHES:
-            branch_condition = mnemonic.split('b')[1]
-            print branch_condition
-            break;
+    for key in set_branch_pairs:
+        branch_setter = MEM_INSTR[set_branch_pairs[key]].instr
+        branch_condition = MEM_INSTR[key].instr.split('b')[1]
+        if branch_setter == 'cbz':
+            branch_setter = 'cmp'
+            branch_condition = 'eq'
+        elif branch_setter == 'cbnz':
+            branch_setter = 'cmp'
+            branch_condition = 'ne'
+        if (branch_setter == "cmp"
+                or branch_setter == "cmn"
+                or branch_setter == 'movs'
+                or branch_setter == 'mvns'
+                or branch_setter == 'rsbs'
+                or branch_setter == 'rscs'):
+                model = 'y'
+        elif branch_setter == 'adds':
+            model = 'y + z'
+        elif branch_setter == 'subs' or branch_setter == 'sbcs':
+            model = 'y - z'
+        elif branch_setter == 'lsls':
+            model = "undetermined"
+        elif branch_setter == 'asrs':
+            model = "undetermined"
+    #for i in paths:
+    #    mnemonic = paths[i].arg.split()[0]
+    #    if mnemonic in CONDITIONAL_BRANCHES:
+    #        branch_condition = mnemonic.split('b')[1]
+    #        print branch_condition
+    #        break;
 
 # Main
 def main():
