@@ -346,7 +346,7 @@ class GeneratorCore(object):
             self.current_setter = i
             return
         if instr in CONDITIONAL_BRANCHES:
-            self.set_branch_pairs[i] = self.current_setter
+            self.set_branch_pairs[self.current_setter] = i
             self.current_setter = 0
 
     def instruction_linking(self, i):
@@ -471,18 +471,21 @@ class GeneratorCore(object):
 
 #Generate models that represent conditional branch paths
 def symbolic_exec(paths, set_branch_pairs):
-    #key is branch instruction
+    #key is setter instruction
     global MEM_INSTR
     sym_models = {}
-    model = ''
-    model1 = ''
-    model2 = ''
     error_count = 0
     for key in set_branch_pairs:
-        if MEM_INSTR[set_branch_pairs[key]] != 0:    #if the conditional branch has a corresponding condition setter
-            branch_setter = MEM_INSTR[set_branch_pairs[key]].instr.split('.')[0]
-            branch_args = MEM_INSTR[set_branch_pairs[key]].op
-            branch_condition = MEM_INSTR[key].instr.split('b')[1]
+        model = ''
+        syms = {}
+        left_model = ''
+        right_model = ''
+        dest_reg = ''
+        if key != 0:    #if there is a setter for the conditional branch
+            branch_setter = MEM_INSTR[key].instr.split('.')[0]
+            branch_args = MEM_INSTR[key].op
+            branch_args = branch_args.split(', ')
+            branch_condition = MEM_INSTR[set_branch_pairs[key]].instr.split('b')[1]
             if branch_setter == 'cbz':
                 branch_setter = 'cmp'
                 branch_condition = 'eq'
@@ -495,58 +498,94 @@ def symbolic_exec(paths, set_branch_pairs):
                     or branch_setter == 'mvns'
                     or branch_setter == 'rsbs'
                     or branch_setter == 'rscs'):
-                branch_args = branch_args.replace('#', '')
-                branch_args = branch_args.split(', ')
-                model = branch_args[1]
+                dest_reg = branch_args[0]
+                syms['x'] = dest_reg
+                syms['y'] = branch_args[1]
+                model = 'y'
             elif branch_setter == 'adds':
-                branch_args = branch_args.replace('#', '')
-                branch_args = branch_args.split(', ')
                 if len(branch_args) == 3:
-                    model = branch_args[1] + '+' + branch_args[2]
+                    dest_reg = branch_args[0]
+                    syms['x'] = dest_reg
+                    syms['y'] = branch_args[1]
+                    syms['z'] = branch_args[2]
+                    model = 'y + z'
                 else:
-                    model = branch_args[0] + '+' + branch_args[1]
+                    dest_reg = branch_args[0]
+                    syms['x'] = dest_reg
+                    syms['y'] = branch_args[1]
+                    model = 'x + y' 
             elif branch_setter == 'subs' or branch_setter == 'sbcs':
-                branch_args = branch_args.replace('#', '')
-                branch_args = branch_args.split(', ')
                 if len(branch_args) == 3:
-                    model = branch_args[1] + '-' + branch_args[2]
+                    dest_reg = branch_args[0]
+                    syms['x'] = dest_reg
+                    syms['y'] = branch_args[1]
+                    syms['z'] = branch_args[2]
+                    model = 'y - z'
                 else:
-                    model = branch_args[0] + '-' + branch_args[1]
+                    dest_reg = branch_args[0]
+                    syms['x'] = dest_reg
+                    syms['y'] = branch_args[1]
+                    model = 'x - y' 
             elif branch_setter == 'lsls':
-                branch_args = branch_args.replace('#', '')
-                branch_args = branch_args.split(', ')
                 if len(branch_args) == 3:
-                    model = branch_args[1] + '<<' + branch_args[2]
-                else:
-                    model = branch_args[0] + '<<' + branch_args[1]
+                    dest_reg = branch_args[0]
+                    syms['x'] = dest_reg
+                    syms['y'] = branch_args[1]
+                    syms['z'] = branch_args[2]
+                    model = 'y << z'
+                elif len(branch_args) == 2 or branch_args[0] == branch_args[1]:
+                    dest_reg = branch_args[0]
+                    syms['x'] = dest_reg
+                    syms['y'] = branch_args[1]
+                    model = 'x << y' 
             elif branch_setter == 'asrs':
-                branch_args = branch_args.replace('#', '')
-                branch_args = branch_args.split(', ')
                 if len(branch_args) == 3:
-                    model = branch_args[1] + '>>' + branch_args[2]
-                else:
-                    model = branch_args[0] + '>>' + branch_args[1]
+                    dest_reg = branch_args[0]
+                    syms['x'] = dest_reg
+                    syms['y'] = branch_args[1]
+                    syms['z'] = branch_args[2]
+                    model = 'y >> z'
+                elif len(branch_args) == 2 or branch_args[0] == branch_args[1]:
+                    dest_reg = branch_args[0]
+                    syms['x'] = dest_reg
+                    syms['y'] = branch_args[1]
+                    model = 'x >> y' 
             elif branch_setter == 'ands':
-                branch_args = branch_args.replace('#', '')
-                branch_args = branch_args.split(', ')
                 if len(branch_args) == 3:
-                    model = branch_args[1] + '&' + branch_args[2]
+                    dest_reg = branch_args[0]
+                    syms['x'] = dest_reg
+                    syms['y'] = branch_args[1]
+                    syms['z'] = branch_args[2]
+                    model = 'y & z'
                 else:
-                    model = branch_args[0] + '&' + branch_args[1]
+                    dest_reg = branch_args[0]
+                    syms['x'] = dest_reg
+                    syms['y'] = branch_args[1]
+                    model = 'x & y' 
             elif branch_setter == 'eors':
-                branch_args = branch_args.replace('#', '')
-                branch_args = branch_args.split(', ')
                 if len(branch_args) == 3:
-                    model = branch_args[1] + '^' + branch_args[2]
+                    dest_reg = branch_args[0]
+                    syms['x'] = dest_reg
+                    syms['y'] = branch_args[1]
+                    syms['z'] = branch_args[2]
+                    model = 'y ^ z'
                 else:
-                    model = branch_args[0] + '^' + branch_args[1]
+                    dest_reg = branch_args[0]
+                    syms['x'] = dest_reg
+                    syms['y'] = branch_args[1]
+                    model = 'x ^ y' 
             elif branch_setter == 'orrs':
-                branch_args = branch_args.replace('#', '')
-                branch_args = branch_args.split(', ')
                 if len(branch_args) == 3:
-                    model = branch_args[1] + '|' + branch_args[2]
+                    dest_reg = branch_args[0]
+                    syms['x'] = dest_reg
+                    syms['y'] = branch_args[1]
+                    syms['z'] = branch_args[2]
+                    model = 'y | z'
                 else:
-                    model = branch_args[0] + '|' + branch_args[1]
+                    dest_reg = branch_args[0]
+                    syms['x'] = dest_reg
+                    syms['y'] = branch_args[1]
+                    model = 'x | y' 
             elif branch_setter == 'lsrs':
                 model = 'undetermined'
             elif branch_setter == 'bics':
@@ -557,59 +596,68 @@ def symbolic_exec(paths, set_branch_pairs):
                 error_count += 1
 
             if 'eq' in branch_condition:
-                model1 = 'x == ' + model
-                model2 = 'x != ' + model
+                left_model = 'x == ' + model
+                right_model = 'x != ' + model
             elif 'ne' in branch_condition:
-                model1 = 'x != ' + model
-                model2 = 'x == ' + model
+                left_model = 'x != ' + model
+                right_model = 'x  == ' + model
             elif 'cs' in branch_condition or 'hs' in branch_condition:
-                model1 = 'UGE(x, ' + model + ')'
-                model2 = 'ULT(x, ' + model + ')'
+                left_model = 'UGE(x,' + model + ')'
+                right_model = 'ULT(x,' + model + ')'
             elif 'cc' in branch_condition  or 'lo' in branch_condition:
-                model1 = 'ULT(x, ' + model + ')'
-                model2 = 'UGE(x, ' + model + ')'
+                left_model = 'ULT(x,' + model + ')'
+                right_model = 'UGE(x,' + model + ')'
             elif 'mi' in branch_condition:
-                model1 = '0 > ' + model
-                model2 = '0 <= ' + model
+                left_model = '0 > ' + model
+                right_model = '0 <= ' + model
             elif 'pl' in branch_condition:
-                model1 = '0 <= ' + model
-                model2 = '0 > ' + model
+                left_model = '0 <= ' + model
+                right_model = '0 > ' + model
             elif 'vs' in branch_condition:
                 #0x7ffffffff: max signed 32-bit number
-                model1 = 'UGT(' + model + ', int(0x7fffffff,16))'
-                model2 = 'ULE(' + model + ', int(0x7fffffff,16))'
+                left_model = 'UGT(' + model + ', int(0x7fffffff,16))'
+                right_model = 'ULE(' + model + ', int(0x7fffffff,16))'
             elif 'vc' in branch_condition:
-                model1 = 'ULE(' + model + ', int(0x7fffffff,16))'
-                model2 = 'UGT(' + model + ', int(0x7fffffff,16))'
+                left_model = 'ULE(' + model + ', int(0x7fffffff,16))'
+                right_model = 'UGT(' + model + ', int(0x7fffffff,16))'
             elif 'hi' in branch_condition:
-                model1 = 'UGT(x, ' + model + ')'
-                model2 = 'ULE(x, ' + model + ')'
+                left_model = 'UGT(' + dest_reg + ', ' + model + ')'
+                right_model = 'ULE(' + dest_reg + ', ' + model + ')'
             elif 'ls' in branch_condition:
-                model1 = 'ULE(x, ' + model + ')'
-                model2 = 'UGT(x, ' + model + ')'
+                left_model = 'ULE(' + dest_reg + ', ' + model + ')'
+                right_model = 'UGT(' + dest_reg + ', ' + model + ')'
             elif 'ge' in branch_condition:
-                model1 = 'x >= ' + model
-                model2 = 'x < ' + model
+                left_model = 'x >= ' + model
+                right_model = 'x < ' + model
             elif 'lt' in branch_condition:
-                model1 = 'x < ' + model
-                model2 = 'x >= ' + model
+                left_model = 'x < ' + model
+                right_model = 'x >= ' + model
             elif 'gt' in branch_condition:
-                model1 = 'x > ' + model
-                model2 = 'x <= ' + model
+                left_model = 'x > ' + model
+                right_model = 'x <= ' + model
             elif 'le' in branch_condition:
-                model1 = 'x <= ' + model
-                model2 = 'x > ' + model
-            sym_models[key] = (model1, model2)
+                left_model = 'x <= ' + model
+                right_model = 'x > ' + model
+            sym_models[key] = (left_model, right_model, syms)
         else:
             error_count += 1
 
-    print(sym_models)
-    print(error_count)
-    print(len(sym_models))
+    return sym_models
+    #print(sym_models)
+    #print(error_count)
+
+def get_models():
+    global SYM_MODELS
+    return SYM_MODELS
+
+def get_pairs():
+    global SET_BRANCH_PAIRS
+    return SET_BRANCH_PAIRS
+    
 
 # Main
 def main():
-    global FLOW, FILE_NAME
+    global FLOW, FILE_NAME, SET_BRANCH_PAIRS, SYM_MODELS
     tmp = False
     if len(sys.argv) > 1:
         FILE_NAME = str(sys.argv[1])
@@ -627,13 +675,13 @@ def main():
             return True
     dc = DisassemblerCore(FILE_NAME)
     dc.run()
-    flow_file = open('flow.txt', 'r')
-    content = flow_file.read()
-    FLOW = content.split(", ")
-    flow_file.close()
+    #flow_file = open('flow.txt', 'r')
+    #content = flow_file.read()
+    #FLOW = content.split(", ")
+    #flow_file.close()
     gc = GeneratorCore(MEM_INSTR, BRANCHES)
-    paths, set_branch_pairs = gc.run()
-    symbolic_exec(paths, set_branch_pairs)
+    paths, SET_BRANCH_PAIRS = gc.run()
+    SYM_MODELS = symbolic_exec(paths, SET_BRANCH_PAIRS)
 
 if __name__ == '__main__':
     main()
