@@ -200,8 +200,8 @@ class DisassemblerCore(object):
 
 class path_data:
     def __init__(self, path1, path2):
-        self.path = path1
-        self.branch_path = path2
+        self.left = path1
+        self.right = path2
         self.sources = []
         self.mode = ''
         self.arg = ''
@@ -249,10 +249,10 @@ class GeneratorCore(object):
         self.generate_paths()
         #for i in range(len(FLOW)-1):
         #    try:
-        #        if (int(FLOW[i+1],16) != self.paths[int(FLOW[i],16)].path) and (int(FLOW[i+1],16) != self.paths[int(FLOW[i],16)].branch_path):
+        #        if (int(FLOW[i+1],16) != self.paths[int(FLOW[i],16)].left) and (int(FLOW[i+1],16) != self.paths[int(FLOW[i],16)].right):
         #            print int(FLOW[i],16), int(FLOW[i+1],16)
-        #            print self.paths[int(FLOW[i],16)].path, self.paths[int(FLOW[i],16)].branch_path
-        #            print int(FLOW[i+1],16) == self.paths[int(FLOW[i],16)].path
+        #            print self.paths[int(FLOW[i],16)].left, self.paths[int(FLOW[i],16)].right
+        #            print int(FLOW[i+1],16) == self.paths[int(FLOW[i],16)].left
         #            break;
         #    except:
         #        print FLOW[i] + 'error'
@@ -260,10 +260,10 @@ class GeneratorCore(object):
         #addresses = list(self.paths.keys())
         #addresses.sort()
         #for i in addresses:
-        #    print("Address: %s  First Path: %s   Branch Path: %s   Instruction: %s"%(hex(i), hex(self.paths[i].path), hex(self.paths[i].branch_path), self.paths[i].arg))
+        #    print("Address: %s  First Path: %s   Branch Path: %s   Instruction: %s"%(hex(i), hex(self.paths[i].left), hex(self.paths[i].right), self.paths[i].arg))
 
-        print len(self.paths)
-           #     print("Address: %s  First Path: %s   Branch Path: %s   Instruction: %s"%(hex(i), hex(self.paths[i].path), hex(self.paths[i].branch_path)))
+        print('paths: ', len(self.paths))
+           #     print("Address: %s  First Path: %s   Branch Path: %s   Instruction: %s"%(hex(i), hex(self.paths[i].left), hex(self.paths[i].right)))
 
         return (self.paths, self.set_branch_pairs)
 
@@ -315,12 +315,19 @@ class GeneratorCore(object):
 
     # Link remaining instructions after reaching end in while loop
     def branch_end_handler(self):
+        test = True
         if len(self.branches) != 0:
             self.last_instr = self.cond_branches.pop()
             tmp = self.branches.pop()
             while(MEM_INSTR[tmp] == 0):
                 tmp += 1
             return tmp
+        #elif len(self.return_address_stack) != 0:
+        #    self.last_instr = 0
+        #    tmp = self.return_address_stack.pop()-int(IMAGEBASE,16)
+        #    while(MEM_INSTR[tmp] == 0):
+        #        tmp+=1
+        #    return tmp
         elif self.isr_num != len(ISR_POINTERS)-1:
             self.last_instr = 0
             self.isr_num += 1
@@ -350,7 +357,7 @@ class GeneratorCore(object):
             self.current_setter = 0
 
     def instruction_linking(self, i):
-        global BRANCH_INSTRUCTIONS, REGISTER_NAMES, CONDITIONAL_BRANCHES, MEM_INSTR, ISR_POINTERS
+        global BRANCH_INSTRUCTIONS, REGISTER_NAMES, CONDITIONAL_BRANCHES, MEM_INSTR, ISR_POINTERS, ENDING_ADDRESS
         while True:
             try:
                 while(MEM_INSTR[i] == 0):
@@ -378,6 +385,7 @@ class GeneratorCore(object):
                     self.paths[i+int(IMAGEBASE,16)] = path_data(0, int(op.split('#')[1],16))
                     self.paths[i+int(IMAGEBASE,16)].arg = instr + ' ' + op
                     self.paths[i+int(IMAGEBASE,16)].sources.append(self.last_instr)
+                    ENDING_ADDRESS = hex(i+int(IMAGEBASE,16))
                     #print(hex(i+int(IMAGEBASE,16)), instr, op)
                     tmp = self.branch_end_handler()
                     if tmp == 0:
@@ -386,22 +394,42 @@ class GeneratorCore(object):
                         i = tmp
                 else:
 
-                    print(hex(i+int(IMAGEBASE,16)), instr, op)
+                    #print(hex(i+int(IMAGEBASE,16)), instr, op)
 
                     self.register_branch_calc(instr, op, i)
 
                     try:
                         if ('pop' in instr and 'pc' in op) or ('ldr' in instr and 'pc' in op and 'sp' in op):
                             if len(self.return_address_stack) != 0:
+                                last_instr_tmp = self.last_instr
                                 self.last_instr = i
-                                i = self.return_address_stack.pop()-int(IMAGEBASE,16)
+                                pop_val = self.return_address_stack.pop()
+                                self.paths[i+int(IMAGEBASE,16)] = path_data(0, pop_val)
+                                self.paths[i+int(IMAGEBASE,16)].arg = instr + ' ' + op
+                                self.paths[i+int(IMAGEBASE,16)].sources.append(last_instr_tmp)
+                                i = pop_val - int(IMAGEBASE,16)
+                                self.return_from_sub = True
                             else:
+                                self.paths[i+int(IMAGEBASE,16)].sources.append(self.last_instr)
+                                self.paths[i+int(IMAGEBASE,16)] = path_data(0, 0)
+                                self.paths[i+int(IMAGEBASE,16)].arg = instr + ' ' + op
+                                self.return_from_sub = True
                                 i = self.branch_end_handler()
                         elif (instr in BRANCH_INSTRUCTIONS or instr in CONDITIONAL_BRANCHES) and 'lr' in op:
                             if len(self.return_address_stack) != 0:
+                                last_instr_tmp = self.last_instr
                                 self.last_instr = i
-                                i = self.return_address_stack.pop()-int(IMAGEBASE,16)
+                                pop_val = self.return_address_stack.pop()
+                                self.paths[i+int(IMAGEBASE,16)] = path_data(0, pop_val)
+                                self.paths[i+int(IMAGEBASE,16)].arg = instr + ' ' + op
+                                self.paths[i+int(IMAGEBASE,16)].sources.append(last_instr_tmp)
+                                i = pop_val - int(IMAGEBASE,16)
+                                self.return_from_sub = True
                             else:
+                                self.paths[i+int(IMAGEBASE,16)].sources.append(self.last_instr)
+                                self.paths[i+int(IMAGEBASE,16)] = path_data(0, 0)
+                                self.paths[i+int(IMAGEBASE,16)].arg = instr + ' ' + op
+                                self.return_from_sub = True
                                 i = self.branch_end_handler()
                         else:
                             b_result = self.branch_destination_handler(instr, op, i)
@@ -568,7 +596,7 @@ def symbolic_exec(paths, set_branch_pairs):
                 model = 'undetermined'
             else:
                 model = "undetermined"
-                print branch_setter
+                #print branch_setter
                 error_count += 1
 
             if 'eq' in branch_condition:
@@ -632,23 +660,58 @@ def get_pairs():
     
 #target address to locate is a hex string
 def get_path(target):
-    global PATHS
     target = int(target, 16)
+    if target not in PATHS:
+        print('not in paths')
+        return
     curr = STARTING_ADDRESS-1
     target_map = []
     untaken_branches = []
+    depth_count = []
+    dp_index = 0
+    depth_count.append(0)
     while curr != target:
-        print(hex(curr))
         if curr not in target_map:
-            target_map.append(curr)
-            if PATHS[curr].path != 0:
-                if PATHS[curr].branch_path != 0:
-                   untaken_branches.append(PATHS[curr].branch_path) 
-                curr = PATHS[curr].path
+            if curr in PATHS:
+                print(hex(curr), MEM_INSTR[curr-int(IMAGEBASE,16)].instr, MEM_INSTR[curr-int(IMAGEBASE,16)].op)
+                target_map.append(curr)
+                depth_count[dp_index]+=1
+                if PATHS[curr].left != 0:
+                    if PATHS[curr].right != 0:
+                       untaken_branches.append(PATHS[curr].right) 
+                       dp_index+=1
+                       depth_count.append(0)
+                    curr = PATHS[curr].left
+                else:
+                    curr = PATHS[curr].right
             else:
-                curr = PATHS[curr].branch_path
+                if len(untaken_branches) != 0:
+                    curr = untaken_branches.pop()
+                    for i in range(depth_count[dp_index]):
+                        target_map.pop()
+                    depth_count.pop()
+                    dp_index-=1
+                else:
+                    print('failed')
+                    return
         else:
-            curr = untaken_branches.pop()
+            if len(untaken_branches) != 0:
+                curr = untaken_branches.pop()
+                for i in range(depth_count[dp_index]):
+                    target_map.pop()
+                depth_count.pop()
+                dp_index-=1
+            else:
+                print('failed')
+                return
+        if curr == target:
+            print(hex(curr), 'end')
+            #print depth_count
+            target_map.append(curr)
+    print target_map
+    for i in target_map:
+        tmp = i-int(IMAGEBASE,16)
+        print(hex(i), MEM_INSTR[tmp].instr, MEM_INSTR[tmp].op)
 
 # Main
 def main():
@@ -677,7 +740,10 @@ def main():
     gc = GeneratorCore(MEM_INSTR, BRANCHES)
     PATHS, SET_BRANCH_PAIRS = gc.run()
     #SYM_MODELS = symbolic_exec(PATHS, SET_BRANCH_PAIRS)
-    #get_path('0x8473c')
+    get_path('0x80674')
+    #get_path('0x88888')
+    #get_path(ENDING_ADDRESS)
+    print(ENDING_ADDRESS)
 
 if __name__ == '__main__':
     main()
