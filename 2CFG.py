@@ -12,8 +12,6 @@ from capstone import *
 from collections import OrderedDict
 import binascii
 import math
-import traceback
-import sys
 
 FLOW = []
 FILE_NAME = ''
@@ -210,9 +208,6 @@ class path_data:
         self.sources = []
         self.mode = ''
         self.arg = ''
-class subroutine_data:
-    def __init__(self):
-        self.subroutines = {}
 
 class GeneratorCore(object):
     def __init__(self, disassembly, branches):
@@ -240,18 +235,25 @@ class GeneratorCore(object):
         self.register_branches['r15'] = []
         self.register_branches['lr'] = []
         self.return_address_stack = []
+        #Some branch addresses cannot be properly determined (i.e. bl r3)
+        #For these instructions, store the return address in a special stack
+        self.bad_return_address_stack = []
         self.link_reg_branch_dest = 0
         self.link_branch_instructions = {}
         # The beginning of invalid instructions
         self.end = 0
         self.linked_instrs = {}
-        # Conditional branch p                                                aths that were unexplored
+        # Conditional branch paths that were unexplored
         self.branches = []
         self.cond_branches = []
         #Keep track of the last instruction to add to sources
         self.last_instr = 0
         #Keep track of which isr is being analyzed
         self.isr_num = 0
+        #Record subroutines
+        self.subroutines = {}
+        self.subroutine_index = []
+        self.sub_instr = False
 
     def run(self):
         self.generate_paths()
@@ -273,6 +275,11 @@ class GeneratorCore(object):
         print('paths: ', len(self.paths))
            #     print("Address: %s  First Path: %s   Branch Path: %s   Instruction: %s"%(hex(i), hex(self.paths[i].left), hex(self.paths[i].right)))
 
+        for i in self.subroutines:
+            print('\n')
+            for x in self.subroutines[i]:
+                print hex(x)
+        print self.bad_return_address_stack
         return (self.paths, self.set_branch_pairs)
 
     # Calculate the location of a branch with a register as the argument
@@ -328,12 +335,12 @@ class GeneratorCore(object):
             while(MEM_INSTR[tmp] == 0):
                 tmp += 1
             return tmp
-        elif len(self.return_address_stack) != 0:
-            self.last_instr = 0
-            tmp = self.return_address_stack.pop()-int(IMAGEBASE,16)
-            while(MEM_INSTR[tmp] == 0):
-                tmp+=1
-            return tmp
+        #elif len(self.return_address_stack) != 0:
+        #    self.last_instr = 0
+        #    tmp = self.return_address_stack.pop()-int(IMAGEBASE,16)
+        #    while(MEM_INSTR[tmp] == 0):
+        #        tmp+=1
+        #    return tmp
         elif self.isr_num != len(ISR_POINTERS)-1:
             self.last_instr = 0
             self.isr_num += 1
@@ -362,29 +369,67 @@ class GeneratorCore(object):
             self.set_branch_pairs[self.current_setter] = i
             self.current_setter = 0
 
-    def subroutine_handler(self, i):
-        return 
+    def begin_subroutine_handler(self, subroutine_start):
+        if subroutine_start in MEM_INSTR:
+            self.subroutine_index.append(subroutine_start)
+            if subroutine_start not in self.subroutines:
+                self.subroutines[subroutine_start] = []
+                #First instruction of subroutine
+                self.subroutines[subroutine_start].append(self.paths[subroutine_start+int(IMAGEBASE,16)].right)
+
+    def end_subroutine_handler(self, i, instr, op):
+        if ('pop' in instr and 'pc' in op) or ('ldr' in instr and 'pc' in op and 'sp' in op):
+            if len(self.return_address_stack) != 0:
+                last_instr_tmp = self.last_instr
+                self.last_instr = i
+                pop_val = self.return_address_stack.pop()
+                self.paths[i+int(IMAGEBASE,16)] = path_data(0, pop_val)
+                self.paths[i+int(IMAGEBASE,16)].arg = instr + ' ' + op
+                self.paths[i+int(IMAGEBASE,16)].sources.append(last_instr_tmp)
+                self.paths[i+int(IMAGEBASE,16)].pop_paths.append(pop_val)
+                i = pop_val - int(IMAGEBASE,16)
+                self.subroutines[self.subroutine_index.pop()].append(pop_val)
+                self.return_from_sub = True
+            else:
+                self.paths[i+int(IMAGEBASE,16)].sources.append(self.last_instr)
+                self.paths[i+int(IMAGEBASE,16)] = path_data(0, 0)
+                self.paths[i+int(IMAGEBASE,16)].arg = instr + ' ' + op
+                self.return_from_sub = True
+                i = self.remaining_instructions()
+            return (True,i)
+        elif (instr in BRANCH_INSTRUCTIONS or instr in CONDITIONAL_BRANCHES) and 'lr' in op:
+            if len(self.return_address_stack) != 0:
+                last_instr_tmp = self.last_instr
+                self.last_instr = i
+                pop_val = self.return_address_stack.pop()
+                self.paths[i+int(IMAGEBASE,16)] = path_data(0, pop_val)
+                self.paths[i+int(IMAGEBASE,16)].arg = instr + ' ' + op
+                self.paths[i+int(IMAGEBASE,16)].sources.append(last_instr_tmp)
+                self.paths[i+int(IMAGEBASE,16)].pop_paths.append(pop_val)
+                i = pop_val - int(IMAGEBASE,16)
+                self.subroutines[self.subroutine_index.pop()].append(pop_val)
+                self.return_from_sub = True
+            else:
+                self.paths[i+int(IMAGEBASE,16)].sources.append(self.last_instr)
+                self.paths[i+int(IMAGEBASE,16)] = path_data(0, 0)
+                self.paths[i+int(IMAGEBASE,16)].arg = instr + ' ' + op
+                self.return_from_sub = True
+                i = self.remaining_instructions()
+            return (True,i)
+        return (False,i)
 
     def instruction_linking(self, i):
         global BRANCH_INSTRUCTIONS, REGISTER_NAMES, CONDITIONAL_BRANCHES, MEM_INSTR, ISR_POINTERS, ENDING_ADDRESS
         while True:
-            if i >= len(MEM_INSTR):
+            try:
+                while(MEM_INSTR[i] == 0):
+                    i += 1
+            except:
                 tmp = self.remaining_instructions()
                 if tmp == 0:
                     return
                 else:
                     i = tmp
-            else:
-                while(MEM_INSTR[i] == 0):
-                    i += 1
-                    if i == len(MEM_INSTR):
-                        break
-                if i == len(MEM_INSTR):
-                    tmp = self.remaining_instructions()
-                    if tmp == 0:
-                        return
-                    else:
-                        i = tmp
 
             if i+int(IMAGEBASE,16) in self.paths:
                 tmp = self.remaining_instructions()
@@ -416,40 +461,9 @@ class GeneratorCore(object):
                     self.register_branch_calc(instr, op, i)
 
                     try:
-                        if ('pop' in instr and 'pc' in op) or ('ldr' in instr and 'pc' in op and 'sp' in op):
-                            if len(self.return_address_stack) != 0:
-                                last_instr_tmp = self.last_instr
-                                self.last_instr = i
-                                pop_val = self.return_address_stack.pop()
-                                self.paths[i+int(IMAGEBASE,16)] = path_data(0, pop_val)
-                                self.paths[i+int(IMAGEBASE,16)].arg = instr + ' ' + op
-                                self.paths[i+int(IMAGEBASE,16)].sources.append(last_instr_tmp)
-                                self.paths[i+int(IMAGEBASE,16)].pop_paths.append(pop_val)
-                                i = pop_val - int(IMAGEBASE,16)
-                                self.return_from_sub = True
-                            else:
-                                self.paths[i+int(IMAGEBASE,16)].sources.append(self.last_instr)
-                                self.paths[i+int(IMAGEBASE,16)] = path_data(0, 0)
-                                self.paths[i+int(IMAGEBASE,16)].arg = instr + ' ' + op
-                                self.return_from_sub = True
-                                i = self.remaining_instructions()
-                        elif (instr in BRANCH_INSTRUCTIONS or instr in CONDITIONAL_BRANCHES) and 'lr' in op:
-                            if len(self.return_address_stack) != 0:
-                                last_instr_tmp = self.last_instr
-                                self.last_instr = i
-                                pop_val = self.return_address_stack.pop()
-                                self.paths[i+int(IMAGEBASE,16)] = path_data(0, pop_val)
-                                self.paths[i+int(IMAGEBASE,16)].arg = instr + ' ' + op
-                                self.paths[i+int(IMAGEBASE,16)].sources.append(last_instr_tmp)
-                                self.paths[i+int(IMAGEBASE,16)].pop_paths.append(pop_val)
-                                i = pop_val - int(IMAGEBASE,16)
-                                self.return_from_sub = True
-                            else:
-                                self.paths[i+int(IMAGEBASE,16)].sources.append(self.last_instr)
-                                self.paths[i+int(IMAGEBASE,16)] = path_data(0, 0)
-                                self.paths[i+int(IMAGEBASE,16)].arg = instr + ' ' + op
-                                self.return_from_sub = True
-                                i = self.remaining_instructions()
+                        result = self.end_subroutine_handler(i, instr, op)
+                        if result[0] == True:
+                            i = result[1]
                         else:
                             b_result = self.branch_destination_handler(instr, op, i)
                             if b_result[0] == True:
@@ -457,11 +471,20 @@ class GeneratorCore(object):
                                 self.paths[i+int(IMAGEBASE,16)].arg = instr + ' ' + op
                                 self.paths[i+int(IMAGEBASE,16)].sources.append(self.last_instr)
                                 if 'bl' in instr:
+                                    '''Testing'''
+                                    print instr, op, hex(self.paths[i+int(IMAGEBASE,16)].right)
+                                    self.begin_subroutine_handler(b_result[2])
                                     index = i + 1
                                     while(MEM_INSTR[index] == 0):
                                         index += 1
                                     index += int(IMAGEBASE,16)
-                                    self.return_address_stack.append(index)
+                                    if (b_result[2]-int(IMAGEBASE,16)) not in MEM_INSTR: 
+                                        print('bad', hex(b_result[2]-int(IMAGEBASE,16)))
+                                        print(MEM_INSTR[b_result[2]-int(IMAGEBASE,16)])
+                                        self.bad_return_address_stack.append(index)
+                                    else:
+                                        print 'good'
+                                        self.return_address_stack.append(index)
                                 if b_result[3] != 0:
                                     self.branches.append(b_result[3])
                                     self.cond_branches.append(i)
@@ -759,10 +782,11 @@ def main():
     gc = GeneratorCore(MEM_INSTR, BRANCHES)
     PATHS, SET_BRANCH_PAIRS = gc.run()
     #SYM_MODELS = symbolic_exec(PATHS, SET_BRANCH_PAIRS)
-    get_path('0x80674')
+    #get_path('0x80674')
     #get_path('0x88888')
     #get_path(ENDING_ADDRESS)
     #print(ENDING_ADDRESS)
+    #print(MEM_INSTR[STARTING_ADDRESS-int(IMAGEBASE,16)+1])
 
 if __name__ == '__main__':
     main()
