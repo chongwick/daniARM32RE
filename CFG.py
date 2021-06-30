@@ -205,7 +205,7 @@ class path_data:
         self.left = path1
         self.right = path2
         #pop instructions can lead to different addresses depending on the address of the
-        #subroutine caller. 
+        #subroutine caller.
         self.pop_paths = []
         self.sources = []
         self.mode = ''
@@ -295,29 +295,30 @@ class GeneratorCore(object):
         else:
             return False
 
-    #Return format: branch instruction?, first branch path, second path, next instruction to handle
+    #Return format: branch instruction?, first branch path, second path, next instruction to handle, empty pop?
     def branch_destination_handler(self, instr, op, addr):
         global MEM_INSTR
-        if instr in BRANCH_INSTRUCTIONS:
+        empty_pop = False
+        if instr in BRANCH_INSTRUCTIONS or instr in CONDITIONAL_BRANCHES:
             dest = 0
             if op in REGISTER_NAMES:
-                dest = self.register_branches[op].pop()
+                if len(self.register_branches[op]) == 0:
+                    empty_pop = True
+                    dest = 0
+                else:
+                    dest = self.register_branches[op].pop()
             else:
                 dest = int(op.split('#')[1],16)
-            return (True, 0, dest, 0)
-        elif instr in CONDITIONAL_BRANCHES:
-            index = addr + 1
-            while(MEM_INSTR[index] == 0):
-                index += 1
-            index += int(IMAGEBASE,16)
-            dest = 0
-            if op in REGISTER_NAMES:
-                dest = self.register_branches[op].pop()
-            else:
-                dest = int(op.split('#')[1],16)
-            return (True, index, dest, addr + 1)
+            if instr in BRANCH_INSTRUCTIONS:
+                return (True, 0, dest, 0, empty_pop)
+            elif instr in CONDITIONAL_BRANCHES:
+                index = addr + 1
+                while(MEM_INSTR[index] == 0):
+                    index += 1
+                index += int(IMAGEBASE,16)
+                return (True, index, dest, addr + 1, empty_pop)
         else:
-            return (False, 0, 0, 0)
+            return (False, 0, 0, 0, empty_pop)
 
     # Link remaining instructions after reaching end in while loop
     def remaining_instructions(self):
@@ -351,8 +352,8 @@ class GeneratorCore(object):
             self.current_setter = i
             return
         elif ((instr.split('.')[0][-1] == 's' and
-            instr.split('.')[0] != 'mls' and 
-            instr.split('.')[0] != 'bls' and 
+            instr.split('.')[0] != 'mls' and
+            instr.split('.')[0] != 'bls' and
             instr.split('.')[0] != 'bcs') or
             instr.split('.')[0] == 'cmp' or
             instr.split('.')[0] == 'cmn'):
@@ -363,7 +364,7 @@ class GeneratorCore(object):
             self.current_setter = 0
 
     def subroutine_handler(self, i):
-        return 
+        return
 
     def instruction_linking(self, i):
         global BRANCH_INSTRUCTIONS, REGISTER_NAMES, CONDITIONAL_BRANCHES, MEM_INSTR, ISR_POINTERS, ENDING_ADDRESS
@@ -415,73 +416,75 @@ class GeneratorCore(object):
 
                     self.register_branch_calc(instr, op, i)
 
-                    try:
-                        if ('pop' in instr and 'pc' in op) or ('ldr' in instr and 'pc' in op and 'sp' in op):
-                            if len(self.return_address_stack) != 0:
-                                last_instr_tmp = self.last_instr
-                                self.last_instr = i
-                                pop_val = self.return_address_stack.pop()
-                                self.paths[i+int(IMAGEBASE,16)] = path_data(0, pop_val)
-                                self.paths[i+int(IMAGEBASE,16)].arg = instr + ' ' + op
-                                self.paths[i+int(IMAGEBASE,16)].sources.append(last_instr_tmp)
-                                self.paths[i+int(IMAGEBASE,16)].pop_paths.append(pop_val)
-                                i = pop_val - int(IMAGEBASE,16)
-                                self.return_from_sub = True
-                            else:
-                                self.paths[i+int(IMAGEBASE,16)].sources.append(self.last_instr)
-                                self.paths[i+int(IMAGEBASE,16)] = path_data(0, 0)
-                                self.paths[i+int(IMAGEBASE,16)].arg = instr + ' ' + op
-                                self.return_from_sub = True
-                                i = self.remaining_instructions()
-                        elif (instr in BRANCH_INSTRUCTIONS or instr in CONDITIONAL_BRANCHES) and 'lr' in op:
-                            if len(self.return_address_stack) != 0:
-                                last_instr_tmp = self.last_instr
-                                self.last_instr = i
-                                pop_val = self.return_address_stack.pop()
-                                self.paths[i+int(IMAGEBASE,16)] = path_data(0, pop_val)
-                                self.paths[i+int(IMAGEBASE,16)].arg = instr + ' ' + op
-                                self.paths[i+int(IMAGEBASE,16)].sources.append(last_instr_tmp)
-                                self.paths[i+int(IMAGEBASE,16)].pop_paths.append(pop_val)
-                                i = pop_val - int(IMAGEBASE,16)
-                                self.return_from_sub = True
-                            else:
-                                self.paths[i+int(IMAGEBASE,16)].sources.append(self.last_instr)
-                                self.paths[i+int(IMAGEBASE,16)] = path_data(0, 0)
-                                self.paths[i+int(IMAGEBASE,16)].arg = instr + ' ' + op
-                                self.return_from_sub = True
-                                i = self.remaining_instructions()
+                    #try:
+                    if ('pop' in instr and 'pc' in op) or ('ldr' in instr and 'pc' in op and 'sp' in op):
+                        if len(self.return_address_stack) != 0:
+                            last_instr_tmp = self.last_instr
+                            self.last_instr = i
+                            pop_val = self.return_address_stack.pop()
+                            self.paths[i+int(IMAGEBASE,16)] = path_data(0, pop_val)
+                            self.paths[i+int(IMAGEBASE,16)].arg = instr + ' ' + op
+                            self.paths[i+int(IMAGEBASE,16)].sources.append(last_instr_tmp)
+                            self.paths[i+int(IMAGEBASE,16)].pop_paths.append(pop_val)
+                            i = pop_val - int(IMAGEBASE,16)
+                            self.return_from_sub = True
                         else:
-                            b_result = self.branch_destination_handler(instr, op, i)
-                            if b_result[0] == True:
-                                self.paths[i+int(IMAGEBASE,16)] = path_data(b_result[1], b_result[2])
-                                self.paths[i+int(IMAGEBASE,16)].arg = instr + ' ' + op
-                                self.paths[i+int(IMAGEBASE,16)].sources.append(self.last_instr)
-                                if 'bl' in instr:
-                                    index = i + 1
-                                    while(MEM_INSTR[index] == 0):
-                                        index += 1
-                                    index += int(IMAGEBASE,16)
-                                    self.return_address_stack.append(index)
-                                if b_result[3] != 0:
-                                    self.branches.append(b_result[3])
-                                    self.cond_branches.append(i)
-                                    self.last_instr = i
-                                    i = b_result[2]-int(IMAGEBASE,16)
-                                else:
-                                    self.last_instr = i
-                                    i = b_result[2]-int(IMAGEBASE,16)
-                            else:
+                            self.paths[i+int(IMAGEBASE,16)].sources.append(self.last_instr)
+                            self.paths[i+int(IMAGEBASE,16)] = path_data(0, 0)
+                            self.paths[i+int(IMAGEBASE,16)].arg = instr + ' ' + op
+                            self.return_from_sub = True
+                            i = self.remaining_instructions()
+                    elif (instr in BRANCH_INSTRUCTIONS or instr in CONDITIONAL_BRANCHES) and 'lr' in op:
+                        if len(self.return_address_stack) != 0:
+                            last_instr_tmp = self.last_instr
+                            self.last_instr = i
+                            pop_val = self.return_address_stack.pop()
+                            self.paths[i+int(IMAGEBASE,16)] = path_data(0, pop_val)
+                            self.paths[i+int(IMAGEBASE,16)].arg = instr + ' ' + op
+                            self.paths[i+int(IMAGEBASE,16)].sources.append(last_instr_tmp)
+                            self.paths[i+int(IMAGEBASE,16)].pop_paths.append(pop_val)
+                            i = pop_val - int(IMAGEBASE,16)
+                            self.return_from_sub = True
+                        else:
+                            self.paths[i+int(IMAGEBASE,16)].sources.append(self.last_instr)
+                            self.paths[i+int(IMAGEBASE,16)] = path_data(0, 0)
+                            self.paths[i+int(IMAGEBASE,16)].arg = instr + ' ' + op
+                            self.return_from_sub = True
+                            i = self.remaining_instructions()
+                    else:
+                        b_result = self.branch_destination_handler(instr, op, i)
+                        if b_result[0] == True:
+                            self.paths[i+int(IMAGEBASE,16)] = path_data(b_result[1], b_result[2])
+                            self.paths[i+int(IMAGEBASE,16)].arg = instr + ' ' + op
+                            self.paths[i+int(IMAGEBASE,16)].sources.append(self.last_instr)
+                            #if no branch destination was determined
+                            if b_result[4] == True:
+                                return
+                            if 'bl' in instr:
                                 index = i + 1
                                 while(MEM_INSTR[index] == 0):
                                     index += 1
                                 index += int(IMAGEBASE,16)
-                                self.paths[i+int(IMAGEBASE,16)] = path_data(index, 0)
-                                self.paths[i+int(IMAGEBASE,16)].arg = instr + ' ' + op
-                                self.paths[i+int(IMAGEBASE,16)].sources.append(self.last_instr)
+                                self.return_address_stack.append(index)
+                            if b_result[3] != 0:
+                                self.branches.append(b_result[3])
+                                self.cond_branches.append(i)
                                 self.last_instr = i
-                                i = i + 1
-                    except:
-                        i = self.remaining_instructions()
+                                i = b_result[2]-int(IMAGEBASE,16)
+                            else:
+                                self.last_instr = i
+                                i = b_result[2]-int(IMAGEBASE,16)
+                        elif b_result[0] == False:
+                            index = i + 1
+                            while(MEM_INSTR[index] == 0):
+                                index += 1
+                            index += int(IMAGEBASE,16)
+                            self.paths[i+int(IMAGEBASE,16)] = path_data(index, 0)
+                            self.paths[i+int(IMAGEBASE,16)].arg = instr + ' ' + op
+                            self.paths[i+int(IMAGEBASE,16)].sources.append(self.last_instr)
+                            self.last_instr = i
+                            i = i + 1
+                    #i = self.remaining_instructions()
 
     def generate_paths(self):
         '''mem_instr and branches have the imagebase subtracted from them!!'''
@@ -536,7 +539,7 @@ def symbolic_exec(paths, set_branch_pairs):
                     dest_reg = branch_args[0]
                     syms['x'] = dest_reg
                     syms['y'] = branch_args[1]
-                    model = 'x + y' 
+                    model = 'x + y'
             elif branch_setter == 'subs' or branch_setter == 'sbcs':
                 if len(branch_args) == 3:
                     dest_reg = branch_args[0]
@@ -548,7 +551,7 @@ def symbolic_exec(paths, set_branch_pairs):
                     dest_reg = branch_args[0]
                     syms['x'] = dest_reg
                     syms['y'] = branch_args[1]
-                    model = 'x - y' 
+                    model = 'x - y'
             elif branch_setter == 'lsls':
                 if len(branch_args) == 3:
                     dest_reg = branch_args[0]
@@ -560,7 +563,7 @@ def symbolic_exec(paths, set_branch_pairs):
                     dest_reg = branch_args[0]
                     syms['x'] = dest_reg
                     syms['y'] = branch_args[1]
-                    model = 'x << y' 
+                    model = 'x << y'
             elif branch_setter == 'asrs':
                 if len(branch_args) == 3:
                     dest_reg = branch_args[0]
@@ -572,7 +575,7 @@ def symbolic_exec(paths, set_branch_pairs):
                     dest_reg = branch_args[0]
                     syms['x'] = dest_reg
                     syms['y'] = branch_args[1]
-                    model = 'x >> y' 
+                    model = 'x >> y'
             elif branch_setter == 'ands':
                 if len(branch_args) == 3:
                     dest_reg = branch_args[0]
@@ -584,7 +587,7 @@ def symbolic_exec(paths, set_branch_pairs):
                     dest_reg = branch_args[0]
                     syms['x'] = dest_reg
                     syms['y'] = branch_args[1]
-                    model = 'x & y' 
+                    model = 'x & y'
             elif branch_setter == 'eors':
                 if len(branch_args) == 3:
                     dest_reg = branch_args[0]
@@ -596,7 +599,7 @@ def symbolic_exec(paths, set_branch_pairs):
                     dest_reg = branch_args[0]
                     syms['x'] = dest_reg
                     syms['y'] = branch_args[1]
-                    model = 'x ^ y' 
+                    model = 'x ^ y'
             elif branch_setter == 'orrs':
                 if len(branch_args) == 3:
                     dest_reg = branch_args[0]
@@ -608,7 +611,7 @@ def symbolic_exec(paths, set_branch_pairs):
                     dest_reg = branch_args[0]
                     syms['x'] = dest_reg
                     syms['y'] = branch_args[1]
-                    model = 'x | y' 
+                    model = 'x | y'
             elif branch_setter == 'lsrs':
                 model = 'undetermined'
             elif branch_setter == 'bics':
@@ -676,7 +679,7 @@ def get_models():
 def get_pairs():
     global SET_BRANCH_PAIRS
     return SET_BRANCH_PAIRS
-    
+
 #target address to locate is a hex string
 def get_path(target):
     target = int(target, 16)
@@ -697,7 +700,7 @@ def get_path(target):
                 depth_count[dp_index]+=1
                 if PATHS[curr].left != 0:
                     if PATHS[curr].right != 0:
-                       untaken_branches.append(PATHS[curr].right) 
+                       untaken_branches.append(PATHS[curr].right)
                        dp_index+=1
                        depth_count.append(0)
                     curr = PATHS[curr].left
