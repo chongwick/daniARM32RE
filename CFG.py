@@ -762,10 +762,14 @@ def main():
     gc = GeneratorCore(MEM_INSTR, BRANCHES)
     PATHS, SET_BRANCH_PAIRS = gc.run()
     #SYM_MODELS = symbolic_exec(PATHS, SET_BRANCH_PAIRS)
-    get_path('0x80674')
+    #get_path('0x80674')
     #get_path('0x88888')
     #get_path(ENDING_ADDRESS)
     #print(ENDING_ADDRESS)
+    page_size = 1024
+    image_base = min(PATHS) & ~(page_size-1)
+    print hex(image_base)
+
 
 if __name__ == '__main__':
     main()
