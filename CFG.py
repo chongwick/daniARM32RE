@@ -369,7 +369,7 @@ class GeneratorCore(object):
     def instruction_linking(self, i):
         global BRANCH_INSTRUCTIONS, REGISTER_NAMES, CONDITIONAL_BRANCHES, MEM_INSTR, ISR_POINTERS, ENDING_ADDRESS
         while True:
-            if i >= len(MEM_INSTR):
+            if i >= len(MEM_INSTR) or i < 0:
                 tmp = self.remaining_instructions()
                 if tmp == 0:
                     return
