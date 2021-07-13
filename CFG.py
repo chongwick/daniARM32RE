@@ -50,6 +50,7 @@ ISR_POINTERS = []
 
 # Takes a hex representation and returns an int
 def endian_switch(val):
+    val = val.zfill(8)
     tmp = "0x" + val[6] + val[7] + val[4] + val[5] + val[2] + val[3] + val[0] + val[1]
     return(int(tmp,16))
 
