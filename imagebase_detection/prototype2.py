@@ -161,7 +161,7 @@ class DisassemblerCore(object):
             instr = self.curr_mnemonic + '\t' + self.curr_op_str
             MEM_INSTR[address] = instr_data(self.curr_mnemonic, self.curr_op_str)
             if self.curr_mnemonic in BRANCH_INSTRUCTIONS or self.curr_mnemonic in CONDITIONAL_BRANCHES:
-                if 'r' not in self.curr_op_str and 's' not in self.curr_op_str:
+                if 'r' not in self.curr_op_str and 's' not in self.curr_op_str and 'i' not in self.curr_op_str:
                     BRANCHED.append(int(self.curr_op_str.split('#')[1],16))
                     #print('branchk:', self.curr_mnemonic, self.curr_op_str)
             #if self.curr_mnemonic in self.branch_instructions or self.curr_mnemonic in self.conditional_branches:
@@ -298,9 +298,12 @@ def main():
     min_imagebase,max_imagebase = find_imagebase(BRANCHED, ISR_POINTERS)
     test_base = min_imagebase
     potential_bases = []
-    while test_base < max_imagebase:
+    while test_base < max_imagebase + 1024:
         bad_base = False
         for i in ISR_POINTERS:
+            if i-test_base-1 >= len(MEM_INSTR) or i-test_base-1 < 0:
+                bad_base = True
+                break
             if MEM_INSTR[i-test_base-1] == 0:
                 bad_base = True
                 break
