@@ -193,6 +193,7 @@ class DisassemblerCore(object):
                 self.curr_addr += 2
             code = HEX_DATA[self.curr_instr:self.curr_instr+MAX_INSTR_SIZE].decode('hex')
 
+
     def toggle_thumb(self):
         if IS_THUMB_MODE == 1:
             IS_THUMB_MODE = 0
@@ -201,38 +202,22 @@ class DisassemblerCore(object):
             IS_THUMB_MODE = 1
             MD = Cs(CS_ARCH_ARM, CS_MODE_THUMB)
 
-def cleanse_data(data_set, resolution):
-    mean = 0
-    for i in data_set:
-        mean += i
-    mean = mean/len(data_set)
-    print 'mean',hex(mean)
-    std = np.std(data_set)
-    upper_limit = mean + resolution * std
-    lower_limit = mean - resolution * std
+def cleanse_data(data_set):
+    mean, std = get_stats(data_set)
+    upper_limit = mean + 3 * std
+    lower_limit = mean - 3 * std
     print 'upper',hex(int(upper_limit)),'lower',hex(int(lower_limit))
     removed = 0
     low = 0
     high = 0
     while(min(data_set) < lower_limit):
         data_set.remove(min(data_set))
-        low += 1 
         if len(data_set) == 0:
             break
     while(max(data_set) > upper_limit):
         data_set.remove(max(data_set))
-        high += 1
         if len(data_set) == 0:
             break
-    if low > high:
-        print low
-        return 'low'
-    elif high > low:
-        print high
-        return 'high'
-    else:
-        return 'even'
-    #elif high == 0 and low == 0:
 
 def hist_plot(data_set):
     bin_number = math.ceil(math.sqrt(len(data_set)))
@@ -240,24 +225,31 @@ def hist_plot(data_set):
     bin_width = (max(data_set)-min(data_set))/bin_number
     plt.hist(data_set, bins=bin_number);plt.show()
 
+def get_stats(data_set):
+    mean = 0
+    for i in data_set:
+        mean += i
+    mean = mean/len(data_set)
+    print 'mean',hex(mean)
+    std = np.std(data_set)
+    print 'std',hex(std)
+    return mean, std
+    
 def find_imagebase(data_set, confirmed_addrs):
     test_imagebase = 0x00000
     iteration = 0
     page_size = 1024
-    max_base = min(confirmed_addrs) & ~(page_size-1)
-    #tmp = [i + test_imagebase for i in data_set]
-    tmp = [i - page_size*iteration for i in confirmed_addrs]
+    tmp = [i + page_size*iteration for i in data_set]
     result = ''
-    result = cleanse_data(tmp+data_set, 3)
+    result = cleanse_data(tmp+confirmed_addrs)
     print result
     while result != 'even':
         iteration += 1
         print 'iteration', iteration
-        tmp = [i - page_size*iteration for i in confirmed_addrs]
-        result = cleanse_data(tmp+data_set, 3)
+        tmp = [i + page_size*iteration for i in data_set]
+        result = cleanse_data(tmp+confirmed_addrs)
         print result
-    print('min',hex(iteration*page_size),'max',hex(max_base))
-    return(iteration*page_size, max_base)
+    print hex(iteration*page_size)
 
 #0x40000000 is the max number where code can be stored
 # Main
@@ -284,32 +276,11 @@ def main():
 
     print 'length', len(BRANCHED)
     #hist_plot(BRANCHED)
-    cleanse_data(BRANCHED, 3)
+    cleanse_data(BRANCHED)
+    print 'hi'
+    get_stats(ISR_POINTERS)
     #hist_plot(BRANCHED)
-    ISR_POINTERS.append(STARTING_ADDRESS)
-    #plt.boxplot(BRANCHED)
-    #plt.boxplot(ISR_POINTERS)
-    '''This address is not in mem_instr because 80830 is a 4-byte instruction.
-    If the supposed image base is incorrect, it is possible that the pointers to the starting 
-    address and the interrupt service routines will point to an instruction that does not exist.
-    Or any branch will point to an instruction that does not exist. 
-    print(MEM_INSTR[int('0x80832',16)-0x80000])'''
-
-    min_imagebase,max_imagebase = find_imagebase(BRANCHED, ISR_POINTERS)
-    test_base = min_imagebase
-    potential_bases = []
-    while test_base < max_imagebase:
-        bad_base = False
-        for i in ISR_POINTERS:
-            if MEM_INSTR[i-test_base-1] == 0:
-                bad_base = True
-                break
-        if bad_base == False:
-            potential_bases.append(test_base)
-        test_base += 1024
-
-    for i in potential_bases:
-        print hex(i), MEM_INSTR[STARTING_ADDRESS-i-1].instr, MEM_INSTR[STARTING_ADDRESS-i-1].op
+    #find_imagebase(BRANCHED, ISR_POINTERS)
 
 
 
