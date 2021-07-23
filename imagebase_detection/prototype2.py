@@ -23,7 +23,7 @@ TOP_ADDRESS = 0
 MAX_INSTR_SIZE = 8
 MD = Cs(CS_ARCH_ARM, CS_MODE_THUMB)
 REGISTER_NAMES = ['r0', 'r1', 'r2', 'r3', 'r4', 'r5', 'r6', 'r7', 'r8', 'r9'
-        , 'r10', 'sl', 'r11', 'r12', 'r13', 'r14', 'r15', 'psr', 'lr', 'pc', 'sp']
+        , 'r10', 'sl', 'r11', 'r12', 'r13', 'r14', 'r15', 'psr', 'lr', 'pc', 'sp', 'ip']
 BRANCH_INSTRUCTIONS = {'b', 'bl', 'blx', 'bx', 'b.w', 'bl.w', 'blx.w', 'bx.w'}
 CONDITIONAL_BRANCHES =  {'blgt', 'blvc', 'blcc', 'blhs', 'blmi', 'blne', 'blal',
         'blle', 'blge', 'blvs',
@@ -161,7 +161,7 @@ class DisassemblerCore(object):
             instr = self.curr_mnemonic + '\t' + self.curr_op_str
             MEM_INSTR[address] = instr_data(self.curr_mnemonic, self.curr_op_str)
             if self.curr_mnemonic in BRANCH_INSTRUCTIONS or self.curr_mnemonic in CONDITIONAL_BRANCHES:
-                if 'r' not in self.curr_op_str and 's' not in self.curr_op_str and 'i' not in self.curr_op_str:
+                if self.curr_op_str not in REGISTER_NAMES:
                     BRANCHED.append(int(self.curr_op_str.split('#')[1],16))
                     #print('branchk:', self.curr_mnemonic, self.curr_op_str)
             #if self.curr_mnemonic in self.branch_instructions or self.curr_mnemonic in self.conditional_branches:
@@ -310,6 +310,15 @@ def main():
         if bad_base == False:
             potential_bases.append(test_base)
         test_base += 1024
+
+    '''for i in potential_bases:
+        for j in ISR_POINTERS:
+            try:
+                second_operand = MEM_INSTR[j-i-1].op.split(',')[1]
+                if second_operand in REGISTER_NAMES and second_operand != 'pc':
+                    potential_bases.remove(i)
+            except:
+                print'fine''''
 
     for i in potential_bases:
         print hex(i), MEM_INSTR[STARTING_ADDRESS-i-1].instr, MEM_INSTR[STARTING_ADDRESS-i-1].op
