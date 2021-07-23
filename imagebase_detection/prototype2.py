@@ -252,6 +252,9 @@ def find_imagebase(data_set, confirmed_addrs):
     print result
     while result != 'even':
         iteration += 1
+        if iteration%20 == 0:
+            plt.ylim(0,0x90000)
+            plt.boxplot([tmp,data_set]);plt.show()
         print 'iteration', iteration
         tmp = [i - page_size*iteration for i in confirmed_addrs]
         result = cleanse_data(tmp+data_set, 3)
@@ -318,7 +321,8 @@ def main():
                 if second_operand in REGISTER_NAMES and second_operand != 'pc':
                     potential_bases.remove(i)
             except:
-                print'fine''''
+                print'fine'
+    '''
 
     for i in potential_bases:
         print hex(i), MEM_INSTR[STARTING_ADDRESS-i-1].instr, MEM_INSTR[STARTING_ADDRESS-i-1].op
