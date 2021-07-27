@@ -253,13 +253,17 @@ def find_imagebase(data_set, confirmed_addrs):
     while result != 'even':
         iteration += 1
         if iteration%20 == 0:
-            plt.ylim(0,0x90000)
-            plt.boxplot([tmp,data_set]);plt.show()
+            plt.ylim(0,max_base)
+            plt.boxplot([tmp,data_set,tmp+data_set]);plt.show()
+            plt.xticks([1,2,3],['offset_confirmed', 'incomp_data', 'combined_sets'])
         print 'iteration', iteration
         tmp = [i - page_size*iteration for i in confirmed_addrs]
         result = cleanse_data(tmp+data_set, 3)
         print result
     print('min',hex(iteration*page_size),'max',hex(max_base))
+    plt.ylim(0,max(data_set)*2)
+    plt.boxplot([tmp,data_set,tmp+data_set]);plt.show()
+    plt.xticks([1,2,3],['offset_confirmed', 'incomp_data', 'combined_sets'])
     return(iteration*page_size, max_base)
 
 #0x40000000 is the max number where code can be stored
@@ -324,8 +328,11 @@ def main():
                 print'fine'
     '''
 
+    #for i in potential_bases:
+    #    print hex(i), MEM_INSTR[STARTING_ADDRESS-i-1].instr, MEM_INSTR[STARTING_ADDRESS-i-1].op
+    print 'Potential bases'
     for i in potential_bases:
-        print hex(i), MEM_INSTR[STARTING_ADDRESS-i-1].instr, MEM_INSTR[STARTING_ADDRESS-i-1].op
+        print hex(i)
 
 
 
