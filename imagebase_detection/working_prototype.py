@@ -14,16 +14,19 @@ import binascii
 import math
 import numpy as np
 import matplotlib.pyplot as plt
+import instructions as prs
 
 FILE_NAME = ''
 IMAGEBASE = '0x80000'
 IS_THUMB_MODE = 1
-BRANCHED = []
+RELATIVE = []
 TOP_ADDRESS = 0
 MAX_INSTR_SIZE = 8
 MD = Cs(CS_ARCH_ARM, CS_MODE_THUMB)
 REGISTER_NAMES = ['r0', 'r1', 'r2', 'r3', 'r4', 'r5', 'r6', 'r7', 'r8', 'r9'
-        , 'r10', 'sl', 'r11', 'r12', 'r13', 'r14', 'r15', 'psr', 'lr', 'pc', 'sp', 'ip']
+        , 'r10', 'sl', 'r11', 'r12', 'r13', 'r14', 'r15', 'psr', 'lr', 'pc', 'sp', 'ip', 'sb']
+NON_PC_REGS = ['r0', 'r1', 'r2', 'r3', 'r4', 'r5', 'r6', 'r7', 'r8', 'r9'
+        , 'r10', 'sl', 'r11', 'r12', 'r13', 'r14', 'r15', 'psr', 'lr', 'sp', 'sb']
 BRANCH_INSTRUCTIONS = {'b', 'bl', 'blx', 'bx', 'b.w', 'bl.w', 'blx.w', 'bx.w'}
 CONDITIONAL_BRANCHES =  {'blgt', 'blvc', 'blcc', 'blhs', 'blmi', 'blne', 'blal',
         'blle', 'blge', 'blvs',
@@ -162,7 +165,7 @@ class DisassemblerCore(object):
             MEM_INSTR[address] = instr_data(self.curr_mnemonic, self.curr_op_str)
             if self.curr_mnemonic in BRANCH_INSTRUCTIONS or self.curr_mnemonic in CONDITIONAL_BRANCHES:
                 if self.curr_op_str not in REGISTER_NAMES:
-                    BRANCHED.append(int(self.curr_op_str.split('#')[1],16))
+                    RELATIVE.append(int(self.curr_op_str.split('#')[1],16))
                     #print('branchk:', self.curr_mnemonic, self.curr_op_str)
             #if self.curr_mnemonic in self.branch_instructions or self.curr_mnemonic in self.conditional_branches:
             #   BRANCHES[address-int(IMAGEBASE,16)] = str(self.curr_mnemonic) + ', ' + str(self.curr_op_str)
@@ -206,11 +209,11 @@ def cleanse_data(data_set, resolution):
     for i in data_set:
         mean += i
     mean = mean/len(data_set)
-    print 'mean',hex(mean)
+    #print 'mean',hex(mean)
     std = np.std(data_set)
     upper_limit = mean + resolution * std
     lower_limit = mean - resolution * std
-    print 'upper',hex(int(upper_limit)),'lower',hex(int(lower_limit))
+    #print 'upper',hex(int(upper_limit)),'lower',hex(int(lower_limit))
     removed = 0
     low = 0
     high = 0
@@ -225,14 +228,15 @@ def cleanse_data(data_set, resolution):
         if len(data_set) == 0:
             break
     if low > high:
-        print low
+        #print low
         return 'low'
     elif high > low:
-        print high
+        #print high
         return 'high'
-    else:
+    elif high == 0 and low == 0:
         return 'even'
-    #elif high == 0 and low == 0:
+    else:
+        return 'equal'
 
 def hist_plot(data_set):
     bin_number = math.ceil(math.sqrt(len(data_set)))
@@ -244,27 +248,92 @@ def find_imagebase(data_set, confirmed_addrs):
     test_imagebase = 0x00000
     iteration = 0
     page_size = 1024
-    max_base = min(confirmed_addrs) & ~(page_size-1)
+    max_imagebase = min(confirmed_addrs) & ~(page_size-1)
     #tmp = [i + test_imagebase for i in data_set]
     tmp = [i - page_size*iteration for i in confirmed_addrs]
     result = ''
     result = cleanse_data(tmp+data_set, 3)
-    print result
+    #print result
     while result != 'even':
         iteration += 1
-        if iteration%20 == 0:
-            plt.ylim(0,max_base)
-            plt.boxplot([tmp,data_set,tmp+data_set]);plt.show()
-            plt.xticks([1,2,3],['offset_confirmed', 'incomp_data', 'combined_sets'])
-        print 'iteration', iteration
+        #if iteration%20 == 0:
+        #    plt.ylim(0,max_base)
+        #    plt.boxplot([tmp,data_set,tmp+data_set]);plt.show()
+        #    plt.xticks([1,2,3],['offset_confirmed', 'incomp_data', 'combined_sets'])
+        #print 'iteration', iteration
         tmp = [i - page_size*iteration for i in confirmed_addrs]
         result = cleanse_data(tmp+data_set, 3)
-        print result
-    print('min',hex(iteration*page_size),'max',hex(max_base))
-    plt.ylim(0,max(data_set)*2)
-    plt.boxplot([tmp,data_set,tmp+data_set]);plt.show()
-    plt.xticks([1,2,3],['offset_confirmed', 'incomp_data', 'combined_sets'])
-    return(iteration*page_size, max_base)
+        #print result
+    print('min',hex(iteration*page_size),'max',hex(max_imagebase))
+    #plt.ylim(0,max(data_set)*2)
+    #plt.boxplot([tmp,data_set,tmp+data_set]);plt.show()
+    #plt.xticks([1,2,3],['offset_confirmed', 'incomp_data', 'combined_sets'])
+    min_imagebase = iteration*page_size
+    '''This address is not in mem_instr because 80830 is a 4-byte instruction.
+    If the supposed image base is incorrect, it is possible that the pointers to the starting 
+    address and the interrupt service routines will point to an instruction that does not exist.
+    Or any branch will point to an instruction that does not exist. 
+    print(MEM_INSTR[int('0x80832',16)-0x80000])'''
+    test_base = min_imagebase
+    potential_bases = []
+    while test_base < max_imagebase + 1024:
+        bad_base = False
+        for i in ISR_POINTERS:
+            if i-test_base-1 >= len(MEM_INSTR) or i-test_base-1 < 0:
+                bad_base = True
+                break
+            if MEM_INSTR[i-test_base-1] == 0:
+                bad_base = True
+                break
+        if bad_base == False:
+            potential_bases.append(test_base)
+        test_base += 1024
+    return potential_bases
+
+def test_base_2(base, ABSOLUTE):
+    for j in ABSOLUTE:
+        addr = j-base-1
+        instr = prs.Instruction(prs.Mnemonic(MEM_INSTR[addr].instr),prs.Operands(MEM_INSTR[addr].op))
+        #print("instr" + str(i) + ": ")
+        #print("Mnemonic Name: " + str(instr.mnemonic.name))
+        #print("Mnemonic Suffix: " + str(instr.mnemonic.suffix))
+        #print("Mnemonic Condition: " + str(instr.mnemonic.condition))
+        #print("Mnemonic Type: " + str(instr.mnemonic.mnemonic_type))
+        #print("Operand List: " + str(instr.operands._list))
+        #print("Secondary Operation: " + str(instr.operands.secondary_operation))
+        #print("\n\n")
+        mnemonic_type = instr.mnemonic.mnemonic_type
+        op_list = instr.operands._list
+        mnemonic_name = str(instr.mnemonic.name)
+        if mnemonic_type == 0:
+            potential_bases.remove(i)
+            print 'unknown mnemonic type'
+            print instr.mnemonic.name, op_list
+            break;
+        elif mnemonic_type == 1: #Arithmetic
+            print op_list
+        elif mnemonic_type == 2: #Comparison
+            for i in op_list:
+                if i in NON_PC_REGS:
+                    return False
+        elif mnemonic_type == 3: #Branch
+            for i in op_list:
+                if i in REGISTER_NAMES:
+                    return False
+        elif mnemonic_type == 4: #Modify
+            if 'mov' in mnemonic_name and (op_list[0] in NON_PC_REGS or op_list[1] in NON_PC_REGS):
+                return False
+            if 'ldr' in mnemonic_name:
+                #op_list[1] contains the arguments for the address to load from
+                for i in op_list[1]:
+                    if i in NON_PC_REGS:
+                        return False
+        elif mnemonic_type == 5: #Load/Store
+            print 'hi'
+        elif mnemonic_type == 6: #Stack control
+            if mnemonic_name == 'pop':
+                return False
+    return True
 
 #0x40000000 is the max number where code can be stored
 # Main
@@ -289,34 +358,28 @@ def main():
     print('\n\n')
 
 
-    print 'length', len(BRANCHED)
-    #hist_plot(BRANCHED)
-    cleanse_data(BRANCHED, 3)
-    #hist_plot(BRANCHED)
-    ISR_POINTERS.append(STARTING_ADDRESS)
-    #plt.boxplot(BRANCHED)
+    #print 'length', len(RELATIVE)
+    #hist_plot(RELATIVE)
+    cleanse_data(RELATIVE, 3)
+    #hist_plot(RELATIVE)
+    ABSOLUTE = ISR_POINTERS 
+    ABSOLUTE.append(STARTING_ADDRESS)
+    #plt.boxplot(RELATIVE)
     #plt.boxplot(ISR_POINTERS)
-    '''This address is not in mem_instr because 80830 is a 4-byte instruction.
-    If the supposed image base is incorrect, it is possible that the pointers to the starting 
-    address and the interrupt service routines will point to an instruction that does not exist.
-    Or any branch will point to an instruction that does not exist. 
-    print(MEM_INSTR[int('0x80832',16)-0x80000])'''
+    potential_bases = find_imagebase(RELATIVE, ABSOLUTE)
+    print 'Potential bases'
+    for i in potential_bases:
+        print hex(i)
 
-    min_imagebase,max_imagebase = find_imagebase(BRANCHED, ISR_POINTERS)
-    test_base = min_imagebase
-    potential_bases = []
-    while test_base < max_imagebase + 1024:
-        bad_base = False
-        for i in ISR_POINTERS:
-            if i-test_base-1 >= len(MEM_INSTR) or i-test_base-1 < 0:
-                bad_base = True
-                break
-            if MEM_INSTR[i-test_base-1] == 0:
-                bad_base = True
-                break
-        if bad_base == False:
-            potential_bases.append(test_base)
-        test_base += 1024
+    '''for i in potential_bases:
+        print("\n")
+        print("Base:", hex(i))
+        for j in ISR_POINTERS:
+            addr = j-i-1
+            print MEM_INSTR[addr].instr, MEM_INSTR[addr].op
+        print ("Starting instruction")
+        print MEM_INSTR[STARTING_ADDRESS-i-1].instr, MEM_INSTR[STARTING_ADDRESS-i-1].op'''
+
 
     '''for i in potential_bases:
         for j in ISR_POINTERS:
@@ -327,66 +390,18 @@ def main():
             except:
                 print'fine'
     '''
+    #instr = instructions.Instruction(instructions.Mnemonic("str"),instructions.Operands("r2,r1"))
+    filtered = []
+    for i in potential_bases:
+        print('\n%s'%hex(i))
+        if test_base_2(i,ABSOLUTE) == False:
+            print 'bad'
+            #potential_bases.remove(i)
+        else:
+            filtered.append(i)
+
 
     #for i in potential_bases:
     #    print hex(i), MEM_INSTR[STARTING_ADDRESS-i-1].instr, MEM_INSTR[STARTING_ADDRESS-i-1].op
-    print 'Potential bases'
-    for i in potential_bases:
-        print hex(i)
-
-
-
-    #mean = 0
-    #for i in BRANCHED:
-    #    mean += i
-    #mean = mean/len(BRANCHED)
-    #print mean
-
-    #isr_std = np.std(ISR_POINTERS)
-    #isr_mean = 0 
-    #for i in ISR_POINTERS:
-    #    isr_mean += i
-    #isr_mean = isr_mean/len(ISR_POINTERS)
-    #lower_limit = isr_mean - 2 * isr_std
-    #upper_limit = isr_mean + 2 * isr_std
-    #tmp = 0
-    #minimum = min(BRANCHED)
-    #maximum = max(BRANCHED)
-    #while minimum < lower_limit:
-    #    minimum += 1024
-    #    tmp += 1024
-    #print hex(tmp)
-
-    #print 'lower', lower_limit, minimum
-    #print 'upper',upper_limit, maximum+tmp
-    #while maximum+tmp > upper_limit:
-    #    tmp -= 1024
-    #print hex(tmp)
-
-
-
-    #BRANCHED.sort()
-    #for i in BRANCHED:
-    #    print hex(i)
-    #combined = BRANCHED + ISR_POINTERS
-    #mean = 0
-    #for i in combined:
-    #    mean += i
-    #mean = mean/len(combined)
-    #std = np.std(combined)
-    #upper_limit = mean + 3 * std
-    #lower_limit = mean - 3 * std
-    #print('upper',upper_limit,'lower',lower_limit)
-    #while(min(combined) < lower_limit):
-    #    combined.remove(min(combined))
-    #print hex(lower_limit)
-    #print hex(min(combined))
-    #page_size = 1024
-    #addr = min(combined)
-    #imagebase = addr & ~(page_size-1)
-    #print('\n')
-    #print hex(imagebase)
-
-
 if __name__ == '__main__':
     main()
