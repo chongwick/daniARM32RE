@@ -101,6 +101,7 @@ class DisassemblerCore(object):
             self.file_data = f.read()
         f.close()
         HEX_DATA = binascii.hexlify(self.file_data)
+        print(HEX_DATA)
         # Stack top stored in first word, starting address in second
         self.stack_top = endian_switch(HEX_DATA[0:8])
         self.starting_address = endian_switch(HEX_DATA[8:16])

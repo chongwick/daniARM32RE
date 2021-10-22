@@ -360,45 +360,48 @@ def main():
 
     #print 'length', len(RELATIVE)
     #hist_plot(RELATIVE)
-    cleanse_data(RELATIVE, 3)
+    RELATIVE.sort()
+    q75, q25 = np.percentile([3, 10,14,19,22,29,32,26,49,70],[75,25])
+    print q75-q25
+    #cleanse_data(RELATIVE, 3)
     #hist_plot(RELATIVE)
-    ABSOLUTE = ISR_POINTERS 
-    ABSOLUTE.append(STARTING_ADDRESS)
-    #plt.boxplot(RELATIVE)
-    #plt.boxplot(ISR_POINTERS)
-    potential_bases = find_imagebase(RELATIVE, ABSOLUTE)
-    print 'Potential bases'
-    for i in potential_bases:
-        print hex(i)
+    #ABSOLUTE = ISR_POINTERS 
+    #ABSOLUTE.append(STARTING_ADDRESS)
+    ##plt.boxplot(RELATIVE)
+    ##plt.boxplot(ISR_POINTERS)
+    #potential_bases = find_imagebase(RELATIVE, ABSOLUTE)
+    #print 'Potential bases'
+    #for i in potential_bases:
+    #    print hex(i)
 
-    for i in potential_bases:
-        print("\n")
-        print("Base:", hex(i))
-        for j in ISR_POINTERS:
-            addr = j-i-1
-            print MEM_INSTR[addr].instr, MEM_INSTR[addr].op
-        print ("Starting instruction")
-        print MEM_INSTR[STARTING_ADDRESS-i-1].instr, MEM_INSTR[STARTING_ADDRESS-i-1].op
+    #for i in potential_bases:
+    #    print("\n")
+    #    print("Base:", hex(i))
+    #    for j in ISR_POINTERS:
+    #        addr = j-i-1
+    #        print MEM_INSTR[addr].instr, MEM_INSTR[addr].op
+    #    print ("Starting instruction")
+    #    print MEM_INSTR[STARTING_ADDRESS-i-1].instr, MEM_INSTR[STARTING_ADDRESS-i-1].op
 
 
-    '''for i in potential_bases:
-        for j in ISR_POINTERS:
-            try:
-                second_operand = MEM_INSTR[j-i-1].op.split(',')[1]
-                if second_operand in REGISTER_NAMES and second_operand != 'pc':
-                    potential_bases.remove(i)
-            except:
-                print'fine'
-    '''
-    #instr = instructions.Instruction(instructions.Mnemonic("str"),instructions.Operands("r2,r1"))
-    filtered = []
-    for i in potential_bases:
-        print('\n%s'%hex(i))
-        if test_base_2(i,ABSOLUTE) == False:
-            print 'bad'
-            #potential_bases.remove(i)
-        else:
-            filtered.append(i)
+    #'''for i in potential_bases:
+    #    for j in ISR_POINTERS:
+    #        try:
+    #            second_operand = MEM_INSTR[j-i-1].op.split(',')[1]
+    #            if second_operand in REGISTER_NAMES and second_operand != 'pc':
+    #                potential_bases.remove(i)
+    #        except:
+    #            print'fine'
+    #'''
+    ##instr = instructions.Instruction(instructions.Mnemonic("str"),instructions.Operands("r2,r1"))
+    #filtered = []
+    #for i in potential_bases:
+    #    print('\n%s'%hex(i))
+    #    if test_base_2(i,ABSOLUTE) == False:
+    #        print 'bad'
+    #        #potential_bases.remove(i)
+    #    else:
+    #        filtered.append(i)
 
 
     #for i in potential_bases:
